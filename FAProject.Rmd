@@ -1,0 +1,2940 @@
+---
+title: "Forecasting Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# Read the data
+
+library(readr)
+
+Projectdata <- read_csv("/Users/isma/Downloads/Projectdata.csv")
+
+Projectdata
+
+```
+
+```{r}
+# ACF Hobbies Plot
+acf(Projectdata$Hobbies_CA_1, main = 'Hoobies ACF CA_1', lag.max= 20)
+acf(Projectdata$Hobbies_CA_2, main = 'Hoobies ACF CA_2', lag.max= 20)
+acf(Projectdata$Hobbies_CA_3, main = 'Hoobies ACF CA_3', lag.max= 20)
+
+# PACF Hobbies
+pacf(Projectdata$Hobbies_CA_1, main = 'Hoobies PACF CA_1', lag.max= 20)
+pacf(Projectdata$Hobbies_CA_2, main = 'Hoobies PACF CA_2', lag.max= 20)
+pacf(Projectdata$Hobbies_CA_3, main = 'Hoobies PACF CA_3', lag.max= 20)
+
+
+```
+
+```{r}
+# Household
+
+# PACF & ACF Household_1
+acf(Projectdata$Household_1_CA_1, main = 'Household1 ACF CA_1', lag.max= 100)
+acf(Projectdata$Household_1_CA_2, main = 'Household1 ACF CA_2', lag.max= 100)
+acf(Projectdata$Household_1_CA_3, main = 'Household1 ACF CA_3', lag.max= 100)
+
+pacf(Projectdata$Household_1_CA_1, main = 'Household1 PACF CA_1', lag.max= 100)
+pacf(Projectdata$Household_1_CA_2, main = 'Household1 PACF CA_2', lag.max= 100)
+pacf(Projectdata$Household_1_CA_3, main = 'Household1 PACF CA_2', lag.max= 100)
+
+# PACF & ACF Household_2
+acf(Projectdata$Household_2_CA_1, main = "Household2 ACF CA_1", lag.max = 100)
+acf(Projectdata$Household_2_CA_2, main = "Household2 ACF CA_2", lag.max = 100)
+acf(Projectdata$Household_2_CA_3, main = "Household2 ACF CA_3", lag.max = 100)
+
+pacf(Projectdata$Household_2_CA_1, main = "Household2 PACF CA_1", lag.max = 100)
+pacf(Projectdata$Household_2_CA_2, main = "Household2 PACF CA_2", lag.max = 100)
+pacf(Projectdata$Household_2_CA_3, main = "Household2 PACF CA_3", lag.max = 100)
+
+
+```
+
+```{r}
+# Food 
+
+# ACF & PACF Foods1
+acf(Projectdata$Foods_1_CA_1, main = 'Foods1 ACF CA_1', lag.max = 100)
+acf(Projectdata$Foods_1_CA_2, main = 'Foods1 ACF CA_2', lag.max = 100)
+acf(Projectdata$Foods_1_CA_3, main = 'Foods1 ACF CA_3', lag.max = 100)
+
+pacf(Projectdata$Foods_1_CA_1, main = 'Foods1 PACF CA_1', lag.max = 100)
+pacf(Projectdata$Foods_1_CA_2, main = 'Foods1 PACF CA_2', lag.max = 100)
+pacf(Projectdata$Foods_1_CA_3, main = 'Foods1 PACF CA_3', lag.max = 100)
+
+# ACF & PACF Foods2
+acf(Projectdata$Foods_2_CA_1, main = 'Foods2 ACF CA_1', lag.max = 100)
+acf(Projectdata$Foods_2_CA_2, main = 'Foods2 ACF CA_2', lag.max = 100)
+acf(Projectdata$Foods_2_CA_3, main = 'Foods2 ACF CA_3', lag.max = 100)
+
+pacf(Projectdata$Foods_2_CA_1, main = 'Foods2 PACF CA_1', lag.max = 100)
+pacf(Projectdata$Foods_2_CA_2, main = 'Foods2 PACF CA_2', lag.max = 100)
+pacf(Projectdata$Foods_2_CA_3, main = 'Foods2 PACF CA_3', lag.max = 100)
+
+# ACF & PACF Food3
+acf(Projectdata$Foods_3_CA_1, main = 'Foods3 ACF CA_1', lag.max = 100)
+acf(Projectdata$Foods_3_CA_2, main = 'Foods3 ACF CA_2', lag.max = 100)
+acf(Projectdata$Foods_3_CA_3, main = 'Foods3 ACF CA_3', lag.max = 100)
+
+pacf(Projectdata$Foods_3_CA_1, main = 'Foods3 PACF CA_1', lag.max = 100)
+pacf(Projectdata$Foods_3_CA_2, main = 'Foods3 PACF CA_2', lag.max = 100)
+pacf(Projectdata$Foods_3_CA_3, main = 'Foods3 PACF CA_3', lag.max = 100)
+```
+Exercise 1
+a) After plotting the ACF and PACF of the all the series at hand, we can see from the ACF plots of all categories that the slow decrease in the graph that is extending beyond 100 lag indicates a trend in the underlying data. additionally the scalloped shape indicates seasonality. 
+
+```{r}
+# Running Tests on the data 
+
+# Hobbies
+
+# to chose between trend, drift or none, we plot the data first
+
+library(urca)
+x1 <- Projectdata$Hobbies_CA_1
+x2 <- Projectdata$Hobbies_CA_2
+x3 <- Projectdata$Hobbies_CA_3
+
+plot(y = x1,x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S",)
+
+# Hobbies CA_1, drift
+summary(ur.df(x1,type="drift", selectlags = c("AIC")))
+# Hobbies CA_2, trend
+summary(ur.df(x2,type="trend", selectlags = c("AIC")))
+# Hobbies CA_3, trend
+summary(ur.df(x3,type="drift", selectlags = c("AIC")))
+
+```
+
+```{r}
+
+# HouseHold 1
+
+# to chose between trend, drift or none, we plot the data first
+
+library(urca)
+x1 <- Projectdata$Household_1_CA_1
+x2 <- Projectdata$Household_1_CA_2
+x3 <- Projectdata$Household_1_CA_3
+
+plot(y = x1, x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S")
+
+# House1_CA_1, trend
+summary(ur.df(x1,type="trend", selectlags = c("AIC")))
+# House1_CA_2, trend
+summary(ur.df(x2,type="trend", selectlags = c("AIC")))
+# House1_CA_3, trend
+summary(ur.df(x3,type="trend", selectlags = c("AIC")))
+
+
+
+```
+```{r}
+
+# HouseHold 2
+x1 <- Projectdata$Household_2_CA_1
+x2 <- Projectdata$Household_2_CA_2
+x3 <- Projectdata$Household_2_CA_3
+
+plot(y = x1, x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S")
+
+# House2_CA_1, trend
+summary(ur.df(x1,type="trend", selectlags = c("AIC")))
+# House2_CA_2, trend
+summary(ur.df(x2,type="trend", selectlags = c("AIC")))
+# House2_CA_3, trend
+summary(ur.df(x3,type="trend", selectlags = c("AIC")))
+
+```
+```{r}
+
+# Foods 1
+x1 <- Projectdata$Foods_1_CA_1
+x2 <- Projectdata$Foods_1_CA_2
+x3 <- Projectdata$Foods_1_CA_3
+
+plot(y = x1, x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S")
+
+# Food1_CA_1, none
+summary(ur.df(x1, selectlags = c("AIC")))
+# Food1_CA_2, drift
+summary(ur.df(x2,type="drift", selectlags = c("AIC")))
+# Food1_CA_3, trend (we need to choose)
+summary(ur.df(x3,type="trend", selectlags = c("AIC")))
+
+```
+```{r}
+# Foods 2
+x1 <- Projectdata$Foods_2_CA_1
+x2 <- Projectdata$Foods_2_CA_2
+x3 <- Projectdata$Foods_2_CA_3
+
+plot(y = x1, x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S")
+
+# Food2_CA_1, we need to check between drift and trend
+summary(ur.df(x1, selectlags = c("AIC")))
+# Food2_CA_2, drift
+summary(ur.df(x2,type="drift", selectlags = c("AIC")))
+# Food2_CA_3, drift
+summary(ur.df(x3,type="drift", selectlags = c("AIC")))
+
+```
+```{r}
+# Foods 3
+x1 <- Projectdata$Foods_3_CA_1
+x2 <- Projectdata$Foods_3_CA_2
+x3 <- Projectdata$Foods_3_CA_3
+
+plot(y = x1, x = Projectdata$date, type = "S")
+plot(y = x2, x = Projectdata$date, type="S")
+plot(y = x3, x = Projectdata$date, type="S")
+
+# Food3_CA_1, we need to check between drift and trend
+summary(ur.df(x1,type="trend", selectlags = c("AIC")))
+# Food3_CA_2, drift
+summary(ur.df(x2,type="drift", selectlags = c("AIC")))
+# Food3_CA_3, we need to check between drift and trend
+summary(ur.df(x3,type="drift", selectlags = c("AIC")))
+
+```
+
+
+```{r}
+library(lubridate)
+library(forecast)
+library(ggplot2)
+Projectdata
+
+# Forecasting Hobbies 
+# create a time series for the HC1 data
+HC1 <- ts(Projectdata$Hobbies_CA_1, start= c(2011,01, 29), frequency = 365)
+HC1
+time = time(HC1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HC1) - n.valid
+
+HC1.train.ts <- window(HC1, start=time[1], end=time[n.train])
+HC1.valid.ts <- window(HC1, start=time[n.train+1], end=time[n.train+n.valid])
+HC1.train.ts
+
+# Naive Hobbies 1 Cali1
+naive.HC1 = naive(HC1.train.ts, h= 28)
+naive.HC1$mean
+naive.HC1_df = data.frame(naive.HC1)
+rownames(naive.HC1_df) = date_decimal(as.numeric(rownames(naive.HC1_df)))
+acc.naive.HC1 <- accuracy(naive.HC1, HC1.valid.ts)
+knitr::kable(acc.naive.HC1)
+
+# Seasonal Naive Hobbies 1 Cali1
+snaive.HC1 = snaive(HC1.train.ts, h =28)
+snaive.HC1$mean
+snaive.HC1_df = data.frame(snaive.HC1)
+snaive.HC1_df
+rownames(snaive.HC1_df) = date_decimal(as.numeric(rownames(snaive.HC1_df)))
+acc.snaive.HC1 <- accuracy(snaive.HC1, HC1.valid.ts)
+knitr::kable(acc.snaive.HC1)
+
+# Exponential Smoothing 
+es.HC1 = ses(HC1.train.ts, h = 28)
+es.HC1$mean
+es.HC1_df <- data.frame(es.HC1)
+es.HC1_df
+rownames(es.HC1_df) <- date_decimal(as.numeric(rownames(es.HC1_df)))
+acc.es.HC1 <- accuracy(es.HC1, HC1.valid.ts)
+knitr::kable(acc.es.HC1)
+
+# Moving Average
+ma.HC1 <- forecast(ma(HC1.train.ts, order = 5), h = 28)
+ma.HC1$mean
+ma.HC1_df <- data.frame(ma.HC1)
+rownames(ma.HC1_df) <- date_decimal(as.numeric(rownames(ma.HC1_df)))
+acc.ma.HC1 <- accuracy(ma.HC1, HC1.valid.ts)
+knitr::kable(acc.ma.HC1)
+
+# SARIMA
+sarima.HC1 <- forecast(auto.arima(HC1.train.ts, D = 1), h = 28)
+sarima.HC1$mean
+sarima.HC1_df <- data.frame(sarima.HC1)
+rownames(sarima.HC1_df) <- date_decimal(as.numeric(rownames(sarima.HC1_df)))
+acc.sarima.HC1 <- accuracy(sarima.HC1, HC1.valid.ts)
+knitr::kable(acc.sarima.HC1)
+
+# HoltWinters
+hw.HC1 <- forecast(HoltWinters(HC1.train.ts, seasonal = "additive"), h = 28)
+hw.HC1$mean
+hw.HC1.df <- data.frame(hw.HC1)
+rownames(hw.HC1.df) <- date_decimal(as.numeric(rownames(hw.HC1.df)))
+acc.hw.HC1 <- accuracy(hw.HC1, HC1.valid.ts)
+knitr::kable(acc.hw.HC1)
+
+plot(redwine.ts,  main="Forecast for monthly red wine sales", xlab="Time", ylab="Thousand of liters")
+
+lines(naive.red$mean, col=4)
+
+lines(snaive.red$mean, col=2)
+
+legend("topright", lty=1, col=c(4,2), 
+       legend=c("Naive method", "Seasonal naive method"))
+
+?window()
+```
+
+
+```{r}
+library(lubridate)
+library(forecast)
+library(ggplot2)
+Projectdata
+
+# Forecasting Hobbies 
+# create a time series for the HC2 data
+HC2 <- ts(Projectdata$Hobbies_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(HC2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HC2) - n.valid
+
+HC2.train.ts <- window(HC2, start=time[1], end=time[n.train])
+HC2.valid.ts <- window(HC2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HC2 = naive(HC2.train.ts, h= 28)
+naive.HC2$mean
+naive.HC2_df = data.frame(naive.HC2)
+rownames(naive.HC2_df) = date_decimal(as.numeric(rownames(naive.HC2_df)))
+acc.naive.HC2 <- accuracy(naive.HC2, HC2.valid.ts)
+knitr::kable(acc.naive.HC2)
+
+# Seasonal Naive Hobbies 
+snaive.HC2 = snaive(HC2.train.ts, h =28)
+snaive.HC2$mean
+snaive.HC2_df = data.frame(snaive.HC2)
+rownames(snaive.HC2_df) = date_decimal(as.numeric(rownames(snaive.HC2_df)))
+acc.snaive.HC2 <- accuracy(snaive.HC2, HC2.valid.ts)
+knitr::kable(acc.snaive.HC2)
+
+# Exponential Smoothing 
+es.HC2 = ses(HC2.train.ts, h = 28)
+es.HC2$mean
+es.HC2_df <- data.frame(es.HC2)
+rownames(es.HC2_df) <- date_decimal(as.numeric(rownames(es.HC2_df)))
+acc.es.HC2 <- accuracy(es.HC2, HC2.valid.ts)
+knitr::kable(acc.es.HC2)
+
+# Moving Average
+ma.HC2 <- forecast(ma(HC2.train.ts, order = 5), h = 28)
+ma.HC2$mean
+ma.HC2_df <- data.frame(ma.HC2)
+rownames(ma.HC2_df) <- date_decimal(as.numeric(rownames(ma.HC2_df)))
+acc.ma.HC2 <- accuracy(ma.HC2, HC2.valid.ts)
+knitr::kable(acc.ma.HC2)
+
+# SARIMA
+sarima.HC2 <- forecast(auto.arima(HC2.train.ts, D = 1), h = 28)
+sarima.HC2$mean
+sarima.HC2_df <- data.frame(sarima.HC2)
+rownames(sarima.HC2_df) <- date_decimal(as.numeric(rownames(sarima.HC2_df)))
+acc.sarima.HC2 <- accuracy(sarima.HC2, HC2.valid.ts)
+knitr::kable(acc.sarima.HC2)
+plot(sarima.HC2)
+# HoltWinters
+hw.HC2 <- forecast(HoltWinters(HC2.train.ts, seasonal = "additive"), h = 28)
+hw.HC2$mean
+hw.HC2.df <- data.frame(hw.HC2)
+rownames(hw.HC2.df) <- date_decimal(as.numeric(rownames(hw.HC2.df)))
+acc.hw.HC2 <- accuracy(hw.HC2, HC2.valid.ts)
+knitr::kable(acc.hw.HC2)
+plot(hw.HC2)
+
+```
+
+```{r}
+library(lubridate)
+library(forecast)
+library(ggplot2)
+Projectdata
+
+# Forecasting Hobbies 
+# create a time series for the HC3 data
+HC3 <- ts(Projectdata$Hobbies_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(HC3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HC3) - n.valid
+
+HC3.train.ts <- window(HC2, start=time[1], end=time[n.train])
+HC3.valid.ts <- window(HC3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HC3 = naive(HC3.train.ts, h= 28)
+naive.HC3$mean
+naive.HC3_df = data.frame(naive.HC3)
+rownames(naive.HC3_df) = date_decimal(as.numeric(rownames(naive.HC3_df)))
+acc.naive.HC3 <- accuracy(naive.HC3, HC3.valid.ts)
+knitr::kable(acc.naive.HC3)
+
+# Seasonal Naive Hobbies 
+snaive.HC3 = snaive(HC3.train.ts, h =28)
+snaive.HC3$mean
+snaive.HC3_df = data.frame(snaive.HC3)
+rownames(snaive.HC3_df) = date_decimal(as.numeric(rownames(snaive.HC3_df)))
+acc.snaive.HC3 <- accuracy(snaive.HC3, HC3.valid.ts)
+knitr::kable(acc.snaive.HC3)
+
+# Exponential Smoothing 
+es.HC3 = ses(HC3.train.ts, h = 28)
+es.HC3$mean
+es.HC3_df <- data.frame(es.HC3)
+rownames(es.HC3_df) <- date_decimal(as.numeric(rownames(es.HC3_df)))
+acc.es.HC3 <- accuracy(es.HC3, HC3.valid.ts)
+knitr::kable(acc.es.HC3)
+
+# Moving Average
+ma.HC3 <- forecast(ma(HC3.train.ts, order = 5), h = 28)
+ma.HC3$mean
+ma.HC3_df <- data.frame(ma.HC3)
+rownames(ma.HC3_df) <- date_decimal(as.numeric(rownames(ma.HC3_df)))
+acc.ma.HC3 <- accuracy(ma.HC3, HC3.valid.ts)
+knitr::kable(acc.ma.HC3)
+
+# SARIMA
+sarima.HC3 <- forecast(auto.arima(HC3.train.ts, D = 1), h = 28)
+sarima.HC3$mean
+sarima.HC3_df <- data.frame(sarima.HC3)
+rownames(sarima.HC3_df) <- date_decimal(as.numeric(rownames(sarima.HC3_df)))
+acc.sarima.HC3 <- accuracy(sarima.HC3, HC3.valid.ts)
+knitr::kable(acc.sarima.HC3)
+plot(sarima.HC3)
+
+# HoltWinters
+hw.HC3 <- forecast(HoltWinters(HC3.train.ts, seasonal = "additive"), h = 28)
+hw.HC3$mean
+hw.HC3.df <- data.frame(hw.HC3)
+rownames(hw.HC3.df) <- date_decimal(as.numeric(rownames(hw.HC3.df)))
+acc.hw.HC3 <- accuracy(hw.HC3, HC3.valid.ts)
+knitr::kable(acc.hw.HC3)
+plot(hw.HC3)
+```
+```{r}
+# Forecasting foods_1 CA_1
+# create a time series for the F1C1 data
+F1C1 <- ts(Projectdata$Foods_1_CA_1, start= c(2011,01, 29), frequency = 365)
+
+time = time(F1C1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F1C1) - n.valid
+
+F1C1.train.ts <- window(F1C1, start=time[1], end=time[n.train])
+F1C1.valid.ts <- window(F1C1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F1C1 = naive(F1C1.train.ts, h= 28)
+naive.F1C1$mean
+naive.F1C1_df = data.frame(naive.F1C1)
+rownames(naive.F1C1_df) = date_decimal(as.numeric(rownames(naive.F1C1_df)))
+acc.naive.F1C1 <- accuracy(naive.F1C1, F1C1.valid.ts)
+knitr::kable(acc.naive.F1C1)
+
+# Seasonal Naive Hobbies 
+snaive.F1C1 = snaive(F1C1.train.ts, h =28)
+snaive.F1C1$mean
+snaive.F1C1_df = data.frame(snaive.F1C1)
+rownames(snaive.F1C1_df) = date_decimal(as.numeric(rownames(snaive.F1C1_df)))
+acc.snaive.F1C1 <- accuracy(snaive.F1C1, F1C1.valid.ts)
+knitr::kable(acc.snaive.F1C1)
+
+# Exponential Smoothing 
+es.F1C1 = ses(F1C1.train.ts, h = 28)
+es.F1C1$mean
+es.F1C1_df <- data.frame(es.F1C1)
+rownames(es.F1C1_df) <- date_decimal(as.numeric(rownames(es.F1C1_df)))
+acc.es.F1C1 <- accuracy(es.F1C1, F1C1.valid.ts)
+knitr::kable(acc.es.F1C1)
+
+# Moving Average
+ma.F1C1 <- forecast(ma(F1C1.train.ts, order = 5), h = 28)
+ma.F1C1$mean
+ma.F1C1_df <- data.frame(ma.F1C1)
+rownames(ma.F1C1_df) <- date_decimal(as.numeric(rownames(ma.F1C1_df)))
+acc.ma.F1C1 <- accuracy(ma.F1C1, F1C1.valid.ts)
+knitr::kable(acc.ma.F1C1)
+
+# SARIMA
+sarima.F1C1 <- forecast(auto.arima(F1C1.train.ts, D = 1), h = 28)
+sarima.F1C1$mean
+sarima.F1C1_df <- data.frame(sarima.F1C1)
+rownames(sarima.F1C1_df) <- date_decimal(as.numeric(rownames(sarima.F1C1_df)))
+acc.sarima.F1C1 <- accuracy(sarima.F1C1, F1C1.valid.ts)
+knitr::kable(acc.sarima.F1C1)
+plot(sarima.F1C1)
+# HoltWinters
+hw.F1C1 <- forecast(HoltWinters(F1C1.train.ts, seasonal = "additive"), h = 28)
+hw.F1C1$mean
+hw.F1C1.df <- data.frame(hw.F1C1)
+rownames(hw.F1C1.df) <- date_decimal(as.numeric(rownames(hw.F1C1.df)))
+acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1.valid.ts)
+knitr::kable(acc.hw.F1C1)
+plot(hw.F1C1)
+```
+
+```{r}
+# Forecasting foods_1 CA_2
+# create a time series for the F1C2 data
+F1C2 <- ts(Projectdata$Foods_1_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(F1C2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F1C2) - n.valid
+
+F1C2.train.ts <- window(F1C2, start=time[1], end=time[n.train])
+F1C2.valid.ts <- window(F1C2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F1C2 = naive(F1C2.train.ts, h= 28)
+naive.F1C2$mean
+naive.F1C2_df = data.frame(naive.F1C2)
+rownames(naive.F1C2_df) = date_decimal(as.numeric(rownames(naive.F1C2_df)))
+acc.naive.F1C2 <- accuracy(naive.F1C2, F1C2.valid.ts)
+knitr::kable(acc.naive.F1C2)
+
+# Seasonal Naive Hobbies 
+snaive.F1C2 = snaive(F1C2.train.ts, h =28)
+snaive.F1C2$mean
+snaive.F1C2_df = data.frame(snaive.F1C2)
+rownames(snaive.F1C2_df) = date_decimal(as.numeric(rownames(snaive.F1C2_df)))
+acc.snaive.F1C2 <- accuracy(snaive.F1C2, F1C2.valid.ts)
+knitr::kable(acc.snaive.F1C2)
+
+# Exponential Smoothing 
+es.F1C2 = ses(F1C2.train.ts, h = 28)
+es.F1C2$mean
+es.F1C2_df <- data.frame(es.F1C2)
+rownames(es.F1C2_df) <- date_decimal(as.numeric(rownames(es.F1C2_df)))
+acc.es.F1C2 <- accuracy(es.F1C2, F1C2.valid.ts)
+knitr::kable(acc.es.F1C2)
+
+# Moving Average
+ma.F1C2 <- forecast(ma(F1C2.train.ts, order = 5), h = 28)
+ma.F1C2$mean
+ma.F1C2_df <- data.frame(ma.F1C2)
+rownames(ma.F1C2_df) <- date_decimal(as.numeric(rownames(ma.F1C2_df)))
+acc.ma.F1C2 <- accuracy(ma.F1C2, F1C2.valid.ts)
+knitr::kable(acc.ma.F1C2)
+
+# SARIMA
+sarima.F1C2 <- forecast(auto.arima(F1C2.train.ts, D = 1), h = 28)
+sarima.F1C2$mean
+sarima.F1C2_df <- data.frame(sarima.F1C2)
+rownames(sarima.F1C2_df) <- date_decimal(as.numeric(rownames(sarima.F1C2_df)))
+acc.sarima.F1C2 <- accuracy(sarima.F1C2, F1C2.valid.ts)
+knitr::kable(acc.sarima.F1C2)
+plot(sarima.F1C2)
+# HoltWinters
+hw.F1C2 <- forecast(HoltWinters(F1C2.train.ts, seasonal = "additive"), h = 28)
+hw.F1C2$mean
+hw.F1C2.df <- data.frame(hw.F1C2)
+rownames(hw.F1C2.df) <- date_decimal(as.numeric(rownames(hw.F1C2.df)))
+acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2.valid.ts)
+knitr::kable(acc.hw.F1C2)
+plot(hw.F1C2)
+```
+
+```{r}
+# Forecasting foods_1 CA_3
+# create a time series for the F1C3 data
+F1C3 <- ts(Projectdata$Foods_1_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(F1C3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F1C3) - n.valid
+
+F1C3.train.ts <- window(F1C3, start=time[1], end=time[n.train])
+F1C3.valid.ts <- window(F1C3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F1C3 = naive(F1C3.train.ts, h= 28)
+naive.F1C3$mean
+naive.F1C3_df = data.frame(naive.F1C3)
+rownames(naive.F1C3_df) = date_decimal(as.numeric(rownames(naive.F1C3_df)))
+acc.naive.F1C3 <- accuracy(naive.F1C3, F1C3.valid.ts)
+knitr::kable(acc.naive.F1C3)
+
+# Seasonal Naive Hobbies 
+snaive.F1C3 = snaive(F1C3.train.ts, h =28)
+snaive.F1C3$mean
+snaive.F1C3_df = data.frame(snaive.F1C3)
+rownames(snaive.F1C3_df) = date_decimal(as.numeric(rownames(snaive.F1C3_df)))
+acc.snaive.F1C3 <- accuracy(snaive.F1C3, F1C3.valid.ts)
+knitr::kable(acc.snaive.F1C3)
+
+# Exponential Smoothing 
+es.F1C3 = ses(F1C3.train.ts, h = 28)
+es.F1C3$mean
+es.F1C3_df <- data.frame(es.F1C3)
+rownames(es.F1C3_df) <- date_decimal(as.numeric(rownames(es.F1C3_df)))
+acc.es.F1C3 <- accuracy(es.F1C3, F1C3.valid.ts)
+knitr::kable(acc.es.F1C3)
+
+# Moving Average
+ma.F1C3 <- forecast(ma(F1C3.train.ts, order = 5), h = 28)
+ma.F1C3$mean
+ma.F1C3_df <- data.frame(ma.F1C3)
+rownames(ma.F1C3_df) <- date_decimal(as.numeric(rownames(ma.F1C3_df)))
+acc.ma.F1C3 <- accuracy(ma.F1C3, F1C3.valid.ts)
+knitr::kable(acc.ma.F1C3)
+
+# SARIMA
+sarima.F1C3 <- forecast(auto.arima(F1C3.train.ts, D = 1), h = 28)
+sarima.F1C3$mean
+sarima.F1C3_df <- data.frame(sarima.F1C3)
+rownames(sarima.F1C3_df) <- date_decimal(as.numeric(rownames(sarima.F1C3_df)))
+acc.sarima.F1C3 <- accuracy(sarima.F1C3, F1C3.valid.ts)
+knitr::kable(acc.sarima.F1C3)
+plot(sarima.F1C3)
+# HoltWinters
+hw.F1C3 <- forecast(HoltWinters(F1C3.train.ts, seasonal = "additive"), h = 28)
+hw.F1C3$mean
+hw.F1C3.df <- data.frame(hw.F1C3)
+rownames(hw.F1C3.df) <- date_decimal(as.numeric(rownames(hw.F1C3.df)))
+acc.hw.F1C3 <- accuracy(hw.F1C3, F1C3.valid.ts)
+knitr::kable(acc.hw.F1C3)
+plot(hw.F1C3)
+```
+
+```{r}
+
+# Forecasting foods_2 CA_1
+# create a time series for the Food2 C1 data
+F2C1 <- ts(Projectdata$Foods_2_CA_1, start= c(2011,01, 29), frequency = 365)
+
+time = time(F2C1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F2C1) - n.valid
+
+F2C1.train.ts <- window(F2C1, start=time[1], end=time[n.train])
+F2C1.valid.ts <- window(F2C1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F2C1 = naive(F2C1.train.ts, h= 28)
+naive.F2C1$mean
+naive.F2C1_df = data.frame(naive.F2C1)
+rownames(naive.F2C1_df) = date_decimal(as.numeric(rownames(naive.F2C1_df)))
+acc.naive.F2C1 <- accuracy(naive.F2C1, F2C1.valid.ts)
+knitr::kable(acc.naive.F2C1)
+
+# Seasonal Naive Hobbies 
+snaive.F2C1 = snaive(F2C1.train.ts, h =28)
+snaive.F2C1$mean
+snaive.F2C1_df = data.frame(snaive.F2C1)
+rownames(snaive.F2C1_df) = date_decimal(as.numeric(rownames(snaive.F2C1_df)))
+acc.snaive.F2C1 <- accuracy(snaive.F2C1, F2C1.valid.ts)
+knitr::kable(acc.snaive.F2C1)
+
+# Exponential Smoothing 
+es.F2C1 = ses(F2C1.train.ts, h = 28)
+es.F2C1$mean
+es.F2C1_df <- data.frame(es.F2C1)
+rownames(es.F2C1_df) <- date_decimal(as.numeric(rownames(es.F2C1_df)))
+acc.es.F2C1 <- accuracy(es.F2C1, F2C1.valid.ts)
+knitr::kable(acc.es.F2C1)
+
+# Moving Average
+ma.F2C1 <- forecast(ma(F2C1.train.ts, order = 5), h = 28)
+ma.F2C1$mean
+ma.F2C1_df <- data.frame(ma.F2C1)
+rownames(ma.F2C1_df) <- date_decimal(as.numeric(rownames(ma.F2C1_df)))
+acc.ma.F2C1 <- accuracy(ma.F2C1, F2C1.valid.ts)
+knitr::kable(acc.ma.F2C1)
+
+# SARIMA
+sarima.F2C1 <- forecast(auto.arima(F2C1.train.ts, D = 1), h = 28)
+sarima.F2C1$mean
+sarima.F2C1_df <- data.frame(sarima.F2C1)
+rownames(sarima.F2C1_df) <- date_decimal(as.numeric(rownames(sarima.F2C1_df)))
+acc.sarima.F2C1 <- accuracy(sarima.F2C1, F2C1.valid.ts)
+knitr::kable(acc.sarima.F2C1)
+plot(sarima.F2C1)
+# HoltWinters
+hw.F2C1 <- forecast(HoltWinters(F2C1.train.ts, seasonal = "additive"), h = 28)
+hw.F2C1$mean
+hw.F2C1.df <- data.frame(hw.F2C1)
+rownames(hw.F2C1.df) <- date_decimal(as.numeric(rownames(hw.F2C1.df)))
+acc.hw.F2C1 <- accuracy(hw.F2C1, F2C1.valid.ts)
+knitr::kable(acc.hw.F2C1)
+plot(hw.F2C1)
+```
+
+```{r}
+# Forecasting foods_2 CA_2
+# create a time series for the Food2 CA2 data
+F2C2 <- ts(Projectdata$Foods_2_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(F2C2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F2C2) - n.valid
+
+F2C2.train.ts <- window(F2C2, start=time[1], end=time[n.train])
+F2C2.valid.ts <- window(F2C2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F2C2 = naive(F2C2.train.ts, h= 28)
+naive.F2C2$mean
+naive.F2C2_df = data.frame(naive.F2C2)
+rownames(naive.F2C2_df) = date_decimal(as.numeric(rownames(naive.F2C2_df)))
+acc.naive.F2C2 <- accuracy(naive.F2C2, F2C2.valid.ts)
+knitr::kable(acc.naive.F2C2)
+
+# Seasonal Naive Hobbies 
+snaive.F2C2 = snaive(F2C2.train.ts, h =28)
+snaive.F2C2$mean
+snaive.F2C2_df = data.frame(snaive.F2C2)
+rownames(snaive.F2C2_df) = date_decimal(as.numeric(rownames(snaive.F2C2_df)))
+acc.snaive.F2C2 <- accuracy(snaive.F2C2, F2C2.valid.ts)
+knitr::kable(acc.snaive.F2C2)
+
+# Exponential Smoothing 
+es.F2C2 = ses(F2C2.train.ts, h = 28)
+es.F2C2$mean
+es.F2C2_df <- data.frame(es.F2C2)
+rownames(es.F2C2_df) <- date_decimal(as.numeric(rownames(es.F2C2_df)))
+acc.es.F2C2 <- accuracy(es.F2C2, F2C2.valid.ts)
+knitr::kable(acc.es.F2C2)
+
+# Moving Average
+ma.F2C2 <- forecast(ma(F2C2.train.ts, order = 5), h = 28)
+ma.F2C2$mean
+ma.F2C2_df <- data.frame(ma.F2C2)
+rownames(ma.F2C2_df) <- date_decimal(as.numeric(rownames(ma.F2C2_df)))
+acc.ma.F2C2 <- accuracy(ma.F2C2, F2C2.valid.ts)
+knitr::kable(acc.ma.F2C2)
+
+# SARIMA
+sarima.F2C2 <- forecast(auto.arima(F2C2.train.ts, D = 1), h = 28)
+sarima.F2C2$mean
+sarima.F2C2_df <- data.frame(sarima.F2C2)
+rownames(sarima.F2C2_df) <- date_decimal(as.numeric(rownames(sarima.F2C2_df)))
+acc.sarima.F2C2 <- accuracy(sarima.F2C2, F2C2.valid.ts)
+knitr::kable(acc.sarima.F2C2)
+plot(sarima.F2C2)
+# HoltWinters
+hw.F2C2 <- forecast(HoltWinters(F2C2.train.ts, seasonal = "additive"), h = 28)
+hw.F2C2$mean
+hw.F2C2.df <- data.frame(hw.F2C2)
+rownames(hw.F2C2.df) <- date_decimal(as.numeric(rownames(hw.F2C2.df)))
+acc.hw.F2C2 <- accuracy(hw.F2C2, F2C2.valid.ts)
+knitr::kable(acc.hw.F2C2)
+plot(hw.F2C2)
+```
+
+```{r}
+# Forecasting foods_2 CA_3
+# create a time series for the F2C3 data
+F2C3 <- ts(Projectdata$Foods_2_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(F2C3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F2C3) - n.valid
+
+F2C3.train.ts <- window(F2C3, start=time[1], end=time[n.train])
+F2C3.valid.ts <- window(F2C3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F2C3 = naive(F2C3.train.ts, h= 28)
+naive.F2C3$mean
+naive.F2C3_df = data.frame(naive.F2C3)
+rownames(naive.F2C3_df) = date_decimal(as.numeric(rownames(naive.F2C3_df)))
+acc.naive.F2C3 <- accuracy(naive.F2C3, F2C3.valid.ts)
+knitr::kable(acc.naive.F2C3)
+
+# Seasonal Naive Hobbies 
+snaive.F2C3 = snaive(F2C3.train.ts, h =28)
+snaive.F2C3$mean
+snaive.F2C3_df = data.frame(snaive.F2C3)
+rownames(snaive.F2C3_df) = date_decimal(as.numeric(rownames(snaive.F2C3_df)))
+acc.snaive.F2C3 <- accuracy(snaive.F2C3, F2C3.valid.ts)
+knitr::kable(acc.snaive.F2C3)
+
+# Exponential Smoothing 
+es.F2C3 = ses(F2C3.train.ts, h = 28)
+es.F2C3$mean
+es.F2C3_df <- data.frame(es.F2C3)
+rownames(es.F2C3_df) <- date_decimal(as.numeric(rownames(es.F2C3_df)))
+acc.es.F2C3 <- accuracy(es.F2C3, F2C3.valid.ts)
+knitr::kable(acc.es.F2C3)
+
+# Moving Average
+ma.F2C3 <- forecast(ma(F2C3.train.ts, order = 5), h = 28)
+ma.F2C3$mean
+ma.F2C3_df <- data.frame(ma.F2C3)
+rownames(ma.F2C3_df) <- date_decimal(as.numeric(rownames(ma.F2C3_df)))
+acc.ma.F2C3 <- accuracy(ma.F2C3, F2C3.valid.ts)
+knitr::kable(acc.ma.F2C3)
+
+# SARIMA
+sarima.F2C3 <- forecast(auto.arima(F2C3.train.ts, D = 1), h = 28)
+sarima.F2C3$mean
+sarima.F2C3_df <- data.frame(sarima.F2C3)
+rownames(sarima.F2C3_df) <- date_decimal(as.numeric(rownames(sarima.F2C3_df)))
+acc.sarima.F2C3 <- accuracy(sarima.F2C3, F2C3.valid.ts)
+knitr::kable(acc.sarima.F2C3)
+plot(sarima.F2C3)
+# HoltWinters
+hw.F2C3 <- forecast(HoltWinters(F2C3.train.ts, seasonal = "additive"), h = 28)
+hw.F2C3$mean
+hw.F2C3.df <- data.frame(hw.F2C3)
+rownames(hw.F2C3.df) <- date_decimal(as.numeric(rownames(hw.F2C3.df)))
+acc.hw.F2C3 <- accuracy(hw.F2C3, F2C3.valid.ts)
+knitr::kable(acc.hw.F2C3)
+plot(hw.F2C3)
+```
+
+```{r}
+
+# Forecasting Food3 CA_1
+# create a time series for the F3C1 data
+F3C1 <- ts(Projectdata$Foods_3_CA_1, start= c(2011,01, 29), frequency = 365)
+
+time = time(F3C1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F3C1) - n.valid
+
+F3C1.train.ts <- window(F3C1, start=time[1], end=time[n.train])
+F3C1.valid.ts <- window(F3C1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F3C1 = naive(F3C1.train.ts, h= 28)
+naive.F3C1$mean
+naive.F3C1_df = data.frame(naive.F3C1)
+rownames(naive.F3C1_df) = date_decimal(as.numeric(rownames(naive.F3C1_df)))
+acc.naive.F3C1 <- accuracy(naive.F3C1, F3C1.valid.ts)
+knitr::kable(acc.naive.F3C1)
+
+# Seasonal Naive Hobbies 
+snaive.F3C1 = snaive(F3C1.train.ts, h =28)
+snaive.F3C1$mean
+snaive.F3C1_df = data.frame(snaive.F3C1)
+rownames(snaive.F3C1_df) = date_decimal(as.numeric(rownames(snaive.F3C1_df)))
+acc.snaive.F3C1 <- accuracy(snaive.F3C1, F3C1.valid.ts)
+knitr::kable(acc.snaive.F3C1)
+
+# Exponential Smoothing 
+es.F3C1 = ses(F3C1.train.ts, h = 28)
+es.F3C1$mean
+es.F3C1_df <- data.frame(es.F3C1)
+rownames(es.F3C1_df) <- date_decimal(as.numeric(rownames(es.F3C1_df)))
+acc.es.F3C1 <- accuracy(es.F3C1, F3C1.valid.ts)
+knitr::kable(acc.es.F3C1)
+
+# Moving Average
+ma.F3C1 <- forecast(ma(F3C1.train.ts, order = 5), h = 28)
+ma.F3C1$mean
+ma.F3C1_df <- data.frame(ma.F3C1)
+rownames(ma.F3C1_df) <- date_decimal(as.numeric(rownames(ma.F3C1_df)))
+acc.ma.F3C1 <- accuracy(ma.F3C1, F3C1.valid.ts)
+knitr::kable(acc.ma.F3C1)
+
+# SARIMA
+sarima.F3C1 <- forecast(auto.arima(F3C1.train.ts, D = 1), h = 28)
+sarima.F3C1$mean
+sarima.F3C1_df <- data.frame(sarima.F3C1)
+rownames(sarima.F3C1_df) <- date_decimal(as.numeric(rownames(sarima.F3C1_df)))
+acc.sarima.F3C1 <- accuracy(sarima.F3C1, F3C1.valid.ts)
+knitr::kable(acc.sarima.F3C1)
+plot(sarima.F3C1)
+
+# HoltWinters
+hw.F3C1 <- forecast(HoltWinters(F3C1.train.ts, seasonal = "additive"), h = 28)
+hw.F3C1$mean
+hw.F3C1.df <- data.frame(hw.F3C1)
+rownames(hw.F3C1.df) <- date_decimal(as.numeric(rownames(hw.F3C1.df)))
+acc.hw.F3C1 <- accuracy(hw.F3C1, F3C1.valid.ts)
+knitr::kable(acc.hw.F3C1)
+plot(hw.F3C1)
+```
+
+```{r}
+
+
+# Forecasting Food3 CA_2
+# create a time series for the F3C2 data
+F3C2 <- ts(Projectdata$Foods_3_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(F3C2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F3C2) - n.valid
+
+F3C2.train.ts <- window(F3C2, start=time[1], end=time[n.train])
+F3C2.valid.ts <- window(F3C2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F3C2 = naive(F3C2.train.ts, h= 28)
+naive.F3C2$mean
+naive.F3C2_df = data.frame(naive.F3C2)
+rownames(naive.F3C2_df) = date_decimal(as.numeric(rownames(naive.F3C2_df)))
+acc.naive.F3C2 <- accuracy(naive.F3C2, F3C2.valid.ts)
+knitr::kable(acc.naive.F3C2)
+
+# Seasonal Naive Hobbies 
+snaive.F3C2 = snaive(F3C2.train.ts, h =28)
+snaive.F3C2$mean
+snaive.F3C2_df = data.frame(snaive.F3C2)
+rownames(snaive.F3C2_df) = date_decimal(as.numeric(rownames(snaive.F3C2_df)))
+acc.snaive.F3C2 <- accuracy(snaive.F3C2, F3C2.valid.ts)
+knitr::kable(acc.snaive.F3C2)
+
+# Exponential Smoothing 
+es.F3C2 = ses(F3C2.train.ts, h = 28)
+es.F3C2$mean
+es.F3C2_df <- data.frame(es.F3C2)
+rownames(es.F3C2_df) <- date_decimal(as.numeric(rownames(es.F3C2_df)))
+acc.es.F3C2 <- accuracy(es.F3C2, F3C2.valid.ts)
+knitr::kable(acc.es.F3C2)
+
+# Moving Average
+ma.F3C2 <- forecast(ma(F3C2.train.ts, order = 5), h = 28)
+ma.F3C2$mean
+ma.F3C2_df <- data.frame(ma.F3C2)
+rownames(ma.F3C2_df) <- date_decimal(as.numeric(rownames(ma.F3C2_df)))
+acc.ma.F3C2 <- accuracy(ma.F3C2, F3C2.valid.ts)
+knitr::kable(acc.ma.F3C2)
+
+# SARIMA
+sarima.F3C2 <- forecast(auto.arima(F3C2.train.ts, D = 1), h = 28)
+sarima.F3C2$mean
+sarima.F3C2_df <- data.frame(sarima.F3C2)
+rownames(sarima.F3C2_df) <- date_decimal(as.numeric(rownames(sarima.F3C2_df)))
+acc.sarima.F3C2 <- accuracy(sarima.F3C2, F3C2.valid.ts)
+knitr::kable(acc.sarima.F3C2)
+plot(sarima.F3C2)
+
+# HoltWinters
+hw.F3C2 <- forecast(HoltWinters(F3C2.train.ts, seasonal = "additive"), h = 28)
+hw.F3C2$mean
+hw.F3C2.df <- data.frame(hw.F3C2)
+rownames(hw.F3C2.df) <- date_decimal(as.numeric(rownames(hw.F3C2.df)))
+acc.hw.F3C2 <- accuracy(hw.F3C2, F3C2.valid.ts)
+knitr::kable(acc.hw.F3C2)
+plot(hw.F3C2)
+```
+
+```{r}
+
+# Forecasting Food3 CA_3
+# create a time series for the F3C3 data
+F3C3 <- ts(Projectdata$Foods_3_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(F3C3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(F3C3) - n.valid
+
+F3C3.train.ts <- window(F3C3, start=time[1], end=time[n.train])
+F3C3.valid.ts <- window(F3C3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.F3C3 = naive(F3C3.train.ts, h= 28)
+naive.F3C3$mean
+naive.F3C3_df = data.frame(naive.F3C3)
+rownames(naive.F3C3_df) = date_decimal(as.numeric(rownames(naive.F3C3_df)))
+acc.naive.F3C3 <- accuracy(naive.F3C3, F3C3.valid.ts)
+knitr::kable(acc.naive.F3C3)
+
+# Seasonal Naive Hobbies 
+snaive.F3C3 = snaive(F3C3.train.ts, h =28)
+snaive.F3C3$mean
+snaive.F3C3_df = data.frame(snaive.F3C3)
+rownames(snaive.F3C3_df) = date_decimal(as.numeric(rownames(snaive.F3C3_df)))
+acc.snaive.F3C3 <- accuracy(snaive.F3C3, F3C3.valid.ts)
+knitr::kable(acc.snaive.F3C3)
+
+# Exponential Smoothing 
+es.F3C3 = ses(F3C3.train.ts, h = 28)
+es.F3C3$mean
+es.F3C3_df <- data.frame(es.F3C3)
+rownames(es.F3C3_df) <- date_decimal(as.numeric(rownames(es.F3C3_df)))
+acc.es.F3C3 <- accuracy(es.F3C3, F3C3.valid.ts)
+knitr::kable(acc.es.F3C3)
+
+# Moving Average
+ma.F3C3 <- forecast(ma(F3C3.train.ts, order = 5), h = 28)
+ma.F3C3$mean
+ma.F3C3_df <- data.frame(ma.F3C3)
+rownames(ma.F3C3_df) <- date_decimal(as.numeric(rownames(ma.F3C3_df)))
+acc.ma.F3C3 <- accuracy(ma.F3C3, F3C3.valid.ts)
+knitr::kable(acc.ma.F3C3)
+
+# SARIMA
+sarima.F3C3 <- forecast(auto.arima(F3C3.train.ts, D = 1), h = 28)
+sarima.F3C3$mean
+sarima.F3C3_df <- data.frame(sarima.F3C3)
+rownames(sarima.F3C3_df) <- date_decimal(as.numeric(rownames(sarima.F3C3_df)))
+acc.sarima.F3C3 <- accuracy(sarima.F3C3, F3C3.valid.ts)
+knitr::kable(acc.sarima.F3C3)
+plot(sarima.F3C3)
+
+# HoltWinters
+hw.F3C3 <- forecast(HoltWinters(F3C3.train.ts, seasonal = "additive"), h = 28)
+hw.F3C3$mean
+hw.F3C3.df <- data.frame(hw.F3C3)
+rownames(hw.F3C3.df) <- date_decimal(as.numeric(rownames(hw.F3C3.df)))
+acc.hw.F3C3 <- accuracy(hw.F3C3, F3C3.valid.ts)
+knitr::kable(acc.hw.F3C3)
+plot(hw.F3C3)
+```
+
+
+
+```{r}
+# Forecasting HouseHold1 CA_1
+# create a time series for the data
+HH1C1 <- ts(Projectdata$Household_1_CA_1, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH1C1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH1C1) - n.valid
+
+HH1C1.train.ts <- window(HH1C1, start=time[1], end=time[n.train])
+HH1C1.valid.ts <- window(HH1C1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH1C1 = naive(HH1C1.train.ts, h= 28)
+naive.HH1C1$mean
+naive.HH1C1_df = data.frame(naive.HH1C1)
+rownames(naive.HH1C1_df) = date_decimal(as.numeric(rownames(naive.HH1C1_df)))
+acc.naive.HH1C1 <- accuracy(naive.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.naive.HH1C1)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C1 = snaive(HH1C1.train.ts, h =28)
+snaive.HH1C1$mean
+snaive.HH1C1_df = data.frame(snaive.HH1C1)
+rownames(snaive.HH1C1_df) = date_decimal(as.numeric(rownames(snaive.HH1C1_df)))
+acc.snaive.HH1C1 <- accuracy(snaive.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.snaive.HH1C1)
+
+# Exponential Smoothing 
+es.HH1C1 = ses(HH1C1.train.ts, h = 28)
+es.HH1C1$mean
+es.HH1C1_df <- data.frame(es.HH1C1)
+rownames(es.HH1C1_df) <- date_decimal(as.numeric(rownames(es.HH1C1_df)))
+acc.es.HH1C1 <- accuracy(es.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.es.HH1C1)
+
+# Moving Average
+ma.HH1C1 <- forecast(ma(HH1C1.train.ts, order = 5), h = 28)
+ma.HH1C1$mean
+ma.HH1C1_df <- data.frame(ma.HH1C1)
+rownames(ma.HH1C1_df) <- date_decimal(as.numeric(rownames(ma.HH1C1_df)))
+acc.ma.HH1C1 <- accuracy(ma.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.ma.HH1C1)
+
+# SARIMA
+sarima.HH1C1 <- forecast(auto.arima(HH1C1.train.ts, D = 1), h = 28)
+sarima.HH1C1$mean
+sarima.HH1C1_df <- data.frame(sarima.HH1C1)
+rownames(sarima.HH1C1_df) <- date_decimal(as.numeric(rownames(sarima.HH1C1_df)))
+acc.sarima.HH1C1 <- accuracy(sarima.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.sarima.HH1C1)
+plot(sarima.HH1C1)
+# HoltWinters
+hw.HH1C1 <- forecast(HoltWinters(HH1C1.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C1$mean
+hw.HH1C1.df <- data.frame(hw.HH1C1)
+rownames(hw.HH1C1.df) <- date_decimal(as.numeric(rownames(hw.HH1C1.df)))
+acc.hw.HH1C1 <- accuracy(hw.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.hw.HH1C1)
+plot(hw.HH1C1)
+```
+
+```{r}
+# Forecasting HouseHold1 CA_2
+# create a time series for the HH1C2 data
+HH1C2 <- ts(Projectdata$Household_1_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH1C2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH1C2) - n.valid
+
+HH1C2.train.ts <- window(HH1C2, start=time[1], end=time[n.train])
+HH1C2.valid.ts <- window(HH1C2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH1C2 = naive(HH1C2.train.ts, h= 28)
+naive.HH1C2$mean
+naive.HH1C2_df = data.frame(naive.HH1C2)
+rownames(naive.HH1C2_df) = date_decimal(as.numeric(rownames(naive.HH1C2_df)))
+acc.naive.HH1C2 <- accuracy(naive.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.naive.HH1C2)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C2 = snaive(HH1C2.train.ts, h =28)
+snaive.HH1C2$mean
+snaive.HH1C2_df = data.frame(snaive.HH1C2)
+rownames(snaive.HH1C2_df) = date_decimal(as.numeric(rownames(snaive.HH1C2_df)))
+acc.snaive.HH1C2 <- accuracy(snaive.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.snaive.HH1C2)
+
+# Exponential Smoothing 
+es.HH1C2 = ses(HH1C2.train.ts, h = 28)
+es.HH1C2$mean
+es.HH1C2_df <- data.frame(es.HH1C2)
+rownames(es.HH1C2_df) <- date_decimal(as.numeric(rownames(es.HH1C2_df)))
+acc.es.HH1C2 <- accuracy(es.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.es.HH1C2)
+
+# Moving Average
+ma.HH1C2 <- forecast(ma(HH1C2.train.ts, order = 5), h = 28)
+ma.HH1C2$mean
+ma.HH1C2_df <- data.frame(ma.HH1C2)
+rownames(ma.HH1C2_df) <- date_decimal(as.numeric(rownames(ma.HH1C2_df)))
+acc.ma.HH1C2 <- accuracy(ma.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.ma.HH1C2)
+
+# SARIMA
+sarima.HH1C2 <- forecast(auto.arima(HH1C2.train.ts, D = 1), h = 28)
+sarima.HH1C2$mean
+sarima.HH1C2_df <- data.frame(sarima.HH1C2)
+rownames(sarima.HH1C2_df) <- date_decimal(as.numeric(rownames(sarima.HH1C2_df)))
+acc.sarima.HH1C2 <- accuracy(sarima.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.sarima.HH1C2)
+plot(sarima.HH1C2)
+# HoltWinters
+hw.HH1C2 <- forecast(HoltWinters(HH1C2.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C2$mean
+hw.HH1C2.df <- data.frame(hw.HH1C2)
+rownames(hw.HH1C2.df) <- date_decimal(as.numeric(rownames(hw.HH1C2.df)))
+acc.hw.HH1C2 <- accuracy(hw.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.hw.HH1C2)
+plot(hw.HH1C2)
+```
+
+```{r}
+
+# Forecasting HouseHold1 CA_3
+# create a time series for the HH1C3 ata
+HH1C3 <- ts(Projectdata$Household_1_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH1C3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH1C3) - n.valid
+
+HH1C3.train.ts <- window(HH1C3, start=time[1], end=time[n.train])
+HH1C3.valid.ts <- window(HH1C3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH1C3 = naive(HH1C3.train.ts, h= 28)
+naive.HH1C3$mean
+naive.HH1C3_df = data.frame(naive.HH1C3)
+rownames(naive.HH1C3_df) = date_decimal(as.numeric(rownames(naive.HH1C3_df)))
+acc.naive.HH1C3 <- accuracy(naive.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.naive.HH1C3)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C3 = snaive(HH1C3.train.ts, h =28)
+snaive.HH1C3$mean
+snaive.HH1C3_df = data.frame(snaive.HH1C3)
+rownames(snaive.HH1C3_df) = date_decimal(as.numeric(rownames(snaive.HH1C3_df)))
+acc.snaive.HH1C3 <- accuracy(snaive.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.snaive.HH1C3)
+
+# Exponential Smoothing 
+es.HH1C3 = ses(HH1C3.train.ts, h = 28)
+es.HH1C3$mean
+es.HH1C3_df <- data.frame(es.HH1C3)
+rownames(es.HH1C3_df) <- date_decimal(as.numeric(rownames(es.HH1C3_df)))
+acc.es.HH1C3 <- accuracy(es.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.es.HH1C3)
+
+# Moving Average
+ma.HH1C3 <- forecast(ma(HH1C3.train.ts, order = 5), h = 28)
+ma.HH1C3$mean
+ma.HH1C3_df <- data.frame(ma.HH1C3)
+rownames(ma.HH1C3_df) <- date_decimal(as.numeric(rownames(ma.HH1C3_df)))
+acc.ma.HH1C3 <- accuracy(ma.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.ma.HH1C3)
+
+# SARIMA
+sarima.HH1C3 <- forecast(auto.arima(HH1C3.train.ts, D = 1), h = 28)
+sarima.HH1C3$mean
+sarima.HH1C3_df <- data.frame(sarima.HH1C3)
+rownames(sarima.HH1C3_df) <- date_decimal(as.numeric(rownames(sarima.HH1C3_df)))
+acc.sarima.HH1C3 <- accuracy(sarima.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.sarima.HH1C3)
+plot(sarima.HH1C3)
+# HoltWinters
+hw.HH1C3 <- forecast(HoltWinters(HH1C3.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C3$mean
+hw.HH1C3.df <- data.frame(hw.HH1C3)
+rownames(hw.HH1C3.df) <- date_decimal(as.numeric(rownames(hw.HH1C3.df)))
+acc.hw.HH1C3 <- accuracy(hw.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.hw.HH1C3)
+plot(hw.HH1C3)
+```
+
+```{r}
+
+# Forecasting HouseHold2 CA_1
+# create a time series for the HH2C1 ata
+HH2C1 <- ts(Projectdata$Household_2_CA_1, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH2C1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH2C1) - n.valid
+
+HH2C1.train.ts <- window(HH2C1, start=time[1], end=time[n.train])
+HH2C1.valid.ts <- window(HH2C1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH2C1 = naive(HH2C1.train.ts, h= 28)
+naive.HH2C1$mean
+naive.HH2C1_df = data.frame(naive.HH2C1)
+rownames(naive.HH2C1_df) = date_decimal(as.numeric(rownames(naive.HH2C1_df)))
+acc.naive.HH2C1 <- accuracy(naive.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.naive.HH2C1)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C1 = snaive(HH2C1.train.ts, h =28)
+snaive.HH2C1$mean
+snaive.HH2C1_df = data.frame(snaive.HH2C1)
+rownames(snaive.HH2C1_df) = date_decimal(as.numeric(rownames(snaive.HH2C1_df)))
+acc.snaive.HH2C1 <- accuracy(snaive.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.snaive.HH2C1)
+
+# Exponential Smoothing 
+es.HH2C1 = ses(HH2C1.train.ts, h = 28)
+es.HH2C1$mean
+es.HH2C1_df <- data.frame(es.HH2C1)
+rownames(es.HH2C1_df) <- date_decimal(as.numeric(rownames(es.HH2C1_df)))
+acc.es.HH2C1 <- accuracy(es.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.es.HH2C1)
+
+# Moving Average
+ma.HH2C1 <- forecast(ma(HH2C1.train.ts, order = 5), h = 28)
+ma.HH2C1$mean
+ma.HH2C1_df <- data.frame(ma.HH2C1)
+rownames(ma.HH2C1_df) <- date_decimal(as.numeric(rownames(ma.HH2C1_df)))
+acc.ma.HH2C1 <- accuracy(ma.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.ma.HH2C1)
+
+# SARIMA
+sarima.HH2C1 <- forecast(auto.arima(HH2C1.train.ts, D = 1), h = 28)
+sarima.HH2C1$mean
+sarima.HH2C1_df <- data.frame(sarima.HH2C1)
+rownames(sarima.HH2C1_df) <- date_decimal(as.numeric(rownames(sarima.HH2C1_df)))
+acc.sarima.HH2C1 <- accuracy(sarima.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.sarima.HH2C1)
+plot(sarima.HH2C1)
+# HoltWinters
+hw.HH2C1 <- forecast(HoltWinters(HH2C1.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C1$mean
+hw.HH2C1.df <- data.frame(hw.HH2C1)
+rownames(hw.HH2C1.df) <- date_decimal(as.numeric(rownames(hw.HH2C1.df)))
+acc.hw.HH2C1 <- accuracy(hw.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.hw.HH2C1)
+plot(hw.HH2C1)
+```
+
+```{r}
+
+# Forecasting HouseHold2 CA_2
+# create a time series for the HH2C2 data
+HH2C2 <- ts(Projectdata$Household_2_CA_2, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH2C2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH2C2) - n.valid
+
+HH2C2.train.ts <- window(HH2C2, start=time[1], end=time[n.train])
+HH2C2.valid.ts <- window(HH2C2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH2C2 = naive(HH2C2.train.ts, h= 28)
+naive.HH2C2$mean
+naive.HH2C2_df = data.frame(naive.HH2C2)
+rownames(naive.HH2C2_df) = date_decimal(as.numeric(rownames(naive.HH2C2_df)))
+acc.naive.HH2C2 <- accuracy(naive.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.naive.HH2C2)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C2 = snaive(HH2C2.train.ts, h =28)
+snaive.HH2C2$mean
+snaive.HH2C2_df = data.frame(snaive.HH2C2)
+rownames(snaive.HH2C2_df) = date_decimal(as.numeric(rownames(snaive.HH2C2_df)))
+acc.snaive.HH2C2 <- accuracy(snaive.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.snaive.HH2C2)
+
+# Exponential Smoothing 
+es.HH2C2 = ses(HH2C2.train.ts, h = 28)
+es.HH2C2$mean
+es.HH2C2_df <- data.frame(es.HH2C2)
+rownames(es.HH2C2_df) <- date_decimal(as.numeric(rownames(es.HH2C2_df)))
+acc.es.HH2C2 <- accuracy(es.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.es.HH2C2)
+
+# Moving Average
+ma.HH2C2 <- forecast(ma(HH2C2.train.ts, order = 5), h = 28)
+ma.HH2C2$mean
+ma.HH2C2_df <- data.frame(ma.HH2C2)
+rownames(ma.HH2C2_df) <- date_decimal(as.numeric(rownames(ma.HH2C2_df)))
+acc.ma.HH2C2 <- accuracy(ma.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.ma.HH2C2)
+
+# SARIMA
+sarima.HH2C2 <- forecast(auto.arima(HH2C2.train.ts, D = 1), h = 28)
+sarima.HH2C2$mean
+sarima.HH2C2_df <- data.frame(sarima.HH2C2)
+rownames(sarima.HH2C2_df) <- date_decimal(as.numeric(rownames(sarima.HH2C2_df)))
+acc.sarima.HH2C2 <- accuracy(sarima.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.sarima.HH2C2)
+plot(sarima.HH2C2)
+# HoltWinters
+hw.HH2C2 <- forecast(HoltWinters(HH2C2.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C2$mean
+hw.HH2C2.df <- data.frame(hw.HH2C2)
+rownames(hw.HH2C2.df) <- date_decimal(as.numeric(rownames(hw.HH2C2.df)))
+acc.hw.HH2C2 <- accuracy(hw.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.hw.HH2C2)
+plot(hw.HH2C2)
+```
+
+```{r}
+# Forecasting HouseHold2 CA_3
+# create a time series for the HH2C3 data
+HH2C3 <- ts(Projectdata$Household_2_CA_3, start= c(2011,01, 29), frequency = 365)
+
+time = time(HH2C3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(HH2C3) - n.valid
+
+HH2C3.train.ts <- window(HH2C3, start=time[1], end=time[n.train])
+HH2C3.valid.ts <- window(HH2C3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.HH2C3 = naive(HH2C3.train.ts, h= 28)
+naive.HH2C3$mean
+naive.HH2C3_df = data.frame(naive.HH2C3)
+rownames(naive.HH2C3_df) = date_decimal(as.numeric(rownames(naive.HH2C3_df)))
+acc.naive.HH2C3 <- accuracy(naive.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.naive.HH2C3)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C3 = snaive(HH2C3.train.ts, h =28)
+snaive.HH2C3$mean
+snaive.HH2C3_df = data.frame(snaive.HH2C3)
+rownames(snaive.HH2C3_df) = date_decimal(as.numeric(rownames(snaive.HH2C3_df)))
+acc.snaive.HH2C3 <- accuracy(snaive.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.snaive.HH2C3)
+
+# Exponential Smoothing 
+es.HH2C3 = ses(HH2C3.train.ts, h = 28)
+es.HH2C3$mean
+es.HH2C3_df <- data.frame(es.HH2C3)
+rownames(es.HH2C3_df) <- date_decimal(as.numeric(rownames(es.HH2C3_df)))
+acc.es.HH2C3 <- accuracy(es.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.es.HH2C3)
+
+# Moving Average
+ma.HH2C3 <- forecast(ma(HH2C3.train.ts, order = 5), h = 28)
+ma.HH2C3$mean
+ma.HH2C3_df <- data.frame(ma.HH2C3)
+rownames(ma.HH2C3_df) <- date_decimal(as.numeric(rownames(ma.HH2C3_df)))
+acc.ma.HH2C3 <- accuracy(ma.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.ma.HH2C3)
+
+# SARIMA
+sarima.HH2C3 <- forecast(auto.arima(HH2C3.train.ts, D = 1), h = 28)
+sarima.HH2C3$mean
+sarima.HH2C3_df <- data.frame(sarima.HH2C3)
+rownames(sarima.HH2C3_df) <- date_decimal(as.numeric(rownames(sarima.HH2C3_df)))
+acc.sarima.HH2C3 <- accuracy(sarima.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.sarima.HH2C3)
+plot(sarima.HH2C3)
+# HoltWinters
+hw.HH2C3 <- forecast(HoltWinters(HH2C3.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C3$mean
+hw.HH2C3.df <- data.frame(hw.HH2C3)
+rownames(hw.HH2C3.df) <- date_decimal(as.numeric(rownames(hw.HH2C3.df)))
+acc.hw.HH2C3 <- accuracy(hw.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.hw.HH2C3)
+plot(hw.HH2C3)
+```
+
+
+```{r}
+# This code is for question 4
+# we decided to aggregate data based on the store level
+Projectdata
+
+# California1 Store Sales
+CA1 <- Projectdata$Hobbies_CA_1 + Projectdata$Household_1_CA_1 + Projectdata$Household_2_CA_1 + Projectdata$Foods_1_CA_1 + Projectdata$Foods_2_CA_1 + Projectdata$Foods_2_CA_1 + Projectdata$Foods_3_CA_1
+
+# California2 Store Sales
+CA2 <- Projectdata$Hobbies_CA_2 + Projectdata$Household_1_CA_2 + Projectdata$Household_2_CA_1 + Projectdata$Foods_1_CA_2 + Projectdata$Foods_2_CA_2 + Projectdata$Foods_2_CA_2 + Projectdata$Foods_3_CA_2
+
+# California3 Store Sales
+CA3 <- Projectdata$Hobbies_CA_3 + Projectdata$Household_1_CA_3 + Projectdata$Household_2_CA_3 + Projectdata$Foods_1_CA_3 + Projectdata$Foods_2_CA_3 + Projectdata$Foods_2_CA_3 + Projectdata$Foods_3_CA_3
+
+# Create a new data frame with aggregate stores sales
+stores_data <- data.frame(date = Projectdata$date)
+stores_data$CA1 = CA1
+stores_data$CA2 = CA2
+stores_data$CA3 = CA3
+
+
+
+```
+```{r}
+# Forecasting Based on aggregated store data
+
+# create a time series for the CA1 data
+
+CA1 <- ts(stores_data$CA1, start= c(2011,01, 29), frequency = 365)
+
+time = time(CA1)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(CA1) - n.valid
+
+CA1.train.ts <- window(CA1, start=time[1], end=time[n.train])
+CA1.valid.ts <- window(CA1, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.CA1 = naive(CA1.train.ts, h= 28)
+naive.CA1$mean
+naive.CA1_df = data.frame(naive.CA1)
+rownames(naive.CA1_df) = date_decimal(as.numeric(rownames(naive.CA1_df)))
+acc.naive.CA1 <- accuracy(naive.CA1, CA1.valid.ts)
+knitr::kable(acc.naive.CA1)
+plot(naive.CA1)
+
+# Seasonal Naive Hobbies 
+snaive.CA1 = snaive(CA1.train.ts, h =28)
+snaive.CA1$mean
+snaive.CA1_df = data.frame(snaive.CA1)
+rownames(snaive.CA1_df) = date_decimal(as.numeric(rownames(snaive.CA1_df)))
+acc.snaive.CA1 <- accuracy(snaive.CA1, CA1.valid.ts)
+knitr::kable(acc.snaive.CA1)
+plot(snaive.CA1)
+
+# Exponential Smoothing 
+es.CA1 = ses(CA1.train.ts, h = 28)
+es.CA1$mean
+es.CA1_df <- data.frame(es.CA1)
+rownames(es.CA1_df) <- date_decimal(as.numeric(rownames(es.CA1_df)))
+acc.es.CA1 <- accuracy(es.CA1, CA1.valid.ts)
+knitr::kable(acc.es.CA1)
+plot(es.CA1)
+
+# Moving Average
+ma.CA1 <- forecast(ma(CA1.train.ts, order = 5), h = 28)
+ma.CA1$mean
+ma.CA1_df <- data.frame(ma.CA1)
+rownames(ma.CA1_df) <- date_decimal(as.numeric(rownames(ma.CA1_df)))
+acc.ma.CA1 <- accuracy(ma.CA1, CA1.valid.ts)
+knitr::kable(acc.ma.CA1)
+plot(ma.CA1)
+
+# SARIMA
+sarima.CA1 <- forecast(auto.arima(CA1.train.ts, D = 1), h = 28)
+sarima.CA1$mean
+sarima.CA1_df <- data.frame(sarima.CA1)
+rownames(sarima.CA1_df) <- date_decimal(as.numeric(rownames(sarima.CA1_df)))
+acc.sarima.CA1 <- accuracy(sarima.CA1, CA1.valid.ts)
+knitr::kable(acc.sarima.CA1)
+plot(sarima.CA1)
+
+# HoltWinters
+hw.CA1 <- forecast(HoltWinters(CA1.train.ts, seasonal = "additive"), h = 28)
+hw.CA1$mean
+hw.CA1.df <- data.frame(hw.CA1)
+rownames(hw.CA1.df) <- date_decimal(as.numeric(rownames(hw.CA1.df)))
+acc.hw.CA1 <- accuracy(hw.CA1, CA1.valid.ts)
+knitr::kable(acc.hw.CA1)
+plot(hw.CA1)
+```
+
+```{r}
+
+# Forecasting Based on aggregated store data
+
+
+# create a time series for the CA2 data
+CA2 <- ts(stores_data$CA2, start= c(2011,01, 29), frequency = 365)
+
+time = time(CA2)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(CA2) - n.valid
+
+CA2.train.ts <- window(CA2, start=time[1], end=time[n.train])
+CA2.valid.ts <- window(CA2, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.CA2 = naive(CA2.train.ts, h= 28)
+naive.CA2$mean
+naive.CA2_df = data.frame(naive.CA2)
+rownames(naive.CA2_df) = date_decimal(as.numeric(rownames(naive.CA2_df)))
+acc.naive.CA2 <- accuracy(naive.CA2, CA2.valid.ts)
+knitr::kable(acc.naive.CA2)
+plot(naive.CA2)
+
+# Seasonal Naive Hobbies 
+snaive.CA2 = snaive(CA2.train.ts, h =28)
+snaive.CA2$mean
+snaive.CA2_df = data.frame(snaive.CA2)
+rownames(snaive.CA2_df) = date_decimal(as.numeric(rownames(snaive.CA2_df)))
+acc.snaive.CA2 <- accuracy(snaive.CA2, CA2.valid.ts)
+knitr::kable(acc.snaive.CA2)
+plot(snaive.CA2)
+
+# Exponential Smoothing 
+es.CA2 = ses(CA2.train.ts, h = 28)
+es.CA2$mean
+es.CA2_df <- data.frame(es.CA2)
+rownames(es.CA2_df) <- date_decimal(as.numeric(rownames(es.CA2_df)))
+acc.es.CA2 <- accuracy(es.CA2, CA2.valid.ts)
+knitr::kable(acc.es.CA2)
+plot(es.CA2)
+
+# Moving Average
+ma.CA2 <- forecast(ma(CA2.train.ts, order = 5), h = 28)
+ma.CA2$mean
+ma.CA2_df <- data.frame(ma.CA2)
+rownames(ma.CA2_df) <- date_decimal(as.numeric(rownames(ma.CA2_df)))
+acc.ma.CA2 <- accuracy(ma.CA2, CA2.valid.ts)
+knitr::kable(acc.ma.CA2)
+plot(ma.CA2)
+
+# SARIMA
+sarima.CA2 <- forecast(auto.arima(CA2.train.ts, D = 1), h = 28)
+sarima.CA2$mean
+sarima.CA2_df <- data.frame(sarima.CA2)
+rownames(sarima.CA2_df) <- date_decimal(as.numeric(rownames(sarima.CA2_df)))
+acc.sarima.CA2 <- accuracy(sarima.CA2, CA2.valid.ts)
+knitr::kable(acc.sarima.CA2)
+plot(sarima.CA2)
+
+# HoltWinters
+hw.CA2 <- forecast(HoltWinters(CA2.train.ts, seasonal = "additive"), h = 28)
+hw.CA2$mean
+hw.CA2.df <- data.frame(hw.CA2)
+rownames(hw.CA2.df) <- date_decimal(as.numeric(rownames(hw.CA2.df)))
+acc.hw.CA2 <- accuracy(hw.CA2, CA2.valid.ts)
+knitr::kable(acc.hw.CA2)
+plot(hw.CA2)
+```
+
+
+```{r}
+
+# create a time series for the CA3 data
+
+CA3 <- ts(stores_data$CA3, start= c(2011,01, 29), frequency = 365)
+
+time = time(CA3)
+
+# validation set is 10% of the data set
+n.valid <- 197
+n.train <- length(CA3) - n.valid
+
+CA3.train.ts <- window(CA3, start=time[1], end=time[n.train])
+CA3.valid.ts <- window(CA3, start=time[n.train+1], end=time[n.train+n.valid])
+
+
+# Naive Hobbies 
+naive.CA3 = naive(CA3.train.ts, h= 28)
+naive.CA3$mean
+naive.CA3_df = data.frame(naive.CA3)
+rownames(naive.CA3_df) = date_decimal(as.numeric(rownames(naive.CA3_df)))
+acc.naive.CA3 <- accuracy(naive.CA3, CA3.valid.ts)
+knitr::kable(acc.naive.CA3)
+plot(naive.CA3)
+
+# Seasonal Naive Hobbies 
+snaive.CA3 = snaive(CA3.train.ts, h =28)
+snaive.CA3$mean
+snaive.CA3_df = data.frame(snaive.CA3)
+rownames(snaive.CA3_df) = date_decimal(as.numeric(rownames(snaive.CA3_df)))
+acc.snaive.CA3 <- accuracy(snaive.CA3, CA3.valid.ts)
+knitr::kable(acc.snaive.CA3)
+plot(snaive.CA3)
+
+# Exponential Smoothing 
+es.CA3 = ses(CA3.train.ts, h = 28)
+es.CA3$mean
+es.CA3_df <- data.frame(es.CA3)
+rownames(es.CA3_df) <- date_decimal(as.numeric(rownames(es.CA3_df)))
+acc.es.CA3 <- accuracy(es.CA3, CA3.valid.ts)
+knitr::kable(acc.es.CA3)
+plot(es.CA3)
+
+# Moving Average
+ma.CA3 <- forecast(ma(CA3.train.ts, order = 5), h = 28)
+ma.CA3$mean
+ma.CA3_df <- data.frame(ma.CA3)
+rownames(ma.CA3_df) <- date_decimal(as.numeric(rownames(ma.CA3_df)))
+acc.ma.CA3 <- accuracy(ma.CA3, CA3.valid.ts)
+knitr::kable(acc.ma.CA3)
+plot(ma.CA3)
+
+# SARIMA
+sarima.CA3 <- forecast(auto.arima(CA3.train.ts, D = 1), h = 28)
+sarima.CA3$mean
+sarima.CA3_df <- data.frame(sarima.CA3)
+rownames(sarima.CA3_df) <- date_decimal(as.numeric(rownames(sarima.CA3_df)))
+acc.sarima.CA3 <- accuracy(sarima.CA3, CA3.valid.ts)
+knitr::kable(acc.sarima.CA3)
+plot(sarima.CA3)
+
+# HoltWinters
+hw.CA3 <- forecast(HoltWinters(CA3.train.ts, seasonal = "additive"), h = 28)
+hw.CA3$mean
+hw.CA3.df <- data.frame(hw.CA3)
+rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
+acc.hw.CA3 <- accuracy(hw.CA3, CA3.valid.ts)
+knitr::kable(acc.hw.CA3)
+plot(hw.CA3)
+```
+
+
+```{r}
+library(xts)
+# Code for quesiton 5
+# Convert data from daily to weekly
+
+wd_HC1 <- apply.weekly(as.xts(Projectdata$Hobbies_CA_1, order.by= Projectdata$date), sum)
+wd_HC2 <- apply.weekly(as.xts(Projectdata$Hobbies_CA_2, order.by = Projectdata$date), sum)
+wd_HC3 <- apply.weekly(as.xts(Projectdata$Hobbies_CA_3, order.by = Projectdata$date), sum)
+wd_F1C1 <- apply.weekly(as.xts(Projectdata$Foods_1_CA_1, order.by = Projectdata$date), sum)
+wd_F1C2 <- apply.weekly(as.xts(Projectdata$Foods_1_CA_2, order.by = Projectdata$date), sum)
+wd_F1C3 <- apply.weekly(as.xts(Projectdata$Foods_1_CA_3, order.by = Projectdata$date), sum)
+wd_F2C1 <- apply.weekly(as.xts(Projectdata$Foods_2_CA_1, order.by = Projectdata$date), sum)
+wd_F2C2 <- apply.weekly(as.xts(Projectdata$Foods_2_CA_2, order.by = Projectdata$date), sum)
+wd_F2C3 <- apply.weekly(as.xts(Projectdata$Foods_2_CA_3, order.by = Projectdata$date), sum)
+wd_F3C1 <- apply.weekly(as.xts(Projectdata$Foods_3_CA_1, order.by = Projectdata$date), sum)
+wd_F3C2 <- apply.weekly(as.xts(Projectdata$Foods_3_CA_2, order.by = Projectdata$date), sum)
+wd_F3C3 <- apply.weekly(as.xts(Projectdata$Foods_3_CA_3, order.by = Projectdata$date), sum)
+wd_HH1C1 <- apply.weekly(as.xts(Projectdata$Household_1_CA_1, order.by = Projectdata$date), sum)
+wd_HH1C2 <- apply.weekly(as.xts(Projectdata$Household_1_CA_2, order.by = Projectdata$date), sum)
+wd_HH1C3 <- apply.weekly(as.xts(Projectdata$Household_1_CA_3, order.by = Projectdata$date), sum)
+wd_HH2C1 <- apply.weekly(as.xts(Projectdata$Household_2_CA_1, order.by = Projectdata$date), sum)
+wd_HH2C2 <- apply.weekly(as.xts(Projectdata$Household_2_CA_2, order.by = Projectdata$date), sum)
+wd_HH2C3 <- apply.weekly(as.xts(Projectdata$Household_2_CA_3, order.by = Projectdata$date), sum)
+
+weekly_df <- data.frame(wd_HC1)
+weekly_df$wd_HC2 <- wd_HC2
+weekly_df$wd_HC3 <- wd_HC3
+weekly_df$wd_F1C1 <- wd_F1C1
+weekly_df$wd_F1C2 <- wd_F1C2
+weekly_df$wd_F1C3 <- wd_F1C3
+weekly_df$wd_F2C1 <- wd_F2C1
+weekly_df$wd_F2C2 <- wd_F2C2
+weekly_df$wd_F2C3 <- wd_F2C3
+weekly_df$wd_F3C1 <- wd_F3C1
+weekly_df$wd_F3C2 <- wd_F3C2
+weekly_df$wd_F3C3 <- wd_F3C3
+weekly_df$wd_HH1C1 <- wd_HH1C1
+weekly_df$wd_HH1C2 <- wd_HH1C2
+weekly_df$wd_HH1C3 <- wd_HH1C3
+weekly_df$wd_HH2C1 <- wd_HH2C1
+weekly_df$wd_HH2C2 <- wd_HH2C2
+weekly_df$wd_HH2C3 <- wd_HH2C3
+
+```
+
+```{r}
+library(forecast)
+library(lubridate)
+
+# create a time series for the Hobbies CA1  data
+weekly_df$date <- as.Date(rownames(weekly_df))
+rownames(weekly_df) <- NULL
+weekly_df
+HC1_w <- ts(weekly_df$wd_HC1, start= c(2011,01, 29), frequency = 52)
+HC1_w
+time = time(HC1_w)
+time
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HC1_w) - n.valid
+
+HC1_w.train.ts <- window(HC1_w, start=time[1], end=time[n.train])
+HC1_w.valid.ts <- window(HC1_w, start=time[n.train+1], end=time[n.train+n.valid])
+HC1_w.train.ts
+?window()
+# Naive Hobbies 
+naive.CA1 = naive(HC1_w.train.ts, h= 28)
+naive.CA1$mean
+naive.CA1_df = data.frame(naive.CA1)
+rownames(naive.CA1_df) = date_decimal(as.numeric(rownames(naive.CA1_df)))
+acc.naive.CA1 <- accuracy(naive.CA1, HC1_w.valid.ts)
+knitr::kable(acc.naive.CA1)
+plot(naive.CA1)
+
+# Seasonal Naive Hobbies 
+snaive.CA1 = snaive(HC1_w.train.ts, h= 28)
+snaive.CA1$mean
+snaive.CA1_df = data.frame(snaive.CA1)
+snaive.CA1_df
+rownames(snaive.CA1_df) = date_decimal(as.numeric(rownames(snaive.CA1_df)))
+snaive.CA1_df
+acc.snaive.CA1 <- accuracy(snaive.CA1, HC1_w.valid.ts)
+knitr::kable(acc.snaive.CA1)
+plot(snaive.CA1)
+
+# Exponential Smoothing 
+es.CA1 = ses(HC1_w.train.ts, h = 28)
+es.CA1$mean
+es.CA1_df <- data.frame(es.CA1)
+rownames(es.CA1_df) <- date_decimal(as.numeric(rownames(es.CA1_df)))
+acc.es.CA1 <- accuracy(es.CA1, HC1_w.valid.ts)
+knitr::kable(acc.es.CA1)
+plot(es.CA1)
+
+# Moving Average
+ma.CA1 <- forecast(ma(HC1_w.train.ts, order = 5), h = 28)
+ma.CA1$mean
+ma.CA1_df <- data.frame(ma.CA1)
+rownames(ma.CA1_df) <- date_decimal(as.numeric(rownames(ma.CA1_df)))
+acc.ma.CA1 <- accuracy(ma.CA1, HC1_w.valid.ts)
+knitr::kable(acc.ma.CA1)
+plot(ma.CA1)
+
+# SARIMA
+sarima.CA1 <- forecast(auto.arima(HC1_w.train.ts, D = 1), h = 28)
+sarima.CA1$mean
+sarima.CA1_df <- data.frame(sarima.CA1)
+rownames(sarima.CA1_df) <- date_decimal(as.numeric(rownames(sarima.CA1_df)))
+acc.sarima.CA1 <- accuracy(sarima.CA1, HC1_w.valid.ts)
+knitr::kable(acc.sarima.CA1)
+plot(sarima.CA1)
+
+# HoltWinters
+hw.CA1 <- forecast(HoltWinters(HC1_w.train.ts, seasonal = "additive"), h = 28)
+hw.CA1$mean
+hw.CA1.df <- data.frame(hw.CA1)
+rownames(hw.CA1.df) <- date_decimal(as.numeric(rownames(hw.CA1.df)))
+acc.hw.CA1 <- accuracy(hw.CA1, HC1_w.valid.ts)
+knitr::kable(acc.hw.CA1)
+plot(hw.CA1)
+
+
+```
+```{r}
+
+# create a time series forecasting for the Hobbies CA2  data
+weekly_df
+HC2_w <- ts(weekly_df$wd_HC2, start= 2011, frequency = 52)
+time = time(HC2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HC2_w) - n.valid
+HC2_w.train.ts <- window(HC2_w, start=time[1], end=time[n.train])
+HC2_w.valid.ts <- window(HC2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.CA2 = naive(HC2_w.train.ts, h= 28)
+naive.CA2$mean
+naive.CA2_df = data.frame(naive.CA2)
+rownames(naive.CA2_df) = date_decimal(as.numeric(rownames(naive.CA2_df)))
+acc.naive.CA2 <- accuracy(naive.CA2, HC2_w.valid.ts)
+knitr::kable(acc.naive.CA2)
+plot(naive.CA2)
+
+# Seasonal Naive Hobbies 
+snaive.CA2 = snaive(HC2_w.train.ts, h= 28)
+snaive.CA2$mean
+snaive.CA2_df = data.frame(snaive.CA2)
+rownames(snaive.CA2_df) = date_decimal(as.numeric(rownames(snaive.CA2_df)))
+acc.snaive.CA2 <- accuracy(snaive.CA2, HC2_w.valid.ts)
+knitr::kable(acc.snaive.CA2)
+plot(snaive.CA2)
+
+# Exponential Smoothing 
+es.CA2 = ses(HC2_w.train.ts, h = 28)
+es.CA2$mean
+es.CA2_df <- data.frame(es.CA2)
+rownames(es.CA2_df) <- date_decimal(as.numeric(rownames(es.CA2_df)))
+acc.es.CA2 <- accuracy(es.CA2, HC2_w.valid.ts)
+knitr::kable(acc.es.CA2)
+plot(es.CA2)
+
+# Moving Average
+ma.CA2 <- forecast(ma(HC2_w.train.ts, order = 5), h = 28)
+ma.CA2$mean
+ma.CA2_df <- data.frame(ma.CA2)
+rownames(ma.CA2_df) <- date_decimal(as.numeric(rownames(ma.CA2_df)))
+acc.ma.CA2 <- accuracy(ma.CA2, HC2_w.valid.ts)
+knitr::kable(acc.ma.CA2)
+plot(ma.CA2)
+
+# SARIMA
+sarima.CA2 <- forecast(auto.arima(HC2_w.train.ts, D = 1), h = 28)
+sarima.CA2$mean
+sarima.CA2_df <- data.frame(sarima.CA2)
+rownames(sarima.CA2_df) <- date_decimal(as.numeric(rownames(sarima.CA2_df)))
+sarima.CA2_df
+acc.sarima.CA2 <- accuracy(sarima.CA2, HC2_w.valid.ts)
+knitr::kable(acc.sarima.CA2)
+plot(sarima.CA2)
+
+# Holt Winters
+hw.CA2 <- forecast(HoltWinters(HC2_w.train.ts, seasonal = "additive"), h = 28)
+hw.CA2$mean
+hw.CA2.df <- data.frame(hw.CA2)
+rownames(hw.CA2.df) <- date_decimal(as.numeric(rownames(hw.CA2.df)))
+acc.hw.CA2 <- accuracy(hw.CA2, HC2_w.valid.ts)
+knitr::kable(acc.hw.CA2)
+plot(hw.CA2)
+
+
+```
+
+```{r}
+
+# create a time series forecasting for the Hobbies CA3  data
+HC3_w <- ts(weekly_df$wd_HC3, start= 2011, frequency = 52)
+time = time(HC3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HC3_w) - n.valid
+HC3_w.train.ts <- window(HC3_w, start=time[1], end=time[n.train])
+HC3_w.valid.ts <- window(HC3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.CA3 = naive(HC3_w.train.ts, h= 28)
+naive.CA3$mean
+naive.CA3_df = data.frame(naive.CA3)
+rownames(naive.CA3_df) = date_decimal(as.numeric(rownames(naive.CA3_df)))
+acc.naive.CA3 <- accuracy(naive.CA3, HC3_w.valid.ts)
+knitr::kable(acc.naive.CA3)
+plot(naive.CA3)
+
+# Seasonal Naive Hobbies 
+snaive.CA3 = snaive(HC3_w.train.ts, h= 28)
+snaive.CA3$mean
+snaive.CA3_df = data.frame(snaive.CA3)
+rownames(snaive.CA3_df) = date_decimal(as.numeric(rownames(snaive.CA3_df)))
+acc.snaive.CA3 <- accuracy(snaive.CA3, HC3_w.valid.ts)
+knitr::kable(acc.snaive.CA3)
+plot(snaive.CA3)
+
+# Exponential Smoothing 
+es.CA3 = ses(HC3_w.train.ts, h = 28)
+es.CA3$mean
+es.CA3_df <- data.frame(es.CA3)
+rownames(es.CA3_df) <- date_decimal(as.numeric(rownames(es.CA3_df)))
+acc.es.CA3 <- accuracy(es.CA3, HC3_w.valid.ts)
+knitr::kable(acc.es.CA3)
+plot(es.CA3)
+
+# Moving Average
+ma.CA3 <- forecast(ma(HC3_w.train.ts, order = 5), h = 28)
+ma.CA3$mean
+ma.CA3_df <- data.frame(ma.CA3)
+rownames(ma.CA3_df) <- date_decimal(as.numeric(rownames(ma.CA3_df)))
+acc.ma.CA3 <- accuracy(ma.CA3, HC3_w.valid.ts)
+knitr::kable(acc.ma.CA3)
+plot(ma.CA3)
+
+# SARIMA
+sarima.CA3 <- forecast(auto.arima(HC3_w.train.ts, D = 1), h = 28)
+sarima.CA3$mean
+sarima.CA3_df <- data.frame(sarima.CA3)
+rownames(sarima.CA3_df) <- date_decimal(as.numeric(rownames(sarima.CA3_df)))
+sarima.CA3_df
+acc.sarima.CA3 <- accuracy(sarima.CA3, HC3_w.valid.ts)
+knitr::kable(acc.sarima.CA3)
+plot(sarima.CA3)
+
+# Holt Winters
+hw.CA3 <- forecast(HoltWinters(HC3_w.train.ts, seasonal = "additive"), h = 28)
+hw.CA3$mean
+hw.CA3.df <- data.frame(hw.CA3)
+rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
+acc.hw.CA3 <- accuracy(hw.CA3, HC3_w.valid.ts)
+knitr::kable(acc.hw.CA3)
+plot(hw.CA3)
+```
+
+```{r}
+
+# create a time series forecasting for the Food1 CA1  data
+F1C1_w <- ts(weekly_df$wd_F1C1, start= 2011, frequency = 52)
+time = time(F1C1_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F1C1_w) - n.valid
+F1C1_w.train.ts <- window(F1C1_w, start=time[1], end=time[n.train])
+F1C1_w.valid.ts <- window(F1C1_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F1C1 = naive(F1C1_w.train.ts, h= 28)
+naive.F1C1$mean
+naive.F1C1_df = data.frame(naive.F1C1)
+rownames(naive.F1C1_df) = date_decimal(as.numeric(rownames(naive.F1C1_df)))
+acc.naive.F1C1 <- accuracy(naive.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.naive.F1C1)
+plot(naive.F1C1)
+
+# Seasonal Naive Hobbies 
+snaive.F1C1 = snaive(F1C1_w.train.ts, h= 28)
+snaive.F1C1$mean
+snaive.F1C1_df = data.frame(snaive.F1C1)
+rownames(snaive.F1C1_df) = date_decimal(as.numeric(rownames(snaive.F1C1_df)))
+acc.snaive.F1C1 <- accuracy(snaive.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.snaive.F1C1)
+plot(snaive.F1C1)
+
+# Exponential Smoothing 
+es.F1C1 = ses(F1C1_w.train.ts, h = 28)
+es.F1C1$mean
+es.F1C1_df <- data.frame(es.F1C1)
+rownames(es.F1C1_df) <- date_decimal(as.numeric(rownames(es.F1C1_df)))
+acc.es.F1C1 <- accuracy(es.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.es.F1C1)
+plot(es.F1C1)
+
+# Moving Average
+ma.F1C1 <- forecast(ma(F1C1_w.train.ts, order = 5), h = 28)
+ma.F1C1$mean
+ma.F1C1_df <- data.frame(ma.F1C1)
+rownames(ma.F1C1_df) <- date_decimal(as.numeric(rownames(ma.F1C1_df)))
+acc.ma.F1C1 <- accuracy(ma.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.ma.F1C1)
+plot(ma.F1C1)
+
+# SARIMA
+sarima.F1C1 <- forecast(auto.arima(F1C1_w.train.ts, D = 1), h = 28)
+sarima.F1C1$mean
+sarima.F1C1_df <- data.frame(sarima.F1C1)
+rownames(sarima.F1C1_df) <- date_decimal(as.numeric(rownames(sarima.F1C1_df)))
+sarima.F1C1_df
+acc.sarima.F1C1 <- accuracy(sarima.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.sarima.F1C1)
+plot(sarima.F1C1)
+
+# Holt Winters
+hw.F1C1 <- forecast(HoltWinters(F1C1_w.train.ts, seasonal = "additive"), h = 28)
+hw.F1C1$mean
+hw.F1C1.df <- data.frame(hw.F1C1)
+rownames(hw.F1C1.df) <- date_decimal(as.numeric(rownames(hw.F1C1.df)))
+acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.hw.F1C1)
+plot(hw.F1C1)
+```
+
+```{r}
+
+# create a time series forecasting for the Food1 CA2  data
+F1C2_w <- ts(weekly_df$wd_F1C2, start= 2011, frequency = 52)
+time = time(F1C2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F1C2_w) - n.valid
+F1C2_w.train.ts <- window(F1C2_w, start=time[1], end=time[n.train])
+F1C2_w.valid.ts <- window(F1C2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F1C2 = naive(F1C2_w.train.ts, h= 28)
+naive.F1C2$mean
+naive.F1C2_df = data.frame(naive.F1C2)
+rownames(naive.F1C2_df) = date_decimal(as.numeric(rownames(naive.F1C2_df)))
+acc.naive.F1C2 <- accuracy(naive.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.naive.F1C2)
+plot(naive.F1C2)
+
+# Seasonal Naive Hobbies 
+snaive.F1C2 = snaive(F1C2_w.train.ts, h= 28)
+snaive.F1C2$mean
+snaive.F1C2_df = data.frame(snaive.F1C2)
+rownames(snaive.F1C2_df) = date_decimal(as.numeric(rownames(snaive.F1C2_df)))
+acc.snaive.F1C2 <- accuracy(snaive.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.snaive.F1C2)
+plot(snaive.F1C2)
+
+# Exponential Smoothing 
+es.F1C2 = ses(F1C2_w.train.ts, h = 28)
+es.F1C2$mean
+es.F1C2_df <- data.frame(es.F1C2)
+rownames(es.F1C2_df) <- date_decimal(as.numeric(rownames(es.F1C2_df)))
+acc.es.F1C2 <- accuracy(es.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.es.F1C2)
+plot(es.F1C2)
+
+# Moving Average
+ma.F1C2 <- forecast(ma(F1C2_w.train.ts, order = 5), h = 28)
+ma.F1C2$mean
+ma.F1C2_df <- data.frame(ma.F1C2)
+rownames(ma.F1C2_df) <- date_decimal(as.numeric(rownames(ma.F1C2_df)))
+acc.ma.F1C2 <- accuracy(ma.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.ma.F1C2)
+plot(ma.F1C2)
+
+# SARIMA
+sarima.F1C2 <- forecast(auto.arima(F1C2_w.train.ts, D = 1), h = 28)
+sarima.F1C2$mean
+sarima.F1C2_df <- data.frame(sarima.F1C2)
+rownames(sarima.F1C2_df) <- date_decimal(as.numeric(rownames(sarima.F1C2_df)))
+sarima.F1C2_df
+acc.sarima.F1C2 <- accuracy(sarima.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.sarima.F1C2)
+plot(sarima.F1C2)
+
+# Holt Winters
+hw.F1C2 <- forecast(HoltWinters(F1C2_w.train.ts, seasonal = "additive"), h = 28)
+hw.F1C2$mean
+hw.F1C2.df <- data.frame(hw.F1C2)
+rownames(hw.F1C2.df) <- date_decimal(as.numeric(rownames(hw.F1C2.df)))
+acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.hw.F1C2)
+plot(hw.F1C2)
+```
+```{r}
+
+# create a time series forecasting for the Food1 CA3  data
+F1C3_w <- ts(weekly_df$wd_F1C3, start= 2011, frequency = 52)
+time = time(F1C3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F1C3_w) - n.valid
+F1C3_w.train.ts <- window(F1C3_w, start=time[1], end=time[n.train])
+F1C3_w.valid.ts <- window(F1C3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F1C3 = naive(F1C3_w.train.ts, h= 28)
+naive.F1C3$mean
+naive.F1C3_df = data.frame(naive.F1C3)
+rownames(naive.F1C3_df) = date_decimal(as.numeric(rownames(naive.F1C3_df)))
+acc.naive.F1C3 <- accuracy(naive.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.naive.F1C3)
+plot(naive.F1C3)
+
+# Seasonal Naive Hobbies 
+snaive.F1C3 = snaive(F1C3_w.train.ts, h= 28)
+snaive.F1C3$mean
+snaive.F1C3_df = data.frame(snaive.F1C3)
+rownames(snaive.F1C3_df) = date_decimal(as.numeric(rownames(snaive.F1C3_df)))
+acc.snaive.F1C3 <- accuracy(snaive.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.snaive.F1C3)
+plot(snaive.F1C3)
+
+# Exponential Smoothing 
+es.F1C3 = ses(F1C3_w.train.ts, h = 28)
+es.F1C3$mean
+es.F1C3_df <- data.frame(es.F1C3)
+rownames(es.F1C3_df) <- date_decimal(as.numeric(rownames(es.F1C3_df)))
+acc.es.F1C3 <- accuracy(es.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.es.F1C3)
+plot(es.F1C3)
+
+# Moving Average
+ma.F1C3 <- forecast(ma(F1C3_w.train.ts, order = 5), h = 28)
+ma.F1C3$mean
+ma.F1C3_df <- data.frame(ma.F1C3)
+rownames(ma.F1C3_df) <- date_decimal(as.numeric(rownames(ma.F1C3_df)))
+acc.ma.F1C3 <- accuracy(ma.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.ma.F1C3)
+plot(ma.F1C3)
+
+# SARIMA
+sarima.F1C3 <- forecast(auto.arima(F1C3_w.train.ts, D = 1), h = 28)
+sarima.F1C3$mean
+sarima.F1C3_df <- data.frame(sarima.F1C3)
+rownames(sarima.F1C3_df) <- date_decimal(as.numeric(rownames(sarima.F1C3_df)))
+sarima.F1C3_df
+acc.sarima.F1C3 <- accuracy(sarima.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.sarima.F1C3)
+plot(sarima.F1C3)
+
+# Holt Winters
+hw.F1C3 <- forecast(HoltWinters(F1C3_w.train.ts, seasonal = "additive"), h = 28)
+hw.F1C3$mean
+hw.F1C3.df <- data.frame(hw.F1C3)
+rownames(hw.F1C3.df) <- date_decimal(as.numeric(rownames(hw.F1C3.df)))
+acc.hw.F1C3 <- accuracy(hw.F1C1, F1C3_w.valid.ts)
+knitr::kable(acc.hw.F1C3)
+plot(hw.F1C3)
+```
+```{r}
+# create a time series forecasting for the Food2 CA1  data
+F2C1_w <- ts(weekly_df$wd_F2C1, start= 2011, frequency = 52)
+time = time(F2C1_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F2C1_w) - n.valid
+F2C1_w.train.ts <- window(F2C1_w, start=time[1], end=time[n.train])
+F2C1_w.valid.ts <- window(F2C1_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F2C1 = naive(F2C1_w.train.ts, h= 28)
+naive.F2C1$mean
+naive.F2C1_df = data.frame(naive.F2C1)
+rownames(naive.F2C1_df) = date_decimal(as.numeric(rownames(naive.F2C1_df)))
+acc.naive.F2C1 <- accuracy(naive.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.naive.F2C1)
+plot(naive.F2C1)
+
+# Seasonal Naive Hobbies 
+snaive.F2C1 = snaive(F2C1_w.train.ts, h= 28)
+snaive.F2C1$mean
+snaive.F2C1_df = data.frame(snaive.F2C1)
+rownames(snaive.F2C1_df) = date_decimal(as.numeric(rownames(snaive.F2C1_df)))
+acc.snaive.F2C1 <- accuracy(snaive.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.snaive.F2C1)
+plot(snaive.F2C1)
+
+# Exponential Smoothing 
+es.F2C1 = ses(F2C1_w.train.ts, h = 28)
+es.F2C1$mean
+es.F2C1_df <- data.frame(es.F2C1)
+rownames(es.F2C1_df) <- date_decimal(as.numeric(rownames(es.F2C1_df)))
+acc.es.F2C1 <- accuracy(es.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.es.F2C1)
+plot(es.F2C1)
+
+# Moving Average
+ma.F2C1 <- forecast(ma(F2C1_w.train.ts, order = 5), h = 28)
+ma.F2C1$mean
+ma.F2C1_df <- data.frame(ma.F2C1)
+rownames(ma.F2C1_df) <- date_decimal(as.numeric(rownames(ma.F2C1_df)))
+acc.ma.F2C1 <- accuracy(ma.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.ma.F2C1)
+plot(ma.F2C1)
+
+# SARIMA
+sarima.F2C1 <- forecast(auto.arima(F2C1_w.train.ts, D = 1), h = 28)
+sarima.F2C1$mean
+sarima.F2C1_df <- data.frame(sarima.F2C1)
+rownames(sarima.F2C1_df) <- date_decimal(as.numeric(rownames(sarima.F2C1_df)))
+acc.sarima.F2C1 <- accuracy(sarima.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.sarima.F2C1)
+plot(sarima.F2C1)
+
+# Holt Winters
+hw.F2C1 <- forecast(HoltWinters(F2C1_w.train.ts, seasonal = "additive"), h = 28)
+hw.F2C1$mean
+hw.F2C1.df <- data.frame(hw.F2C1)
+rownames(hw.F2C1.df) <- date_decimal(as.numeric(rownames(hw.F2C1.df)))
+acc.hw.F2C1 <- accuracy(hw.F1C1, F2C1_w.valid.ts)
+knitr::kable(acc.hw.F2C1)
+plot(hw.F2C1)
+```
+```{r}
+# create a time series forecasting for the Food2 CA2  data
+F2C2_w <- ts(weekly_df$wd_F2C2, start= 2011, frequency = 52)
+time = time(F2C2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F2C2_w) - n.valid
+F2C2_w.train.ts <- window(F2C2_w, start=time[1], end=time[n.train])
+F2C2_w.valid.ts <- window(F2C2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F2C2 = naive(F2C2_w.train.ts, h= 28)
+naive.F2C2$mean
+naive.F2C2_df = data.frame(naive.F2C2)
+rownames(naive.F2C2_df) = date_decimal(as.numeric(rownames(naive.F2C2_df)))
+acc.naive.F2C2 <- accuracy(naive.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.naive.F2C2)
+plot(naive.F2C2)
+
+# Seasonal Naive Hobbies 
+snaive.F2C2 = snaive(F2C2_w.train.ts, h= 28)
+snaive.F2C2$mean
+snaive.F2C2_df = data.frame(snaive.F2C2)
+rownames(snaive.F2C2_df) = date_decimal(as.numeric(rownames(snaive.F2C2_df)))
+acc.snaive.F2C2 <- accuracy(snaive.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.snaive.F2C2)
+plot(snaive.F2C2)
+
+# Exponential Smoothing 
+es.F2C2 = ses(F2C2_w.train.ts, h = 28)
+es.F2C2$mean
+es.F2C2_df <- data.frame(es.F2C2)
+rownames(es.F2C2_df) <- date_decimal(as.numeric(rownames(es.F2C2_df)))
+acc.es.F2C2 <- accuracy(es.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.es.F2C2)
+plot(es.F2C2)
+
+# Moving Average
+ma.F2C2 <- forecast(ma(F2C2_w.train.ts, order = 5), h = 28)
+ma.F2C2$mean
+ma.F2C2_df <- data.frame(ma.F2C2)
+rownames(ma.F2C2_df) <- date_decimal(as.numeric(rownames(ma.F2C2_df)))
+acc.ma.F2C2 <- accuracy(ma.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.ma.F2C2)
+plot(ma.F2C2)
+
+# SARIMA
+sarima.F2C2 <- forecast(auto.arima(F2C2_w.train.ts, D = 1), h = 28)
+sarima.F2C2$mean
+sarima.F2C2_df <- data.frame(sarima.F2C2)
+rownames(sarima.F2C2_df) <- date_decimal(as.numeric(rownames(sarima.F2C2_df)))
+acc.sarima.F2C2 <- accuracy(sarima.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.sarima.F2C2)
+plot(sarima.F2C2)
+
+# Holt Winters
+hw.F2C2 <- forecast(HoltWinters(F2C2_w.train.ts, seasonal = "additive"), h = 28)
+hw.F2C2$mean
+hw.F2C2.df <- data.frame(hw.F2C2)
+rownames(hw.F2C2.df) <- date_decimal(as.numeric(rownames(hw.F2C2.df)))
+acc.hw.F2C2 <- accuracy(hw.F1C1, F2C2_w.valid.ts)
+knitr::kable(acc.hw.F2C2)
+plot(hw.F2C2)
+```
+```{r}
+
+# create a time series forecasting for the Food2 CA3  data
+F2C3_w <- ts(weekly_df$wd_F2C3, start= 2011, frequency = 52)
+time = time(F2C3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F2C3_w) - n.valid
+F2C3_w.train.ts <- window(F2C3_w, start=time[1], end=time[n.train])
+F2C3_w.valid.ts <- window(F2C3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F2C3 = naive(F2C3_w.train.ts, h= 28)
+naive.F2C3$mean
+naive.F2C3_df = data.frame(naive.F2C3)
+rownames(naive.F2C3_df) = date_decimal(as.numeric(rownames(naive.F2C3_df)))
+acc.naive.F2C3 <- accuracy(naive.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.naive.F2C3)
+plot(naive.F2C3)
+
+# Seasonal Naive Hobbies 
+snaive.F2C3 = snaive(F2C3_w.train.ts, h= 28)
+snaive.F2C3$mean
+snaive.F2C3_df = data.frame(snaive.F2C3)
+rownames(snaive.F2C3_df) = date_decimal(as.numeric(rownames(snaive.F2C3_df)))
+acc.snaive.F2C3 <- accuracy(snaive.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.snaive.F2C3)
+plot(snaive.F2C3)
+
+# Exponential Smoothing 
+es.F2C3 = ses(F2C3_w.train.ts, h = 28)
+es.F2C3$mean
+es.F2C3_df <- data.frame(es.F2C3)
+rownames(es.F2C3_df) <- date_decimal(as.numeric(rownames(es.F2C3_df)))
+acc.es.F2C3 <- accuracy(es.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.es.F2C3)
+plot(es.F2C3)
+
+# Moving Average
+ma.F2C3 <- forecast(ma(F2C3_w.train.ts, order = 5), h = 28)
+ma.F2C3$mean
+ma.F2C3_df <- data.frame(ma.F2C3)
+rownames(ma.F2C3_df) <- date_decimal(as.numeric(rownames(ma.F2C3_df)))
+acc.ma.F2C3 <- accuracy(ma.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.ma.F2C3)
+plot(ma.F2C3)
+
+# SARIMA
+sarima.F2C3 <- forecast(auto.arima(F2C3_w.train.ts, D = 1), h = 28)
+sarima.F2C3$mean
+sarima.F2C3_df <- data.frame(sarima.F2C3)
+rownames(sarima.F2C3_df) <- date_decimal(as.numeric(rownames(sarima.F2C3_df)))
+acc.sarima.F2C3 <- accuracy(sarima.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.sarima.F2C3)
+plot(sarima.F2C3)
+
+# Holt Winters
+hw.F2C3 <- forecast(HoltWinters(F2C3_w.train.ts, seasonal = "additive"), h = 28)
+hw.F2C3$mean
+hw.F2C3.df <- data.frame(hw.F2C3)
+rownames(hw.F2C3.df) <- date_decimal(as.numeric(rownames(hw.F2C3.df)))
+acc.hw.F2C3 <- accuracy(hw.F1C1, F2C3_w.valid.ts)
+knitr::kable(acc.hw.F2C3)
+plot(hw.F2C3)
+```
+
+
+```{r}
+
+# create a time series forecasting for the Food3 CA1  data
+F3C1_w <- ts(weekly_df$wd_F3C1, start= 2011, frequency = 52)
+time = time(F3C1_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F3C1_w) - n.valid
+F3C1_w.train.ts <- window(F3C1_w, start=time[1], end=time[n.train])
+F3C1_w.valid.ts <- window(F3C1_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F3C1 = naive(F3C1_w.train.ts, h= 28)
+naive.F3C1$mean
+naive.F3C1_df = data.frame(naive.F3C1)
+rownames(naive.F3C1_df) = date_decimal(as.numeric(rownames(naive.F3C1_df)))
+acc.naive.F3C1 <- accuracy(naive.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.naive.F3C1)
+plot(naive.F3C1)
+
+# Seasonal Naive Hobbies 
+snaive.F3C1 = snaive(F3C1_w.train.ts, h= 28)
+snaive.F3C1$mean
+snaive.F3C1_df = data.frame(snaive.F3C1)
+rownames(snaive.F3C1_df) = date_decimal(as.numeric(rownames(snaive.F3C1_df)))
+acc.snaive.F3C1 <- accuracy(snaive.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.snaive.F3C1)
+plot(snaive.F3C1)
+
+# Exponential Smoothing 
+es.F3C1 = ses(F3C1_w.train.ts, h = 28)
+es.F3C1$mean
+es.F3C1_df <- data.frame(es.F3C1)
+rownames(es.F3C1_df) <- date_decimal(as.numeric(rownames(es.F3C1_df)))
+acc.es.F3C1 <- accuracy(es.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.es.F3C1)
+plot(es.F3C1)
+
+# Moving Average
+ma.F3C1 <- forecast(ma(F3C1_w.train.ts, order = 5), h = 28)
+ma.F3C1$mean
+ma.F3C1_df <- data.frame(ma.F3C1)
+rownames(ma.F3C1_df) <- date_decimal(as.numeric(rownames(ma.F3C1_df)))
+acc.ma.F3C1 <- accuracy(ma.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.ma.F3C1)
+plot(ma.F3C1)
+
+# SARIMA
+sarima.F3C1 <- forecast(auto.arima(F3C1_w.train.ts, D = 1), h = 28)
+sarima.F3C1$mean
+sarima.F3C1_df <- data.frame(sarima.F3C1)
+rownames(sarima.F3C1_df) <- date_decimal(as.numeric(rownames(sarima.F3C1_df)))
+acc.sarima.F3C1 <- accuracy(sarima.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.sarima.F3C1)
+plot(sarima.F3C1)
+
+# Holt Winters
+hw.F3C1 <- forecast(HoltWinters(F3C1_w.train.ts, seasonal = "additive"), h = 28)
+hw.F3C1$mean
+hw.F3C1.df <- data.frame(hw.F3C1)
+rownames(hw.F3C1.df) <- date_decimal(as.numeric(rownames(hw.F3C1.df)))
+acc.hw.F3C1 <- accuracy(hw.F1C1, F3C1_w.valid.ts)
+knitr::kable(acc.hw.F3C1)
+plot(hw.F3C1)
+```
+
+
+```{r}
+
+# create a time series forecasting for the Food3 CA2  data
+F3C2_w <- ts(weekly_df$wd_F3C2, start= 2011, frequency = 52)
+time = time(F3C2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F3C2_w) - n.valid
+F3C2_w.train.ts <- window(F3C2_w, start=time[1], end=time[n.train])
+F3C2_w.valid.ts <- window(F3C2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F3C2 = naive(F3C2_w.train.ts, h= 28)
+naive.F3C2$mean
+naive.F3C2_df = data.frame(naive.F3C2)
+rownames(naive.F3C2_df) = date_decimal(as.numeric(rownames(naive.F3C2_df)))
+acc.naive.F3C2 <- accuracy(naive.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.naive.F3C2)
+plot(naive.F3C2)
+
+# Seasonal Naive Hobbies 
+snaive.F3C2 = snaive(F3C2_w.train.ts, h= 28)
+snaive.F3C2$mean
+snaive.F3C2_df = data.frame(snaive.F3C2)
+rownames(snaive.F3C2_df) = date_decimal(as.numeric(rownames(snaive.F3C2_df)))
+acc.snaive.F3C2 <- accuracy(snaive.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.snaive.F3C2)
+plot(snaive.F3C2)
+
+# Exponential Smoothing 
+es.F3C2 = ses(F3C2_w.train.ts, h = 28)
+es.F3C2$mean
+es.F3C2_df <- data.frame(es.F3C2)
+rownames(es.F3C2_df) <- date_decimal(as.numeric(rownames(es.F3C2_df)))
+acc.es.F3C2 <- accuracy(es.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.es.F3C2)
+plot(es.F3C2)
+
+# Moving Average
+ma.F3C2 <- forecast(ma(F3C2_w.train.ts, order = 5), h = 28)
+ma.F3C2$mean
+ma.F3C2_df <- data.frame(ma.F3C2)
+rownames(ma.F3C2_df) <- date_decimal(as.numeric(rownames(ma.F3C2_df)))
+acc.ma.F3C2 <- accuracy(ma.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.ma.F3C2)
+plot(ma.F3C2)
+
+# SARIMA
+sarima.F3C2 <- forecast(auto.arima(F3C2_w.train.ts, D = 1), h = 28)
+sarima.F3C2$mean
+sarima.F3C2_df <- data.frame(sarima.F3C2)
+rownames(sarima.F3C2_df) <- date_decimal(as.numeric(rownames(sarima.F3C2_df)))
+acc.sarima.F3C2 <- accuracy(sarima.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.sarima.F3C2)
+plot(sarima.F3C2)
+
+# Holt Winters
+hw.F3C2 <- forecast(HoltWinters(F3C2_w.train.ts, seasonal = "additive"), h = 28)
+hw.F3C2$mean
+hw.F3C2.df <- data.frame(hw.F3C2)
+rownames(hw.F3C2.df) <- date_decimal(as.numeric(rownames(hw.F3C2.df)))
+acc.hw.F3C2 <- accuracy(hw.F1C1, F3C2_w.valid.ts)
+knitr::kable(acc.hw.F3C2)
+plot(hw.F3C2)
+```
+
+
+```{r}
+
+# create a time series forecasting for the Food3 CA3  data
+F3C3_w <- ts(weekly_df$wd_F3C3, start= 2011, frequency = 52)
+time = time(F3C3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(F3C3_w) - n.valid
+F3C3_w.train.ts <- window(F3C3_w, start=time[1], end=time[n.train])
+F3C3_w.valid.ts <- window(F3C3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.F3C3 = naive(F3C3_w.train.ts, h= 28)
+naive.F3C3$mean
+naive.F3C3_df = data.frame(naive.F3C3)
+rownames(naive.F3C3_df) = date_decimal(as.numeric(rownames(naive.F3C3_df)))
+acc.naive.F3C3 <- accuracy(naive.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.naive.F3C3)
+plot(naive.F3C3)
+
+# Seasonal Naive Hobbies 
+snaive.F3C3 = snaive(F3C3_w.train.ts, h= 28)
+snaive.F3C3$mean
+snaive.F3C3_df = data.frame(snaive.F3C3)
+rownames(snaive.F3C3_df) = date_decimal(as.numeric(rownames(snaive.F3C3_df)))
+acc.snaive.F3C3 <- accuracy(snaive.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.snaive.F3C3)
+plot(snaive.F3C3)
+
+# Exponential Smoothing 
+es.F3C3 = ses(F3C3_w.train.ts, h = 28)
+es.F3C3$mean
+es.F3C3_df <- data.frame(es.F3C3)
+rownames(es.F3C3_df) <- date_decimal(as.numeric(rownames(es.F3C3_df)))
+acc.es.F3C3 <- accuracy(es.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.es.F3C3)
+plot(es.F3C3)
+
+# Moving Average
+ma.F3C3 <- forecast(ma(F3C3_w.train.ts, order = 5), h = 28)
+ma.F3C3$mean
+ma.F3C3_df <- data.frame(ma.F3C3)
+rownames(ma.F3C3_df) <- date_decimal(as.numeric(rownames(ma.F3C3_df)))
+acc.ma.F3C3 <- accuracy(ma.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.ma.F3C3)
+plot(ma.F3C3)
+
+# SARIMA
+sarima.F3C3 <- forecast(auto.arima(F3C3_w.train.ts, D = 1), h = 28)
+sarima.F3C3$mean
+sarima.F3C3_df <- data.frame(sarima.F3C3)
+rownames(sarima.F3C3_df) <- date_decimal(as.numeric(rownames(sarima.F3C3_df)))
+acc.sarima.F3C3 <- accuracy(sarima.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.sarima.F3C3)
+plot(sarima.F3C3)
+
+# Holt Winters
+hw.F3C3 <- forecast(HoltWinters(F3C3_w.train.ts, seasonal = "additive"), h = 28)
+hw.F3C3$mean
+hw.F3C3.df <- data.frame(hw.F3C3)
+rownames(hw.F3C3.df) <- date_decimal(as.numeric(rownames(hw.F3C3.df)))
+acc.hw.F3C3 <- accuracy(hw.F1C1, F3C3_w.valid.ts)
+knitr::kable(acc.hw.F3C3)
+plot(hw.F3C3)
+```
+
+```{r}
+
+# create a time series forecasting for the HH1 CA1 data
+HH1C1_w <- ts(weekly_df$wd_HH1C1, start= 2011, frequency = 52)
+time = time(HH1C1_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH1C1_w) - n.valid
+HH1C1_w.train.ts <- window(HH1C1_w, start=time[1], end=time[n.train])
+HH1C1_w.valid.ts <- window(HH1C1_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH1C1 = naive(HH1C1_w.train.ts, h= 28)
+naive.HH1C1$mean
+naive.HH1C1_df = data.frame(naive.HH1C1)
+rownames(naive.HH1C1_df) = date_decimal(as.numeric(rownames(naive.HH1C1_df)))
+acc.naive.HH1C1 <- accuracy(naive.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.naive.HH1C1)
+plot(naive.HH1C1)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C1 = snaive(HH1C1_w.train.ts, h= 28)
+snaive.HH1C1$mean
+snaive.HH1C1_df = data.frame(snaive.HH1C1)
+rownames(snaive.HH1C1_df) = date_decimal(as.numeric(rownames(snaive.HH1C1_df)))
+acc.snaive.HH1C1 <- accuracy(snaive.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.snaive.HH1C1)
+plot(snaive.HH1C1)
+
+# Exponential Smoothing 
+es.HH1C1 = ses(HH1C1_w.train.ts, h = 28)
+es.HH1C1$mean
+es.HH1C1_df <- data.frame(es.HH1C1)
+rownames(es.HH1C1_df) <- date_decimal(as.numeric(rownames(es.HH1C1_df)))
+acc.es.HH1C1 <- accuracy(es.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.es.HH1C1)
+plot(es.HH1C1)
+
+# Moving Average
+ma.HH1C1 <- forecast(ma(HH1C1_w.train.ts, order = 5), h = 28)
+ma.HH1C1$mean
+ma.HH1C1_df <- data.frame(ma.HH1C1)
+rownames(ma.HH1C1_df) <- date_decimal(as.numeric(rownames(ma.HH1C1_df)))
+acc.ma.HH1C1 <- accuracy(ma.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.ma.HH1C1)
+plot(ma.HH1C1)
+
+# SARIMA
+sarima.HH1C1 <- forecast(auto.arima(HH1C1_w.train.ts, D = 1), h = 28)
+sarima.HH1C1$mean
+sarima.HH1C1_df <- data.frame(sarima.HH1C1)
+rownames(sarima.HH1C1_df) <- date_decimal(as.numeric(rownames(sarima.HH1C1_df)))
+acc.sarima.HH1C1 <- accuracy(sarima.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.sarima.HH1C1)
+plot(sarima.HH1C1)
+
+# Holt Winters
+hw.HH1C1 <- forecast(HoltWinters(HH1C1_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C1$mean
+hw.HH1C1.df <- data.frame(hw.HH1C1)
+rownames(hw.HH1C1.df) <- date_decimal(as.numeric(rownames(hw.HH1C1.df)))
+acc.hw.HH1C1 <- accuracy(hw.F1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.hw.HH1C1)
+plot(hw.HH1C1)
+```
+
+
+```{r}
+
+# create a time series forecasting for the HH1 CA2 data
+HH1C2_w <- ts(weekly_df$wd_HH1C2, start= 2011, frequency = 52)
+time = time(HH1C2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH1C2_w) - n.valid
+HH1C2_w.train.ts <- window(HH1C2_w, start=time[1], end=time[n.train])
+HH1C2_w.valid.ts <- window(HH1C2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH1C2 = naive(HH1C2_w.train.ts, h= 28)
+naive.HH1C2$mean
+naive.HH1C2_df = data.frame(naive.HH1C2)
+rownames(naive.HH1C2_df) = date_decimal(as.numeric(rownames(naive.HH1C2_df)))
+acc.naive.HH1C2 <- accuracy(naive.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.naive.HH1C2)
+plot(naive.HH1C2)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C2 = snaive(HH1C2_w.train.ts, h= 28)
+snaive.HH1C2$mean
+snaive.HH1C2_df = data.frame(snaive.HH1C2)
+rownames(snaive.HH1C2_df) = date_decimal(as.numeric(rownames(snaive.HH1C2_df)))
+acc.snaive.HH1C2 <- accuracy(snaive.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.snaive.HH1C2)
+plot(snaive.HH1C2)
+
+# Exponential Smoothing 
+es.HH1C2 = ses(HH1C2_w.train.ts, h = 28)
+es.HH1C2$mean
+es.HH1C2_df <- data.frame(es.HH1C2)
+rownames(es.HH1C2_df) <- date_decimal(as.numeric(rownames(es.HH1C2_df)))
+acc.es.HH1C2 <- accuracy(es.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.es.HH1C2)
+plot(es.HH1C2)
+
+# Moving Average
+ma.HH1C2 <- forecast(ma(HH1C2_w.train.ts, order = 5), h = 28)
+ma.HH1C2$mean
+ma.HH1C2_df <- data.frame(ma.HH1C2)
+rownames(ma.HH1C2_df) <- date_decimal(as.numeric(rownames(ma.HH1C2_df)))
+acc.ma.HH1C2 <- accuracy(ma.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.ma.HH1C2)
+plot(ma.HH1C2)
+
+# SARIMA
+sarima.HH1C2 <- forecast(auto.arima(HH1C2_w.train.ts, D = 1), h = 28)
+sarima.HH1C2$mean
+sarima.HH1C2_df <- data.frame(sarima.HH1C2)
+rownames(sarima.HH1C2_df) <- date_decimal(as.numeric(rownames(sarima.HH1C2_df)))
+acc.sarima.HH1C2 <- accuracy(sarima.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.sarima.HH1C2)
+plot(sarima.HH1C2)
+
+# Holt Winters
+hw.HH1C2 <- forecast(HoltWinters(HH1C2_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C2$mean
+hw.HH1C2.df <- data.frame(hw.HH1C2)
+rownames(hw.HH1C2.df) <- date_decimal(as.numeric(rownames(hw.HH1C2.df)))
+acc.hw.HH1C2 <- accuracy(hw.F1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.hw.HH1C2)
+plot(hw.HH1C2)
+```
+
+
+```{r}
+
+# create a time series forecasting for the HH1 CA3 data
+HH1C3_w <- ts(weekly_df$wd_HH1C3, start= 2011, frequency = 52)
+time = time(HH1C3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH1C3_w) - n.valid
+HH1C3_w.train.ts <- window(HH1C3_w, start=time[1], end=time[n.train])
+HH1C3_w.valid.ts <- window(HH1C3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH1C3 = naive(HH1C3_w.train.ts, h= 28)
+naive.HH1C3$mean
+naive.HH1C3_df = data.frame(naive.HH1C3)
+rownames(naive.HH1C3_df) = date_decimal(as.numeric(rownames(naive.HH1C3_df)))
+acc.naive.HH1C3 <- accuracy(naive.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.naive.HH1C3)
+plot(naive.HH1C3)
+
+# Seasonal Naive Hobbies 
+snaive.HH1C3 = snaive(HH1C3_w.train.ts, h= 28)
+snaive.HH1C3$mean
+snaive.HH1C3_df = data.frame(snaive.HH1C3)
+rownames(snaive.HH1C3_df) = date_decimal(as.numeric(rownames(snaive.HH1C3_df)))
+acc.snaive.HH1C3 <- accuracy(snaive.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.snaive.HH1C3)
+plot(snaive.HH1C3)
+
+# Exponential Smoothing 
+es.HH1C3 = ses(HH1C3_w.train.ts, h = 28)
+es.HH1C3$mean
+es.HH1C3_df <- data.frame(es.HH1C3)
+rownames(es.HH1C3_df) <- date_decimal(as.numeric(rownames(es.HH1C3_df)))
+acc.es.HH1C3 <- accuracy(es.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.es.HH1C3)
+plot(es.HH1C3)
+
+# Moving Average
+ma.HH1C3 <- forecast(ma(HH1C3_w.train.ts, order = 5), h = 28)
+ma.HH1C3$mean
+ma.HH1C3_df <- data.frame(ma.HH1C3)
+rownames(ma.HH1C3_df) <- date_decimal(as.numeric(rownames(ma.HH1C3_df)))
+acc.ma.HH1C3 <- accuracy(ma.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.ma.HH1C3)
+plot(ma.HH1C3)
+
+# SARIMA
+sarima.HH1C3 <- forecast(auto.arima(HH1C3_w.train.ts, D = 1), h = 28)
+sarima.HH1C3$mean
+sarima.HH1C3_df <- data.frame(sarima.HH1C3)
+rownames(sarima.HH1C3_df) <- date_decimal(as.numeric(rownames(sarima.HH1C3_df)))
+acc.sarima.HH1C3 <- accuracy(sarima.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.sarima.HH1C3)
+plot(sarima.HH1C3)
+
+# Holt Winters
+hw.HH1C3 <- forecast(HoltWinters(HH1C3_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH1C3$mean
+hw.HH1C3.df <- data.frame(hw.HH1C3)
+rownames(hw.HH1C3.df) <- date_decimal(as.numeric(rownames(hw.HH1C3.df)))
+acc.hw.HH1C3 <- accuracy(hw.F1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.hw.HH1C3)
+plot(hw.HH1C3)
+```
+
+
+```{r}
+
+# create a time series forecasting for the HH2 CA1 data
+HH2C1_w <- ts(weekly_df$wd_HH2C1, start= 2011, frequency = 52)
+time = time(HH2C1_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH2C1_w) - n.valid
+HH2C1_w.train.ts <- window(HH2C1_w, start=time[1], end=time[n.train])
+HH2C1_w.valid.ts <- window(HH2C1_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH2C1 = naive(HH2C1_w.train.ts, h= 28)
+naive.HH2C1$mean
+naive.HH2C1_df = data.frame(naive.HH2C1)
+rownames(naive.HH2C1_df) = date_decimal(as.numeric(rownames(naive.HH2C1_df)))
+acc.naive.HH2C1 <- accuracy(naive.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.naive.HH2C1)
+plot(naive.HH2C1)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C1 = snaive(HH2C1_w.train.ts, h= 28)
+snaive.HH2C1$mean
+snaive.HH2C1_df = data.frame(snaive.HH2C1)
+rownames(snaive.HH2C1_df) = date_decimal(as.numeric(rownames(snaive.HH2C1_df)))
+acc.snaive.HH2C1 <- accuracy(snaive.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.snaive.HH2C1)
+plot(snaive.HH2C1)
+
+# Exponential Smoothing 
+es.HH2C1 = ses(HH2C1_w.train.ts, h = 28)
+es.HH2C1$mean
+es.HH2C1_df <- data.frame(es.HH2C1)
+rownames(es.HH2C1_df) <- date_decimal(as.numeric(rownames(es.HH2C1_df)))
+acc.es.HH2C1 <- accuracy(es.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.es.HH2C1)
+plot(es.HH2C1)
+
+# Moving Average
+ma.HH2C1 <- forecast(ma(HH2C1_w.train.ts, order = 5), h = 28)
+ma.HH2C1$mean
+ma.HH2C1_df <- data.frame(ma.HH2C1)
+rownames(ma.HH2C1_df) <- date_decimal(as.numeric(rownames(ma.HH2C1_df)))
+acc.ma.HH2C1 <- accuracy(ma.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.ma.HH2C1)
+plot(ma.HH2C1)
+
+# SARIMA
+sarima.HH2C1 <- forecast(auto.arima(HH2C1_w.train.ts, D = 1), h = 28)
+sarima.HH2C1$mean
+sarima.HH2C1_df <- data.frame(sarima.HH2C1)
+rownames(sarima.HH2C1_df) <- date_decimal(as.numeric(rownames(sarima.HH2C1_df)))
+acc.sarima.HH2C1 <- accuracy(sarima.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.sarima.HH2C1)
+plot(sarima.HH2C1)
+
+# Holt Winters
+hw.HH2C1 <- forecast(HoltWinters(HH2C1_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C1$mean
+hw.HH2C1.df <- data.frame(hw.HH2C1)
+rownames(hw.HH2C1.df) <- date_decimal(as.numeric(rownames(hw.HH2C1.df)))
+acc.hw.HH2C1 <- accuracy(hw.F1C1, HH2C1_w.valid.ts)
+knitr::kable(acc.hw.HH2C1)
+plot(hw.HH2C1)
+```
+```{r}
+# create a time series forecasting for the HH2 CA2 data
+HH2C2_w <- ts(weekly_df$wd_HH2C2, start= 2011, frequency = 52)
+time = time(HH2C2_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH2C2_w) - n.valid
+HH2C2_w.train.ts <- window(HH2C2_w, start=time[1], end=time[n.train])
+HH2C2_w.valid.ts <- window(HH2C2_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH2C2 = naive(HH2C2_w.train.ts, h= 28)
+naive.HH2C2$mean
+naive.HH2C2_df = data.frame(naive.HH2C2)
+rownames(naive.HH2C2_df) = date_decimal(as.numeric(rownames(naive.HH2C2_df)))
+acc.naive.HH2C2 <- accuracy(naive.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.naive.HH2C2)
+plot(naive.HH2C2)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C2 = snaive(HH2C2_w.train.ts, h= 28)
+snaive.HH2C2$mean
+snaive.HH2C2_df = data.frame(snaive.HH2C2)
+rownames(snaive.HH2C2_df) = date_decimal(as.numeric(rownames(snaive.HH2C2_df)))
+acc.snaive.HH2C2 <- accuracy(snaive.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.snaive.HH2C2)
+plot(snaive.HH2C2)
+
+# Exponential Smoothing 
+es.HH2C2 = ses(HH2C2_w.train.ts, h = 28)
+es.HH2C2$mean
+es.HH2C2_df <- data.frame(es.HH2C2)
+rownames(es.HH2C2_df) <- date_decimal(as.numeric(rownames(es.HH2C2_df)))
+acc.es.HH2C2 <- accuracy(es.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.es.HH2C2)
+plot(es.HH2C2)
+
+# Moving Average
+ma.HH2C2 <- forecast(ma(HH2C2_w.train.ts, order = 5), h = 28)
+ma.HH2C2$mean
+ma.HH2C2_df <- data.frame(ma.HH2C2)
+rownames(ma.HH2C2_df) <- date_decimal(as.numeric(rownames(ma.HH2C2_df)))
+acc.ma.HH2C2 <- accuracy(ma.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.ma.HH2C2)
+plot(ma.HH2C2)
+
+# SARIMA
+sarima.HH2C2 <- forecast(auto.arima(HH2C2_w.train.ts, D = 1), h = 28)
+sarima.HH2C2$mean
+sarima.HH2C2_df <- data.frame(sarima.HH2C2)
+rownames(sarima.HH2C2_df) <- date_decimal(as.numeric(rownames(sarima.HH2C2_df)))
+acc.sarima.HH2C2 <- accuracy(sarima.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.sarima.HH2C2)
+plot(sarima.HH2C2)
+
+# Holt Winters
+hw.HH2C2 <- forecast(HoltWinters(HH2C2_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C2$mean
+hw.HH2C2.df <- data.frame(hw.HH2C2)
+rownames(hw.HH2C2.df) <- date_decimal(as.numeric(rownames(hw.HH2C2.df)))
+acc.hw.HH2C2 <- accuracy(hw.F1C2, HH2C2_w.valid.ts)
+knitr::kable(acc.hw.HH2C2)
+plot(hw.HH2C2)
+```
+
+```{r}
+
+# create a time series forecasting for the HH2 CA3 data
+HH2C3_w <- ts(weekly_df$wd_HH2C3, start= 2011, frequency = 52)
+time = time(HH2C3_w)
+
+# validation set is 10% of the data set
+n.valid <- 28
+n.train <- length(HH2C3_w) - n.valid
+HH2C3_w.train.ts <- window(HH2C3_w, start=time[1], end=time[n.train])
+HH2C3_w.valid.ts <- window(HH2C3_w, start=time[n.train+1], end=time[n.train+n.valid])
+
+# Naive Hobbies 
+naive.HH2C3 = naive(HH2C3_w.train.ts, h= 28)
+naive.HH2C3$mean
+naive.HH2C3_df = data.frame(naive.HH2C3)
+rownames(naive.HH2C3_df) = date_decimal(as.numeric(rownames(naive.HH2C3_df)))
+acc.naive.HH2C3 <- accuracy(naive.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.naive.HH2C3)
+plot(naive.HH2C3)
+
+# Seasonal Naive Hobbies 
+snaive.HH2C3 = snaive(HH2C3_w.train.ts, h= 28)
+snaive.HH2C3$mean
+snaive.HH2C3_df = data.frame(snaive.HH2C3)
+rownames(snaive.HH2C3_df) = date_decimal(as.numeric(rownames(snaive.HH2C3_df)))
+acc.snaive.HH2C3 <- accuracy(snaive.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.snaive.HH2C3)
+plot(snaive.HH2C3)
+
+# Exponential Smoothing 
+es.HH2C3 = ses(HH2C3_w.train.ts, h = 28)
+es.HH2C3$mean
+es.HH2C3_df <- data.frame(es.HH2C3)
+rownames(es.HH2C3_df) <- date_decimal(as.numeric(rownames(es.HH2C3_df)))
+acc.es.HH2C3 <- accuracy(es.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.es.HH2C3)
+plot(es.HH2C3)
+
+# Moving Average
+ma.HH2C3 <- forecast(ma(HH2C3_w.train.ts, order = 5), h = 28)
+ma.HH2C3$mean
+ma.HH2C3_df <- data.frame(ma.HH2C3)
+rownames(ma.HH2C3_df) <- date_decimal(as.numeric(rownames(ma.HH2C3_df)))
+acc.ma.HH2C3 <- accuracy(ma.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.ma.HH2C3)
+plot(ma.HH2C3)
+
+# SARIMA
+sarima.HH2C3 <- forecast(auto.arima(HH2C3_w.train.ts, D = 1), h = 28)
+sarima.HH2C3$mean
+sarima.HH2C3_df <- data.frame(sarima.HH2C3)
+rownames(sarima.HH2C3_df) <- date_decimal(as.numeric(rownames(sarima.HH2C3_df)))
+acc.sarima.HH2C3 <- accuracy(sarima.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.sarima.HH2C3)
+plot(sarima.HH2C3)
+
+# Holt Winters
+hw.HH2C3 <- forecast(HoltWinters(HH2C3_w.train.ts, seasonal = "additive"), h = 28)
+hw.HH2C3$mean
+hw.HH2C3.df <- data.frame(hw.HH2C3)
+rownames(hw.HH2C3.df) <- date_decimal(as.numeric(rownames(hw.HH2C3.df)))
+acc.hw.HH2C3 <- accuracy(hw.F1C3, HH2C3_w.valid.ts)
+knitr::kable(acc.hw.HH2C3)
+plot(hw.HH2C3)
+```
+
