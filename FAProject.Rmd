@@ -13,12 +13,93 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(readr)
 
-Projectdata <- read_csv("/Users/isma/Downloads/Projectdata.csv")
+Projectdata <- read_csv("/Users/patrick/Documents/Universität/Master/DSBA/Year_2/T1/Forecasting & Predictive Analytics/Project/Project and data-20220107/Projectdata.csv")
 
 Projectdata
 
 ```
 
+Exercise 1 - Assessing the data and univariate benchmarks
+
+Exercise 1.1 - Are these six variables stationary,
+
+(a) using a simple method, e.g. looking at the time series plots and at the ACF/PACF?
+
+```{r}
+# Time series Plot
+# Libraries
+library(ggplot2)
+library(dplyr)
+
+# Hobbies
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Hobbies_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Hoobies CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Hobbies_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Hoobies CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Hobbies_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Hoobies CA_3")
+
+# Household 1
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_1_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_1 CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_1_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_1 CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_1_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_1 CA_3")
+
+# Household 2
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_2_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_2 CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_2_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_2 CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Household_2_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Household_2 CA_3")
+
+# Food 1
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_1_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_1 CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_1_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_1 CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_1_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_1 CA_3")
+
+# Food 2
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_2_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_2 CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_2_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_2 CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_2_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_2 CA_3")
+
+# Food 3
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_3_CA_1)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_3 CA_1")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_3_CA_2)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_3 CA_2")
+ggplot(Projectdata, aes(x=Projectdata$date, y=Projectdata$Foods_3_CA_3)) +
+    geom_line(color="#69b3a2") +
+    ylab("Foods_3 CA_3")
+
+
+
+```
 ```{r}
 # ACF Hobbies Plot
 acf(Projectdata$Hobbies_CA_1, main = 'Hoobies ACF CA_1', lag.max= 20)
@@ -87,8 +168,10 @@ pacf(Projectdata$Foods_3_CA_1, main = 'Foods3 PACF CA_1', lag.max = 100)
 pacf(Projectdata$Foods_3_CA_2, main = 'Foods3 PACF CA_2', lag.max = 100)
 pacf(Projectdata$Foods_3_CA_3, main = 'Foods3 PACF CA_3', lag.max = 100)
 ```
-Exercise 1
-a) After plotting the ACF and PACF of the all the series at hand, we can see from the ACF plots of all categories that the slow decrease in the graph that is extending beyond 100 lag indicates a trend in the underlying data. additionally the scalloped shape indicates seasonality. 
+
+a) After plotting the ACF and PACF of all the series at hand, we can see from the ACF plots of all categories that the slow decrease in the graph that is extending beyond 100 lag indicates a trend in the underlying data. Thus, using the simple method of analyzing the time series plots as well as the plots of the ACF, we assume that the six variables are not stationary. Additionally the scalloped shape indicates seasonality. 
+
+(b) performing a test?
 
 ```{r}
 # Running Tests on the data 
@@ -215,6 +298,9 @@ summary(ur.df(x3,type="drift", selectlags = c("AIC")))
 
 ```
 
+Exercise 1.2 - We now want to assess the set of benchmark in the M5 guidelines. For several sample splits of your choice,
+
+(a) Fit Statistical benchmarks 1 (Naive), 2 (sNaive), 3 (ES), 4 (MA), 13 (ESX), as well as SARIMA, SARIMAX (using X as in ESX) and Holt-Winters up to the end of the training subsample.
 
 ```{r}
 library(lubridate)
