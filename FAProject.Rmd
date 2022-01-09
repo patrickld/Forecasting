@@ -3024,15 +3024,3 @@ knitr::kable(acc.hw.HH2C3)
 plot(hw.HH2C3)
 ```
 
-3. Machine/Deep Learning models and extension 
-
-
-1. Now consider machine learning benchmarks, such as those in the set of benchmarks or that are available on the M5 github (e.g. LSTM, using keras in R) and compare their performance in terms of point/probabilistic forecasts. 
-
-When analyzing the scores and ranks of the M5 competition, we can find information about the Accuracy-Benchmarks as well as the Uncertainty-Benchmarks. Furthermore, the information is provided in 12 different levels of aggregation starting with the one time series containing the unit sales that is later on aggregated by state, store, category, department, product and a combination leading to a 30.490 time series in level 12 (L12). Finally, the average of all 42.840 time series is taking and provided in the final column of the benchmarks. 
-
-In the following we want to first analyze the performance of the individual algorithms and compare their benchmarks with the achieved results from the highest-ranking teams to assess what approaches lead to the highest performance.
-
-Starting with the Accuracy-Benchmarks, the performance of point forecasts of the individual machine learning algorithms is measured using the Root Mean Squared Scaled Error (WRMSSE). The models that achieve the lowest WRMSSE in the first 9 levels are the statistical benchmarks Exponential Smoothing in a Bottum Up approach (ES_bu) and Exponential Smoothing with explanatory Variables (ESX). For the larger number of time series in the levels 10, 11 and 12 we can observe that the performance varies less than in the previous levels with the lowest error being reached by using combination benchmarks of averaging both Exponential Smoothing methods in a top-down and bottom-up approach (Com_tb). On average, the ES_bu method gives the lowest error and thus
-
-Here we can see how the different models performed, XYZ are the best
