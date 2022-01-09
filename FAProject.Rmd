@@ -302,6 +302,7 @@ Exercise 1.2 - We now want to assess the set of benchmark in the M5 guidelines. 
 
 (a) Fit Statistical benchmarks 1 (Naive), 2 (sNaive), 3 (ES), 4 (MA), 13 (ESX), as well as SARIMA, SARIMAX (using X as in ESX) and Holt-Winters up to the end of the training subsample.
 
+
 ```{r}
 library(lubridate)
 library(forecast)
@@ -338,7 +339,7 @@ snaive.HC1_df
 rownames(snaive.HC1_df) = date_decimal(as.numeric(rownames(snaive.HC1_df)))
 acc.snaive.HC1 <- accuracy(snaive.HC1, HC1.valid.ts)
 knitr::kable(acc.snaive.HC1)
-
+summary(snaive.HC1)
 # Exponential Smoothing 
 es.HC1 = ses(HC1.train.ts, h = 28)
 es.HC1$mean
@@ -347,6 +348,7 @@ es.HC1_df
 rownames(es.HC1_df) <- date_decimal(as.numeric(rownames(es.HC1_df)))
 acc.es.HC1 <- accuracy(es.HC1, HC1.valid.ts)
 knitr::kable(acc.es.HC1)
+
 
 # Moving Average
 ma.HC1 <- forecast(ma(HC1.train.ts, order = 5), h = 28)
@@ -372,16 +374,13 @@ rownames(hw.HC1.df) <- date_decimal(as.numeric(rownames(hw.HC1.df)))
 acc.hw.HC1 <- accuracy(hw.HC1, HC1.valid.ts)
 knitr::kable(acc.hw.HC1)
 
-plot(redwine.ts,  main="Forecast for monthly red wine sales", xlab="Time", ylab="Thousand of liters")
-
-lines(naive.red$mean, col=4)
-
-lines(snaive.red$mean, col=2)
-
-legend("topright", lty=1, col=c(4,2), 
-       legend=c("Naive method", "Seasonal naive method"))
-
-?window()
+# State Space (Tbats)
+tbats.HC1 <- forecast(tbats(HC1.train.ts), h = 28)
+tbats.HC1$mean
+tbats.HC1.df <- data.frame(tbats.HC1)
+rownames(tbats.HC1.df) <- date_decimal(as.numeric(rownames(tbats.HC1.df)))
+acc.tbats.HC1 <- accuracy(tbats.HC1, HC1.valid.ts)
+knitr::kable(acc.tbats.HC1)
 ```
 
 
@@ -454,6 +453,15 @@ acc.hw.HC2 <- accuracy(hw.HC2, HC2.valid.ts)
 knitr::kable(acc.hw.HC2)
 plot(hw.HC2)
 
+
+# State Space (Tbats)
+tbats.HC2 <- forecast(tbats(HC2.train.ts), h = 28)
+tbats.HC2$mean
+tbats.HC2.df <- data.frame(tbats.HC2)
+rownames(tbats.HC2.df) <- date_decimal(as.numeric(rownames(tbats.HC2.df)))
+acc.tbats.HC2 <- accuracy(tbats.HC2, HC2.valid.ts)
+knitr::kable(acc.tbats.HC2)
+plot(tbats.HC2)
 ```
 
 ```{r}
@@ -525,7 +533,19 @@ rownames(hw.HC3.df) <- date_decimal(as.numeric(rownames(hw.HC3.df)))
 acc.hw.HC3 <- accuracy(hw.HC3, HC3.valid.ts)
 knitr::kable(acc.hw.HC3)
 plot(hw.HC3)
+
+# State Space (Tbats)
+tbats.HC3 <- forecast(tbats(HC3.train.ts), h = 28)
+tbats.HC3$mean
+tbats.HC3.df <- data.frame(tbats.HC3)
+rownames(tbats.HC3.df) <- date_decimal(as.numeric(rownames(tbats.HC3.df)))
+acc.tbats.HC3 <- accuracy(tbats.HC3, HC3.valid.ts)
+knitr::kable(acc.tbats.HC3)
+plot(tbats.HC3)
 ```
+
+
+
 ```{r}
 # Forecasting foods_1 CA_1
 # create a time series for the F1C1 data
@@ -589,7 +609,20 @@ rownames(hw.F1C1.df) <- date_decimal(as.numeric(rownames(hw.F1C1.df)))
 acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1.valid.ts)
 knitr::kable(acc.hw.F1C1)
 plot(hw.F1C1)
+
+# State Space (Tbats)
+tbats.F1C1 <- forecast(tbats(F1C1.train.ts), h = 28)
+tbats.F1C1$mean
+tbats.F1C1.df <- data.frame(tbats.F1C1)
+rownames(tbats.F1C1.df) <- date_decimal(as.numeric(rownames(tbats.F1C1.df)))
+acc.tbats.F1C1 <- accuracy(tbats.F1C1, F1C1.valid.ts)
+knitr::kable(acc.tbats.F1C1)
+plot(tbats.F1C1)
+
+
 ```
+
+
 
 ```{r}
 # Forecasting foods_1 CA_2
@@ -654,7 +687,19 @@ rownames(hw.F1C2.df) <- date_decimal(as.numeric(rownames(hw.F1C2.df)))
 acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2.valid.ts)
 knitr::kable(acc.hw.F1C2)
 plot(hw.F1C2)
+
+# State Space (Tbats)
+tbats.F1C2 <- forecast(tbats(F1C2.train.ts), h = 28)
+tbats.F1C2$mean
+tbats.F1C2.df <- data.frame(tbats.F1C2)
+rownames(tbats.F1C2.df) <- date_decimal(as.numeric(rownames(tbats.F1C2.df)))
+acc.tbats.F1C2 <- accuracy(tbats.F1C2, F1C2.valid.ts)
+knitr::kable(acc.tbats.F1C2)
+plot(tbats.F1C2)
+
 ```
+
+
 
 ```{r}
 # Forecasting foods_1 CA_3
@@ -711,6 +756,7 @@ rownames(sarima.F1C3_df) <- date_decimal(as.numeric(rownames(sarima.F1C3_df)))
 acc.sarima.F1C3 <- accuracy(sarima.F1C3, F1C3.valid.ts)
 knitr::kable(acc.sarima.F1C3)
 plot(sarima.F1C3)
+
 # HoltWinters
 hw.F1C3 <- forecast(HoltWinters(F1C3.train.ts, seasonal = "additive"), h = 28)
 hw.F1C3$mean
@@ -719,7 +765,18 @@ rownames(hw.F1C3.df) <- date_decimal(as.numeric(rownames(hw.F1C3.df)))
 acc.hw.F1C3 <- accuracy(hw.F1C3, F1C3.valid.ts)
 knitr::kable(acc.hw.F1C3)
 plot(hw.F1C3)
+
+# State Space (Tbats)
+tbats.F1C3 <- forecast(tbats(F1C3.train.ts), h = 28)
+tbats.F1C3$mean
+tbats.F1C3.df <- data.frame(tbats.F1C3)
+rownames(tbats.F1C3.df) <- date_decimal(as.numeric(rownames(tbats.F1C3.df)))
+acc.tbats.F1C3 <- accuracy(tbats.F1C3, F1C3.valid.ts)
+knitr::kable(acc.tbats.F1C3)
+plot(tbats.F1C3)
 ```
+
+
 
 ```{r}
 
@@ -777,6 +834,7 @@ rownames(sarima.F2C1_df) <- date_decimal(as.numeric(rownames(sarima.F2C1_df)))
 acc.sarima.F2C1 <- accuracy(sarima.F2C1, F2C1.valid.ts)
 knitr::kable(acc.sarima.F2C1)
 plot(sarima.F2C1)
+
 # HoltWinters
 hw.F2C1 <- forecast(HoltWinters(F2C1.train.ts, seasonal = "additive"), h = 28)
 hw.F2C1$mean
@@ -785,6 +843,17 @@ rownames(hw.F2C1.df) <- date_decimal(as.numeric(rownames(hw.F2C1.df)))
 acc.hw.F2C1 <- accuracy(hw.F2C1, F2C1.valid.ts)
 knitr::kable(acc.hw.F2C1)
 plot(hw.F2C1)
+
+# State Space (Tbats)
+tbats.F2C1 <- forecast(tbats(F2C1.train.ts), h = 28)
+tbats.F2C1$mean
+tbats.F2C1.df <- data.frame(tbats.F2C1)
+rownames(tbats.F2C1.df) <- date_decimal(as.numeric(rownames(tbats.F2C1.df)))
+acc.tbats.F2C1 <- accuracy(tbats.F2C1, F2C1.valid.ts)
+knitr::kable(acc.tbats.F2C1)
+plot(tbats.F2C1)
+
+
 ```
 
 ```{r}
@@ -842,6 +911,7 @@ rownames(sarima.F2C2_df) <- date_decimal(as.numeric(rownames(sarima.F2C2_df)))
 acc.sarima.F2C2 <- accuracy(sarima.F2C2, F2C2.valid.ts)
 knitr::kable(acc.sarima.F2C2)
 plot(sarima.F2C2)
+
 # HoltWinters
 hw.F2C2 <- forecast(HoltWinters(F2C2.train.ts, seasonal = "additive"), h = 28)
 hw.F2C2$mean
@@ -850,6 +920,16 @@ rownames(hw.F2C2.df) <- date_decimal(as.numeric(rownames(hw.F2C2.df)))
 acc.hw.F2C2 <- accuracy(hw.F2C2, F2C2.valid.ts)
 knitr::kable(acc.hw.F2C2)
 plot(hw.F2C2)
+
+
+# State Space (Tbats)
+tbats.F2C2 <- forecast(tbats(F2C2.train.ts), h = 28)
+tbats.F2C2$mean
+tbats.F2C2.df <- data.frame(tbats.F2C2)
+rownames(tbats.F2C2.df) <- date_decimal(as.numeric(rownames(tbats.F2C2.df)))
+acc.tbats.F2C2 <- accuracy(tbats.F2C2, F2C2.valid.ts)
+knitr::kable(acc.tbats.F2C2)
+plot(tbats.F2C2)
 ```
 
 ```{r}
@@ -907,6 +987,7 @@ rownames(sarima.F2C3_df) <- date_decimal(as.numeric(rownames(sarima.F2C3_df)))
 acc.sarima.F2C3 <- accuracy(sarima.F2C3, F2C3.valid.ts)
 knitr::kable(acc.sarima.F2C3)
 plot(sarima.F2C3)
+
 # HoltWinters
 hw.F2C3 <- forecast(HoltWinters(F2C3.train.ts, seasonal = "additive"), h = 28)
 hw.F2C3$mean
@@ -915,6 +996,16 @@ rownames(hw.F2C3.df) <- date_decimal(as.numeric(rownames(hw.F2C3.df)))
 acc.hw.F2C3 <- accuracy(hw.F2C3, F2C3.valid.ts)
 knitr::kable(acc.hw.F2C3)
 plot(hw.F2C3)
+
+# State Space (Tbats)
+tbats.F2C3 <- forecast(tbats(F2C3.train.ts), h = 28)
+tbats.F2C3$mean
+tbats.F2C3.df <- data.frame(tbats.F2C3)
+rownames(tbats.F2C3.df) <- date_decimal(as.numeric(rownames(tbats.F2C3.df)))
+acc.tbats.F2C3 <- accuracy(tbats.F2C3, F2C3.valid.ts)
+knitr::kable(acc.tbats.F2C3)
+plot(tbats.F2C3)
+
 ```
 
 ```{r}
@@ -982,7 +1073,19 @@ rownames(hw.F3C1.df) <- date_decimal(as.numeric(rownames(hw.F3C1.df)))
 acc.hw.F3C1 <- accuracy(hw.F3C1, F3C1.valid.ts)
 knitr::kable(acc.hw.F3C1)
 plot(hw.F3C1)
+
+# State Space (Tbats)
+tbats.F3C1 <- forecast(tbats(F3C1.train.ts), h = 28)
+tbats.F3C1$mean
+tbats.F3C1.df <- data.frame(tbats.F3C1)
+rownames(tbats.F3C1.df) <- date_decimal(as.numeric(rownames(tbats.F3C1.df)))
+acc.tbats.F3C1 <- accuracy(tbats.F3C1, F3C1.valid.ts)
+knitr::kable(acc.tbats.F3C1)
+plot(tbats.F3C1)
+
 ```
+
+
 
 ```{r}
 
@@ -1050,7 +1153,19 @@ rownames(hw.F3C2.df) <- date_decimal(as.numeric(rownames(hw.F3C2.df)))
 acc.hw.F3C2 <- accuracy(hw.F3C2, F3C2.valid.ts)
 knitr::kable(acc.hw.F3C2)
 plot(hw.F3C2)
+
+# State Space (Tbats)
+tbats.F3C2 <- forecast(tbats(F3C2.train.ts), h = 28)
+tbats.F3C2$mean
+tbats.F3C2.df <- data.frame(tbats.F3C2)
+rownames(tbats.F3C2.df) <- date_decimal(as.numeric(rownames(tbats.F3C2.df)))
+acc.tbats.F3C2 <- accuracy(tbats.F3C2, F3C2.valid.ts)
+knitr::kable(acc.tbats.F3C2)
+plot(tbats.F3C2)
+
+
 ```
+
 
 ```{r}
 
@@ -1117,6 +1232,18 @@ rownames(hw.F3C3.df) <- date_decimal(as.numeric(rownames(hw.F3C3.df)))
 acc.hw.F3C3 <- accuracy(hw.F3C3, F3C3.valid.ts)
 knitr::kable(acc.hw.F3C3)
 plot(hw.F3C3)
+
+
+# State Space (Tbats)
+tbats.F3C3 <- forecast(tbats(F3C3.train.ts), h = 28)
+tbats.F3C3$mean
+tbats.F3C3.df <- data.frame(tbats.F3C3)
+rownames(tbats.F3C3.df) <- date_decimal(as.numeric(rownames(tbats.F3C3.df)))
+acc.tbats.F3C3 <- accuracy(tbats.F3C3, F3C3.valid.ts)
+knitr::kable(acc.tbats.F3C3)
+plot(tbats.F3C3)
+
+
 ```
 
 
@@ -1176,6 +1303,7 @@ rownames(sarima.HH1C1_df) <- date_decimal(as.numeric(rownames(sarima.HH1C1_df)))
 acc.sarima.HH1C1 <- accuracy(sarima.HH1C1, HH1C1.valid.ts)
 knitr::kable(acc.sarima.HH1C1)
 plot(sarima.HH1C1)
+
 # HoltWinters
 hw.HH1C1 <- forecast(HoltWinters(HH1C1.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C1$mean
@@ -1184,6 +1312,16 @@ rownames(hw.HH1C1.df) <- date_decimal(as.numeric(rownames(hw.HH1C1.df)))
 acc.hw.HH1C1 <- accuracy(hw.HH1C1, HH1C1.valid.ts)
 knitr::kable(acc.hw.HH1C1)
 plot(hw.HH1C1)
+
+# State Space (Tbats)
+tbats.HH1C1 <- forecast(tbats(HH1C1.train.ts), h = 28)
+tbats.HH1C1$mean
+tbats.HH1C1.df <- data.frame(tbats.HH1C1)
+rownames(tbats.HH1C1.df) <- date_decimal(as.numeric(rownames(tbats.HH1C1.df)))
+acc.tbats.HH1C1 <- accuracy(tbats.HH1C1, HH1C1.valid.ts)
+knitr::kable(acc.tbats.HH1C1)
+plot(tbats.HH1C1)
+
 ```
 
 ```{r}
@@ -1241,6 +1379,7 @@ rownames(sarima.HH1C2_df) <- date_decimal(as.numeric(rownames(sarima.HH1C2_df)))
 acc.sarima.HH1C2 <- accuracy(sarima.HH1C2, HH1C2.valid.ts)
 knitr::kable(acc.sarima.HH1C2)
 plot(sarima.HH1C2)
+
 # HoltWinters
 hw.HH1C2 <- forecast(HoltWinters(HH1C2.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C2$mean
@@ -1249,6 +1388,16 @@ rownames(hw.HH1C2.df) <- date_decimal(as.numeric(rownames(hw.HH1C2.df)))
 acc.hw.HH1C2 <- accuracy(hw.HH1C2, HH1C2.valid.ts)
 knitr::kable(acc.hw.HH1C2)
 plot(hw.HH1C2)
+
+
+# State Space (Tbats)
+tbats.HH1C2 <- forecast(tbats(HH1C2.train.ts), h = 28)
+tbats.HH1C2$mean
+tbats.HH1C2.df <- data.frame(tbats.HH1C2)
+rownames(tbats.HH1C2.df) <- date_decimal(as.numeric(rownames(tbats.HH1C2.df)))
+acc.tbats.HH1C2 <- accuracy(tbats.HH1C2, HH1C2.valid.ts)
+knitr::kable(acc.tbats.HH1C2)
+plot(tbats.HH1C2)
 ```
 
 ```{r}
@@ -1307,6 +1456,7 @@ rownames(sarima.HH1C3_df) <- date_decimal(as.numeric(rownames(sarima.HH1C3_df)))
 acc.sarima.HH1C3 <- accuracy(sarima.HH1C3, HH1C3.valid.ts)
 knitr::kable(acc.sarima.HH1C3)
 plot(sarima.HH1C3)
+
 # HoltWinters
 hw.HH1C3 <- forecast(HoltWinters(HH1C3.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C3$mean
@@ -1315,6 +1465,16 @@ rownames(hw.HH1C3.df) <- date_decimal(as.numeric(rownames(hw.HH1C3.df)))
 acc.hw.HH1C3 <- accuracy(hw.HH1C3, HH1C3.valid.ts)
 knitr::kable(acc.hw.HH1C3)
 plot(hw.HH1C3)
+
+
+# State Space (Tbats)
+tbats.HH1C3 <- forecast(tbats(HH1C3.train.ts), h = 28)
+tbats.HH1C3$mean
+tbats.HH1C3.df <- data.frame(tbats.HH1C3)
+rownames(tbats.HH1C3.df) <- date_decimal(as.numeric(rownames(tbats.HH1C3.df)))
+acc.tbats.HH1C3 <- accuracy(tbats.HH1C3, HH1C3.valid.ts)
+knitr::kable(acc.tbats.HH1C3)
+plot(tbats.HH1C3)
 ```
 
 ```{r}
@@ -1373,6 +1533,7 @@ rownames(sarima.HH2C1_df) <- date_decimal(as.numeric(rownames(sarima.HH2C1_df)))
 acc.sarima.HH2C1 <- accuracy(sarima.HH2C1, HH2C1.valid.ts)
 knitr::kable(acc.sarima.HH2C1)
 plot(sarima.HH2C1)
+
 # HoltWinters
 hw.HH2C1 <- forecast(HoltWinters(HH2C1.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C1$mean
@@ -1381,6 +1542,18 @@ rownames(hw.HH2C1.df) <- date_decimal(as.numeric(rownames(hw.HH2C1.df)))
 acc.hw.HH2C1 <- accuracy(hw.HH2C1, HH2C1.valid.ts)
 knitr::kable(acc.hw.HH2C1)
 plot(hw.HH2C1)
+
+
+
+# State Space (Tbats)
+tbats.HH2C1 <- forecast(tbats(HH2C1.train.ts), h = 28)
+tbats.HH2C1$mean
+tbats.HH2C1.df <- data.frame(tbats.HH2C1)
+rownames(tbats.HH2C1.df) <- date_decimal(as.numeric(rownames(tbats.HH2C1.df)))
+acc.tbats.HH2C1 <- accuracy(tbats.HH2C1, HH2C1.valid.ts)
+knitr::kable(acc.tbats.HH2C1)
+plot(tbats.HH2C1)
+
 ```
 
 ```{r}
@@ -1439,6 +1612,7 @@ rownames(sarima.HH2C2_df) <- date_decimal(as.numeric(rownames(sarima.HH2C2_df)))
 acc.sarima.HH2C2 <- accuracy(sarima.HH2C2, HH2C2.valid.ts)
 knitr::kable(acc.sarima.HH2C2)
 plot(sarima.HH2C2)
+
 # HoltWinters
 hw.HH2C2 <- forecast(HoltWinters(HH2C2.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C2$mean
@@ -1447,6 +1621,17 @@ rownames(hw.HH2C2.df) <- date_decimal(as.numeric(rownames(hw.HH2C2.df)))
 acc.hw.HH2C2 <- accuracy(hw.HH2C2, HH2C2.valid.ts)
 knitr::kable(acc.hw.HH2C2)
 plot(hw.HH2C2)
+
+
+# State Space (Tbats)
+tbats.HH2C2 <- forecast(tbats(HH2C2.train.ts), h = 28)
+tbats.HH2C2$mean
+tbats.HH2C2.df <- data.frame(tbats.HH2C2)
+rownames(tbats.HH2C2.df) <- date_decimal(as.numeric(rownames(tbats.HH2C2.df)))
+acc.tbats.HH2C2 <- accuracy(tbats.HH2C2, HH2C2.valid.ts)
+knitr::kable(acc.tbats.HH2C2)
+plot(tbats.HH2C2)
+
 ```
 
 ```{r}
@@ -1504,6 +1689,7 @@ rownames(sarima.HH2C3_df) <- date_decimal(as.numeric(rownames(sarima.HH2C3_df)))
 acc.sarima.HH2C3 <- accuracy(sarima.HH2C3, HH2C3.valid.ts)
 knitr::kable(acc.sarima.HH2C3)
 plot(sarima.HH2C3)
+
 # HoltWinters
 hw.HH2C3 <- forecast(HoltWinters(HH2C3.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C3$mean
@@ -1512,6 +1698,16 @@ rownames(hw.HH2C3.df) <- date_decimal(as.numeric(rownames(hw.HH2C3.df)))
 acc.hw.HH2C3 <- accuracy(hw.HH2C3, HH2C3.valid.ts)
 knitr::kable(acc.hw.HH2C3)
 plot(hw.HH2C3)
+
+
+# State Space (Tbats)
+tbats.HH2C3 <- forecast(tbats(HH2C3.train.ts), h = 28)
+tbats.HH2C3$mean
+tbats.HH2C3.df <- data.frame(tbats.HH2C3)
+rownames(tbats.HH2C3.df) <- date_decimal(as.numeric(rownames(tbats.HH2C3.df)))
+acc.tbats.HH2C3 <- accuracy(tbats.HH2C3, HH2C3.valid.ts)
+knitr::kable(acc.tbats.HH2C3)
+plot(tbats.HH2C3)
 ```
 
 
@@ -1608,6 +1804,16 @@ rownames(hw.CA1.df) <- date_decimal(as.numeric(rownames(hw.CA1.df)))
 acc.hw.CA1 <- accuracy(hw.CA1, CA1.valid.ts)
 knitr::kable(acc.hw.CA1)
 plot(hw.CA1)
+
+
+# State Space (Tbats)
+tbats.CA1 <- forecast(tbats(CA1.train.ts), h = 28)
+tbats.CA1$mean
+tbats.CA1.df <- data.frame(tbats.CA1)
+rownames(tbats.CA1.df) <- date_decimal(as.numeric(rownames(tbats.CA1.df)))
+acc.tbats.CA1 <- accuracy(tbats.CA1, CA1.valid.ts)
+knitr::kable(acc.tbats.CA1)
+plot(tbats.CA1)
 ```
 
 ```{r}
@@ -1681,6 +1887,16 @@ rownames(hw.CA2.df) <- date_decimal(as.numeric(rownames(hw.CA2.df)))
 acc.hw.CA2 <- accuracy(hw.CA2, CA2.valid.ts)
 knitr::kable(acc.hw.CA2)
 plot(hw.CA2)
+
+
+# State Space (Tbats)
+tbats.CA2 <- forecast(tbats(CA2.train.ts), h = 28)
+tbats.CA2$mean
+tbats.CA2.df <- data.frame(tbats.CA2)
+rownames(tbats.CA2.df) <- date_decimal(as.numeric(rownames(tbats.CA2.df)))
+acc.tbats.CA2 <- accuracy(tbats.CA2, CA2.valid.ts)
+knitr::kable(acc.tbats.CA2)
+plot(tbats.CA2)
 ```
 
 
@@ -1753,6 +1969,17 @@ rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
 acc.hw.CA3 <- accuracy(hw.CA3, CA3.valid.ts)
 knitr::kable(acc.hw.CA3)
 plot(hw.CA3)
+
+
+
+# State Space (Tbats)
+tbats.CA3 <- forecast(tbats(CA3.train.ts), h = 28)
+tbats.CA3$mean
+tbats.CA3.df <- data.frame(tbats.CA3)
+rownames(tbats.CA3.df) <- date_decimal(as.numeric(rownames(tbats.CA3.df)))
+acc.tbats.CA3 <- accuracy(tbats.CA3, CA3.valid.ts)
+knitr::kable(acc.tbats.CA3)
+plot(tbats.CA3)
 ```
 
 
@@ -1878,6 +2105,16 @@ knitr::kable(acc.hw.CA1)
 plot(hw.CA1)
 
 
+# State Space (Tbats)
+tbats.CA1 <- forecast(tbats(HC1_w.train.ts), h = 28)
+tbats.CA1$mean
+tbats.CA1.df <- data.frame(tbats.CA1)
+rownames(tbats.CA1.df) <- date_decimal(as.numeric(rownames(tbats.CA1.df)))
+acc.tbats.CA1 <- accuracy(tbats.CA1, HC1_w.valid.ts)
+knitr::kable(acc.tbats.CA1)
+plot(tbats.CA1)
+
+
 ```
 ```{r}
 
@@ -1948,6 +2185,15 @@ knitr::kable(acc.hw.CA2)
 plot(hw.CA2)
 
 
+# State Space (Tbats)
+tbats.CA2 <- forecast(tbats(HC2_w.train.ts), h = 28)
+tbats.CA2$mean
+tbats.CA2.df <- data.frame(tbats.CA2)
+rownames(tbats.CA2.df) <- date_decimal(as.numeric(rownames(tbats.CA2.df)))
+acc.tbats.CA2 <- accuracy(tbats.CA2, HC2_w.valid.ts)
+knitr::kable(acc.tbats.CA2)
+plot(tbats.CA2)
+
 ```
 
 ```{r}
@@ -2016,6 +2262,18 @@ rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
 acc.hw.CA3 <- accuracy(hw.CA3, HC3_w.valid.ts)
 knitr::kable(acc.hw.CA3)
 plot(hw.CA3)
+
+
+# State Space (Tbats)
+tbats.CA3 <- forecast(tbats(HC3_w.train.ts), h = 28)
+tbats.CA3$mean
+tbats.CA3.df <- data.frame(tbats.CA3)
+rownames(tbats.CA3.df) <- date_decimal(as.numeric(rownames(tbats.CA3.df)))
+acc.tbats.CA3 <- accuracy(tbats.CA3, HC3_w.valid.ts)
+knitr::kable(acc.tbats.CA3)
+plot(tbats.CA3)
+
+
 ```
 
 ```{r}
@@ -2084,6 +2342,15 @@ rownames(hw.F1C1.df) <- date_decimal(as.numeric(rownames(hw.F1C1.df)))
 acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1_w.valid.ts)
 knitr::kable(acc.hw.F1C1)
 plot(hw.F1C1)
+
+# State Space (Tbats)
+tbats.F1C1 <- forecast(tbats(F1C1_w.train.ts), h = 28)
+tbats.F1C1$mean
+tbats.F1C1.df <- data.frame(tbats.F1C1)
+rownames(tbats.F1C1.df) <- date_decimal(as.numeric(rownames(tbats.F1C1.df)))
+acc.tbats.F1C1 <- accuracy(tbats.F1C1, F1C1_w.valid.ts)
+knitr::kable(acc.tbats.F1C1)
+plot(tbats.F1C1)
 ```
 
 ```{r}
@@ -2151,7 +2418,18 @@ hw.F1C2.df <- data.frame(hw.F1C2)
 rownames(hw.F1C2.df) <- date_decimal(as.numeric(rownames(hw.F1C2.df)))
 acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2_w.valid.ts)
 knitr::kable(acc.hw.F1C2)
-plot(hw.F1C2)
+plot
+
+
+
+# State Space (Tbats)
+tbats.F1C2 <- forecast(tbats(F1C2_w.train.ts), h = 28)
+tbats.F1C2$mean
+tbats.F1C2.df <- data.frame(tbats.F1C2)
+rownames(tbats.F1C2.df) <- date_decimal(as.numeric(rownames(tbats.F1C2.df)))
+acc.tbats.F1C2 <- accuracy(tbats.F1C2, F1C2_w.valid.ts)
+knitr::kable(acc.tbats.F1C2)
+plot(tbats.F1C2)
 ```
 ```{r}
 
@@ -2219,6 +2497,16 @@ rownames(hw.F1C3.df) <- date_decimal(as.numeric(rownames(hw.F1C3.df)))
 acc.hw.F1C3 <- accuracy(hw.F1C1, F1C3_w.valid.ts)
 knitr::kable(acc.hw.F1C3)
 plot(hw.F1C3)
+
+
+# State Space (Tbats)
+tbats.F1C3 <- forecast(tbats(F1C3_w.train.ts), h = 28)
+tbats.F1C3$mean
+tbats.F1C3.df <- data.frame(tbats.F1C3)
+rownames(tbats.F1C3.df) <- date_decimal(as.numeric(rownames(tbats.F1C3.df)))
+acc.tbats.F1C3 <- accuracy(tbats.F1C3, F1C3_w.valid.ts)
+knitr::kable(acc.tbats.F1C3)
+plot(tbats.F1C3)
 ```
 ```{r}
 # create a time series forecasting for the Food2 CA1  data
@@ -2284,6 +2572,15 @@ rownames(hw.F2C1.df) <- date_decimal(as.numeric(rownames(hw.F2C1.df)))
 acc.hw.F2C1 <- accuracy(hw.F1C1, F2C1_w.valid.ts)
 knitr::kable(acc.hw.F2C1)
 plot(hw.F2C1)
+
+# State Space (Tbats)
+tbats.F2C1 <- forecast(tbats(F2C1_w.train.ts), h = 28)
+tbats.F2C1$mean
+tbats.F2C1.df <- data.frame(tbats.F2C1)
+rownames(tbats.F2C1.df) <- date_decimal(as.numeric(rownames(tbats.F2C1.df)))
+acc.tbats.F2C1 <- accuracy(tbats.F2C1, F2C1_w.valid.ts)
+knitr::kable(acc.tbats.F2C1)
+plot(tbats.F2C1)
 ```
 ```{r}
 # create a time series forecasting for the Food2 CA2  data
@@ -2349,6 +2646,15 @@ rownames(hw.F2C2.df) <- date_decimal(as.numeric(rownames(hw.F2C2.df)))
 acc.hw.F2C2 <- accuracy(hw.F1C1, F2C2_w.valid.ts)
 knitr::kable(acc.hw.F2C2)
 plot(hw.F2C2)
+
+# State Space (Tbats)
+tbats.F2C2 <- forecast(tbats(F2C2_w.train.ts), h = 28)
+tbats.F2C2$mean
+tbats.F2C2.df <- data.frame(tbats.F2C2)
+rownames(tbats.F2C2.df) <- date_decimal(as.numeric(rownames(tbats.F2C2.df)))
+acc.tbats.F2C2 <- accuracy(tbats.F2C2, F2C2_w.valid.ts)
+knitr::kable(acc.tbats.F2C2)
+plot(tbats.F2C2)
 ```
 ```{r}
 
@@ -2415,6 +2721,15 @@ rownames(hw.F2C3.df) <- date_decimal(as.numeric(rownames(hw.F2C3.df)))
 acc.hw.F2C3 <- accuracy(hw.F1C1, F2C3_w.valid.ts)
 knitr::kable(acc.hw.F2C3)
 plot(hw.F2C3)
+
+# State Space (Tbats)
+tbats.F2C3 <- forecast(tbats(F2C3_w.train.ts), h = 28)
+tbats.F2C3$mean
+tbats.F2C3.df <- data.frame(tbats.F2C3)
+rownames(tbats.F2C3.df) <- date_decimal(as.numeric(rownames(tbats.F2C3.df)))
+acc.tbats.F2C3 <- accuracy(tbats.F2C3, F2C3_w.valid.ts)
+knitr::kable(acc.tbats.F2C3)
+plot(tbats.F2C3)
 ```
 
 
@@ -2483,6 +2798,16 @@ rownames(hw.F3C1.df) <- date_decimal(as.numeric(rownames(hw.F3C1.df)))
 acc.hw.F3C1 <- accuracy(hw.F1C1, F3C1_w.valid.ts)
 knitr::kable(acc.hw.F3C1)
 plot(hw.F3C1)
+
+
+# State Space (Tbats)
+tbats.F3C1 <- forecast(tbats(F3C1_w.train.ts), h = 28)
+tbats.F3C1$mean
+tbats.F3C1.df <- data.frame(tbats.F3C1)
+rownames(tbats.F3C1.df) <- date_decimal(as.numeric(rownames(tbats.F3C1.df)))
+acc.tbats.F3C1 <- accuracy(tbats.F3C1, F3C1_w.valid.ts)
+knitr::kable(acc.tbats.F3C1)
+plot(tbats.F3C1)
 ```
 
 
@@ -2551,6 +2876,17 @@ rownames(hw.F3C2.df) <- date_decimal(as.numeric(rownames(hw.F3C2.df)))
 acc.hw.F3C2 <- accuracy(hw.F1C1, F3C2_w.valid.ts)
 knitr::kable(acc.hw.F3C2)
 plot(hw.F3C2)
+
+
+
+# State Space (Tbats)
+tbats.F3C2 <- forecast(tbats(F3C2_w.train.ts), h = 28)
+tbats.F3C2$mean
+tbats.F3C2.df <- data.frame(tbats.F3C2)
+rownames(tbats.F3C2.df) <- date_decimal(as.numeric(rownames(tbats.F3C2.df)))
+acc.tbats.F3C2 <- accuracy(tbats.F3C2, F3C2_w.valid.ts)
+knitr::kable(acc.tbats.F3C2)
+plot(tbats.F3C2)
 ```
 
 
@@ -2619,6 +2955,17 @@ rownames(hw.F3C3.df) <- date_decimal(as.numeric(rownames(hw.F3C3.df)))
 acc.hw.F3C3 <- accuracy(hw.F1C1, F3C3_w.valid.ts)
 knitr::kable(acc.hw.F3C3)
 plot(hw.F3C3)
+
+
+# State Space (Tbats)
+tbats.F3C3 <- forecast(tbats(F3C3_w.train.ts), h = 28)
+tbats.F3C3$mean
+tbats.F3C3.df <- data.frame(tbats.F3C3)
+rownames(tbats.F3C3.df) <- date_decimal(as.numeric(rownames(tbats.F3C3.df)))
+acc.tbats.F3C3 <- accuracy(tbats.F3C3, F3C3_w.valid.ts)
+knitr::kable(acc.tbats.F3C3)
+plot(tbats.F3C3)
+
 ```
 
 ```{r}
@@ -2686,6 +3033,17 @@ rownames(hw.HH1C1.df) <- date_decimal(as.numeric(rownames(hw.HH1C1.df)))
 acc.hw.HH1C1 <- accuracy(hw.F1C1, HH1C1_w.valid.ts)
 knitr::kable(acc.hw.HH1C1)
 plot(hw.HH1C1)
+
+
+
+# State Space (Tbats)
+tbats.HH1C1 <- forecast(tbats(HH1C1_w.train.ts), h = 28)
+tbats.HH1C1$mean
+tbats.HH1C1.df <- data.frame(tbats.HH1C1)
+rownames(tbats.HH1C1.df) <- date_decimal(as.numeric(rownames(tbats.HH1C1.df)))
+acc.tbats.HH1C1 <- accuracy(tbats.HH1C1, HH1C1_w.valid.ts)
+knitr::kable(acc.tbats.HH1C1)
+plot(tbats.HH1C1)
 ```
 
 
@@ -2754,6 +3112,17 @@ rownames(hw.HH1C2.df) <- date_decimal(as.numeric(rownames(hw.HH1C2.df)))
 acc.hw.HH1C2 <- accuracy(hw.F1C2, HH1C2_w.valid.ts)
 knitr::kable(acc.hw.HH1C2)
 plot(hw.HH1C2)
+
+
+
+# State Space (Tbats)
+tbats.HH1C2 <- forecast(tbats(HH1C2_w.train.ts), h = 28)
+tbats.HH1C2$mean
+tbats.HH1C2.df <- data.frame(tbats.HH1C2)
+rownames(tbats.HH1C2.df) <- date_decimal(as.numeric(rownames(tbats.HH1C2.df)))
+acc.tbats.HH1C2 <- accuracy(tbats.HH1C2, HH1C2_w.valid.ts)
+knitr::kable(acc.tbats.HH1C2)
+plot(tbats.HH1C2)
 ```
 
 
@@ -2822,6 +3191,16 @@ rownames(hw.HH1C3.df) <- date_decimal(as.numeric(rownames(hw.HH1C3.df)))
 acc.hw.HH1C3 <- accuracy(hw.F1C3, HH1C3_w.valid.ts)
 knitr::kable(acc.hw.HH1C3)
 plot(hw.HH1C3)
+
+
+# State Space (Tbats)
+tbats.HH1C3 <- forecast(tbats(HH1C3_w.train.ts), h = 28)
+tbats.HH1C3$mean
+tbats.HH1C3.df <- data.frame(tbats.HH1C3)
+rownames(tbats.HH1C3.df) <- date_decimal(as.numeric(rownames(tbats.HH1C3.df)))
+acc.tbats.HH1C3 <- accuracy(tbats.HH1C3, HH1C3_w.valid.ts)
+knitr::kable(acc.tbats.HH1C3)
+plot(tbats.HH1C3)
 ```
 
 
@@ -2890,6 +3269,17 @@ rownames(hw.HH2C1.df) <- date_decimal(as.numeric(rownames(hw.HH2C1.df)))
 acc.hw.HH2C1 <- accuracy(hw.F1C1, HH2C1_w.valid.ts)
 knitr::kable(acc.hw.HH2C1)
 plot(hw.HH2C1)
+
+
+
+# State Space (Tbats)
+tbats.HH2C1 <- forecast(tbats(HH2C1_w.train.ts), h = 28)
+tbats.HH2C1$mean
+tbats.HH2C1.df <- data.frame(tbats.HH2C1)
+rownames(tbats.HH2C1.df) <- date_decimal(as.numeric(rownames(tbats.HH2C1.df)))
+acc.tbats.HH2C1 <- accuracy(tbats.HH2C1, HH2C1_w.valid.ts)
+knitr::kable(acc.tbats.HH2C1)
+plot(tbats.HH2C1)
 ```
 ```{r}
 # create a time series forecasting for the HH2 CA2 data
@@ -2955,6 +3345,17 @@ rownames(hw.HH2C2.df) <- date_decimal(as.numeric(rownames(hw.HH2C2.df)))
 acc.hw.HH2C2 <- accuracy(hw.F1C2, HH2C2_w.valid.ts)
 knitr::kable(acc.hw.HH2C2)
 plot(hw.HH2C2)
+
+
+
+# State Space (Tbats)
+tbats.HH2C2 <- forecast(tbats(HH2C2_w.train.ts), h = 28)
+tbats.HH2C2$mean
+tbats.HH2C2.df <- data.frame(tbats.HH2C2)
+rownames(tbats.HH2C2.df) <- date_decimal(as.numeric(rownames(tbats.HH2C2.df)))
+acc.tbats.HH2C2 <- accuracy(tbats.HH2C2, HH2C2_w.valid.ts)
+knitr::kable(acc.tbats.HH2C2)
+plot(tbats.HH2C2)
 ```
 
 ```{r}
@@ -3022,17 +3423,32 @@ rownames(hw.HH2C3.df) <- date_decimal(as.numeric(rownames(hw.HH2C3.df)))
 acc.hw.HH2C3 <- accuracy(hw.F1C3, HH2C3_w.valid.ts)
 knitr::kable(acc.hw.HH2C3)
 plot(hw.HH2C3)
+
+
+
+# State Space (Tbats)
+tbats.HH2C3 <- forecast(tbats(HH2C3_w.train.ts), h = 28)
+tbats.HH2C3$mean
+tbats.HH2C3.df <- data.frame(tbats.HH2C3)
+rownames(tbats.HH2C3.df) <- date_decimal(as.numeric(rownames(tbats.HH2C3.df)))
+acc.tbats.HH2C3 <- accuracy(tbats.HH2C3, HH2C3_w.valid.ts)
+knitr::kable(acc.tbats.HH2C3)
+plot(tbats.HH2C3)
 ```
+
 
 3. Machine/Deep Learning models and extension 
 
 
 1. Now consider machine learning benchmarks, such as those in the set of benchmarks or that are available on the M5 github (e.g. LSTM, using keras in R) and compare their performance in terms of point/probabilistic forecasts. 
 
-When analyzing the scores and ranks of the M5 competition, we can find information about the Accuracy-Benchmarks as well as the Uncertainty-Benchmarks. Furthermore, the information is provided in 12 different levels of aggregation starting with the one time series containing the unit sales that is later on aggregated by state, store, category, department, product and a combination leading to a 30.490 time series in level 12 (L12). Finally, the average of all 42.840 time series is taking and provided in the final column of the benchmarks. 
+When analyzing the scores and ranks of the M5 competition, we can find information about the Accuracy-Benchmarks as well as the Uncertainty-Benchmarks. Furthermore, the information is provided in 12 different levels of aggregation starting with the one time series containing the unit sales that is later on aggregated by state, store, category, department, product and a combination leading to a 30.490 time series in level 12 (L12). Finally, the average of all 42.840 time series is taking and provided in the final column of the benchmarks.
 
 In the following we want to first analyze the performance of the individual algorithms and compare their benchmarks with the achieved results from the highest-ranking teams to assess what approaches lead to the highest performance.
 
-Starting with the Accuracy-Benchmarks, the performance of point forecasts of the individual machine learning algorithms is measured using the Root Mean Squared Scaled Error (WRMSSE). The models that achieve the lowest WRMSSE in the first 9 levels are the statistical benchmarks Exponential Smoothing in a Bottum Up approach (ES_bu) and Exponential Smoothing with explanatory Variables (ESX). For the larger number of time series in the levels 10, 11 and 12 we can observe that the performance varies less than in the previous levels with the lowest error being reached by using combination benchmarks of averaging both Exponential Smoothing methods in a top-down and bottom-up approach (Com_tb). On average, the ES_bu method gives the lowest error and thus
+Starting with the Accuracy-Benchmarks, the performance of point forecasts of the individual machine learning algorithms is measured using the Root Mean Squared Scaled Error (WRMSSE). Overall, we can see that the WRMSSE increases with the level and the number of time series to consider. The models that achieve the lowest WRMSSE in the first 9 levels are the statistical benchmarks Exponential Smoothing in a Bottum Up approach (ES_bu) and Exponential Smoothing with explanatory Variables (ESX). For the larger number of time series in the levels 10, 11 and 12 we can observe that the performance varies less than in the previous levels with the lowest error being reached by using combination benchmarks of averaging both Exponential Smoothing methods in a top-down and bottom-up approach (Com_tb). On average, the ES_bu method gives the lowest error and thus displays the top-performing and most interesting benchmark to consider.
 
-Here we can see how the different models performed, XYZ are the best
+The Top 50 teams of the competition all outperformed the ES_bu benchmark with the Top 5 teams achieving higher accuracies by over 20% and the winning team achieving 22.4% improvement over ES_bu. Thus, the approaches of the top 5 teams could have high impacts and create a lot of economic value when used in practice. It is evident, that the performance vastly differs among the aggregation level. Some teams perform better in some levels while lacking accuracy in comparison in other levels. The winning team performed best in the levels L3, L7, L8, L9 while only coming 13th in L10, 12th in L11 and 11th in L12. The second place received impressive results in lower levels, winning L2, L4, L5 and L6, but performed worse in L10, L11 and L12 only barely making a Top 50 accuracy in these aggregation levels. Thus, we can conclude that different methods are more or less useful depending on the forecasting task and to optimize accuracy the entire scope of the values has to be taken into account. We also notice that compared to ES_bu the accuracy in the lower levels is on average more improved than in the higher levels with more time series to consider.
+
+When assessing the different methods the teams have used to receive the results with the highest performance, it becomes clear that most of the teams have used gradient boosting ML algorithms. Especially LightGBM, which is a nonlinear regression algorithm using gradient boosted trees, is used for the top placements in the competition. The submissions of the top placements combined various LightGBM models using different recursive and non-recursive learning approaches and training sets, for example per store or department, that were fine-tuned using numerous parameters and features.
+
