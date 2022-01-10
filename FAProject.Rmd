@@ -3436,11 +3436,67 @@ knitr::kable(acc.tbats.HH2C3)
 plot(tbats.HH2C3)
 ```
 
+################################################################################
+Exercise 2. Multivariate Models
 
-3. Machine/Deep Learning models and extension 
+We now consider fitting multivariate models and, in each case, comparing them with the univariate benchmarks obtained in Section 1 as well as between themselves. Assessments are made at the h = 1 horizon for point & probabilistic forecasts.
+
+2.1. Consider a VAR model for each store and obtain resulting forecasts for the testing sample
+```{r}
+install.packages("vars")
+install.packages("mFilter")
+install.packages("TSstudio")
+```
+```{r}
+library(vars)
+library(mFilter)
+library(tseries)
+library(TSstudio)
+library(forecast)
+library(tidyverse)
+
+# https://towardsdatascience.com/a-deep-dive-on-vector-autoregression-in-r-58767ebb3f06?gi=b439b180190c
+ex2 <- stores_data
+ex2_CA1 <- ts(ex2$CA1, start = c(2011,1,29), frequency = 365)
+ex2_CA2 <- ts(ex2$CA1, start = c(2011,1,29), frequency = 365)
+ex2_CA3 <- ts(ex2$CA1, start = c(2011,1,29), frequency = 365)
+
+v1 <- cbind(ex2_CA1,ex2_CA2,ex2_CA3)
+colnames(v1) <- cbind("CA1", "CA2", "CA3")
+
+# Automatically generate preferred lag order
+lagselect <- VARselect(v1, lag.max = 15, type = "const")
+lagselect$selection
+Model1 <- VAR(v1, p = 1, type = "const", season = NULL, exog = NULL) 
+
+# Test that residuals are non-autocorrelated
+Serial1 <- serial.test(Model1, lags.pt = 5, type = "PT.asymptotic")
+Serial1
+
+# lag length
+#VARselect(ex2.lev, lag.max = 4,
+#          type = "const", season = 4)
+ 
+# estimation
+#ar.model_lev <- VAR(df.lev, p = 2, 
+#                    type = "const", season = 4)
+ 
+# forecast of lev data
+#var.pred <-  predict(var.model_lev, n.ahead = nhor)
+
+```
+2.2. Consider a VAR model for each type of products and obtain forecasts.
+
+2.3. Consider a large VAR model involving all variables.
 
 
-1. Now consider machine learning benchmarks, such as those in the set of benchmarks or that are available on the M5 github (e.g. LSTM, using keras in R) and compare their performance in terms of point/probabilistic forecasts. 
+
+
+################################################################################
+Exercise 3. Machine/Deep Learning models and extension 
+
+
+3.1. Now consider machine learning benchmarks, such as those in the set of benchmarks or that are available on the M5 github (e.g. LSTM, using keras in R) and compare their performance in terms of point/probabilistic forecasts. 
 
 When analyzing the scores and ranks of the M5 competition, we can find information about the Accuracy-Benchmarks as well as the Uncertainty-Benchmarks. There are 24 methods being used for point forecasts and 6 methods for probabilistic forecasts. Furthermore, the information is provided in 12 different levels of aggregation starting with the one time series containing the unit sales that is later on aggregated by state, store, category, department, product and a combination leading to a 30.490 time series in level 12 (L12). Finally, the average of all 42.840 time series is taking and provided in the final column of the benchmarks. 
 
@@ -3454,13 +3510,13 @@ When assessing the different methods, the teams have used to receive the results
 
 When we analyze the Uncertainty-Benchmarks, the performance of probabilistic forecast is evaluated using the Scaled Pinball Loss function calculated at nine quantiles, averaged and ranked using the Weighted Scaled Pinball Loss function (WSPL). Again, for the highest performing benchmarks we can see the WSPL error slightly increase with the level and the number of time series to be estimated. The AutoRegressive Integrated Moving Average (ARIMA) and Exponential smoothing (ETS) benchmarks, both similar to the Bottom-Up approach for point forecasts, give the best performance among the probabilistic methods over all levels as well as all quantiles. On average they give almost the same results with the ARIMA method slightly outperforming ETS by 0.001 and thus is the benchmark to beat for the submissions. As the coverage rate for all of the benchmarks fits quite well for most of the quantiles, and the first 10 submissions in the Uncertainty Ranking among the Top 50 submissions received bad placements in terms of coverage rage, the coverage rate will be neglected for the purpose of this analysis.
 
-
-2. Can combinations of ML/DL techniques with standard techniques help? 
+3.2. Can combinations of ML/DL techniques with standard techniques help? 
 
 In the M5 competition the highest ranked submissions consisted solely of ML methods and vastly outperformed statistical benchmarks and their combinations. Due to advancements in data availability, efficiency of algorithms, preprocessing and computational power, ML methods provide more promising results as evidenced by the improved accuracy of the WRMSSE of over 20 % over all statistical benchmarks. Even with only smaller improvements for less aggregated time series, ML forecasting methods should be considered as today’s most promising approach to estimate the complex, non-linear relationships within the data. Next to gradient boosting methods like LightGBM can Deep Learning methods further optimize results and provide potential to outperform other ML algorithms. 
 
 The approach of combining numerous methods to achieve more accurate estimations has been proving valuable for a long time. Already the combination of statistical benchmarks showed promising results and almost all the results of the Top 50 submissions use combination of techniques improve their accuracy and exploit different learning approaches and training sets to receive the targeted placements. Following the results of the Top 50 submissions we can also see that using the correlation between the series allows achieving more accurate results compared to methods without cross-learning by taking all the information of the dataset into consideration.
 
-The combination of ML/DL technique with standard techniques becomes then interesting when external information from domain knowledge and forecasting knowledge comes into play to externally adjust the forecasts, reducing bias and including long-term trends by using special weights and multipliers for certain ML models. Furthermore, time series methods can identify patterns in historic data, especially those reliant on exogenous and explanatory variables such as holidays, promotion and prices etc. can help observe patterns that could distort historical data. After removing the pattern-generating data, the forecast can further reach higher accuracies. 
+The combination of ML/DL technique with standard techniques becomes then interesting when external information from domain knowledge and forecasting knowledge comes into play to externally adjust the forecasts, reducing bias and including long-term trends by using special weights and multipliers for certain ML models. Furthermore, time series methods can identify patterns in historic data, especially those reliant on exogenous and explanatory variables such as holidays, promotion and prices etc. can help observe patterns that could distort historical data. After removing the pattern-generating data, the forecast can further reach higher accuracies.
 
 Nevertheless, most high-ranking submissions focused primarily the use of unstructured data-driven methods using cross-validation and rather focused on building numerous models than finding the most accurate model using a certain statistical method or a combination of such. Instead of understanding the data in depth and applying statistical and forecasting knowledge, the improved accuracy came through experimentation and data mining. Thus, we conclude that standard techniques can help to improve the accuracy of the results but the computational-heavy implementation and fine tuning of numerous ML/DL methods proves to be more effective if solely improved accuracy instead of explainability is the target. 
+
