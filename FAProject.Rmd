@@ -3463,6 +3463,155 @@ knitr::kable(acc.tbats.HH2C3)
 plot(tbats.HH2C3)
 ```
 
+1.7. We now only focus on forecasting the disaggregates (original data).
+
+(a) Consider the probabilistic forecasts i to vi in the M5 guidelines
+
+```{r}
+benchmarks_f <- function(x, fh){
+  
+  input <- x$x
+  
+  #Drop the periods where the item wasn't active
+  start_period <- data.frame(input, c(1:length(input)))
+  start_period <- min(start_period[start_period$input>0,2])
+  input <- input[start_period:length(input)]
+  
+  #Estimate forecasts
+  
+  # SES
+  sesf <- ses(ts(input, frequency = 7), h = fh, level = c(50, 67, 95, 99))
+  sesf <- data.frame(cbind(sesf$lower[,4], sesf$lower[,3], sesf$lower[,2], sesf$lower[,1],
+                           sesf$mean,
+                           sesf$upper[,1], sesf$upper[,2], sesf$upper[,3],sesf$upper[,4]))
+  colnames(sesf) <- paste0("q",qlist)
+  for (qid in 1:ncol(sesf)){
+    for (fhid in 1:nrow(sesf)){
+      sesf[fhid,qid] <- max(0,sesf[fhid,qid])
+    }
+  }
+  sesf <- data.frame(as.numeric(unlist(sesf)), 
+                     rep(c(1:fh),9), 
+                     unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(sesf) <- c("SES", "fh", "quantile")
+  
+  # Naive
+  naivef <- naive(ts(input, frequency = 7), h = fh, level = c(50, 67, 95, 99))
+  naivef <- data.frame(cbind(naivef$lower[,4], naivef$lower[,3], naivef$lower[,2], naivef$lower[,1],
+                             naivef$mean,
+                             naivef$upper[,1], naivef$upper[,2], naivef$upper[,3], naivef$upper[,4]))
+  colnames(naivef) <- paste0("q",qlist)
+  for (qid in 1:ncol(naivef)){
+    for (fhid in 1:nrow(naivef)){
+      naivef[fhid,qid] <- max(0,naivef[fhid,qid])
+    }
+  }
+  naivef <- data.frame(as.numeric(unlist(naivef)), 
+                       rep(c(1:fh),9), 
+                       unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(naivef) <- c("Naive", "fh", "quantile")
+  
+  # sNaive
+  snaivef <- snaive(ts(input, frequency = 7), h = fh, level = c(50, 67, 95, 99))
+  snaivef <- data.frame(cbind(snaivef$lower[,4], snaivef$lower[,3], snaivef$lower[,2], snaivef$lower[,1],
+                              snaivef$mean,
+                              snaivef$upper[,1], snaivef$upper[,2], snaivef$upper[,3], snaivef$upper[,4]))
+  colnames(snaivef) <- paste0("q",qlist)
+  for (qid in 1:ncol(snaivef)){
+    for (fhid in 1:nrow(snaivef)){
+      snaivef[fhid,qid] <- max(0,snaivef[fhid,qid])
+    }
+  }
+  snaivef <- data.frame(as.numeric(unlist(snaivef)), 
+                        rep(c(1:fh),9), 
+                        unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(snaivef) <- c("sNaive", "fh", "quantile")
+  
+  # ETS
+  etsf <- forecast(ets(ts(input, frequency = 7)), h = fh, level = c(50, 67, 95, 99))
+  etsf <- data.frame(cbind(etsf$lower[,4], etsf$lower[,3], etsf$lower[,2], etsf$lower[,1],
+                           etsf$mean,
+                           etsf$upper[,1], etsf$upper[,2], etsf$upper[,3], etsf$upper[,4]))
+  colnames(etsf) <- paste0("q",qlist)
+  for (qid in 1:ncol(etsf)){
+    for (fhid in 1:nrow(etsf)){
+      etsf[fhid,qid] <- max(0,etsf[fhid,qid])
+    }
+  }
+  etsf <- data.frame(as.numeric(unlist(etsf)), 
+                     rep(c(1:fh),9), 
+                     unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(etsf) <- c("ETS", "fh", "quantile")
+  
+  # ARIMA
+  arimaf <- forecast(auto.arima(ts(input, frequency = 7)), h = fh, level = c(50, 67, 95, 99))
+  arimaf <- data.frame(cbind(arimaf$lower[,4], arimaf$lower[,3], arimaf$lower[,2], arimaf$lower[,1],
+                             arimaf$mean,
+                             arimaf$upper[,1], arimaf$upper[,2], arimaf$upper[,3], arimaf$upper[,4]))
+  colnames(arimaf) <- paste0("q",qlist)
+  for (qid in 1:ncol(arimaf)){
+    for (fhid in 1:nrow(arimaf)){
+      arimaf[fhid,qid] <- max(0,arimaf[fhid,qid])
+    }
+  }
+  arimaf <- data.frame(as.numeric(unlist(arimaf)), 
+                       rep(c(1:fh),9), 
+                       unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(arimaf) <- c("ARIMA", "fh", "quantile")
+  
+  # Kernel 
+  quants <- as.numeric(quantile(input,qlist))
+  kernelf <- data.frame(cbind(rep(quants[1],28), rep(quants[2],28), rep(quants[3],28),
+                              rep(quants[4],28), rep(quants[5],28), rep(quants[6],28),
+                              rep(quants[7],28), rep(quants[8],28), rep(quants[9],28)))
+  colnames(kernelf) <- paste0("q",qlist)
+  kernelf <- data.frame(as.numeric(unlist(kernelf)), 
+                        rep(c(1:fh),9), 
+                        unlist(lapply(c(1:9), function(x) rep(qlist[x],fh))))
+  colnames(kernelf) <- c("Kernel", "fh", "quantile")
+  
+  Methods <- merge(naivef, snaivef, by=c("fh", "quantile"))
+  Methods <- merge(Methods, sesf, by=c("fh", "quantile"))
+  Methods <- merge(Methods, etsf, by=c("fh", "quantile"))
+  Methods <- merge(Methods, arimaf, by=c("fh", "quantile"))
+  Methods <- merge(Methods, kernelf, by=c("fh", "quantile"))
+  
+  Methods$Agg_Level_1	<- x$Agg_Level_1
+  Methods$Agg_Level_2 <- x$Agg_Level_2
+  
+  return(Methods)
+}
+```
+
+(b) Assess them using the Scaled Pinball Loss (p7 of the M5 guidelines)
+
+```{r}
+final_scores <- NULL
+b_names <- c("Naive", "sNaive", "SES", "ETS", "ARIMA", "Kernel")
+qlist <- c(0.005, 0.025, 0.165, 0.25, 0.5, 0.75, 0.835, 0.975, 0.995)
+
+    scorej <- 0
+    for (j in 1:length(qlist)){
+      for_temp_j <- for_temp[for_temp$quantile==qlist[j],]
+      for_temp_j$fh <- as.numeric(for_temp_j$fh)
+      for_temp_j <- for_temp_j[order(for_temp_j$fh),] ; row.names(for_temp_j) <- NULL
+      for_temp_j <- for_temp_j[,3]
+      temp_score <- 0
+      for (k in 1:length(for_temp_j)){
+        if (outsample$x[k]>=for_temp_j[k]){
+          temp_score <- temp_score + qlist[j]*(outsample$x[k]-for_temp_j[k])
+        }else{
+          temp_score <- temp_score + (1-qlist[j])*(for_temp_j[k]-outsample$x[k])
+        }
+      }
+      temp_score <- (temp_score/length(for_temp_j))/mean(abs(diff(insample$x)))
+      scorej <- scorej + temp_score
+    }
+    score_total <- rbind(score_total, data.frame((scorej/length(qlist))*wi,outsample$Agg_Level_1,outsample$Agg_Level_2, outsample$Hlevel)) 
+  
+
+```
+
 ################################################################################
 Exercise 2. Multivariate Models
 
