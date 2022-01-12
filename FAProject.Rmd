@@ -302,6 +302,33 @@ Exercise 1.2 - We now want to assess the set of benchmark in the M5 guidelines. 
 
 (a) Fit Statistical benchmarks 1 (Naive), 2 (sNaive), 3 (ES), 4 (MA), 13 (ESX), as well as SARIMA, SARIMAX (using X as in ESX) and Holt-Winters up to the end of the training subsample.
 
+```{r}
+require(smooth)
+require(greybox)
+library(xts)
+library(tseries)
+library(TSA)
+library(forecast)
+library(fpp3)
+#df_tsbl <- Projectdata #%>%
+  #mutate(date = as_date(date)) %>%
+  #as_tsibble(index = date)
+#dim(df_tsbl) # 1969, 22
+
+# array of features' names - for possible for loop
+colnames = colnames(Projectdata) # all column names
+
+ex_variables_n = tail(colnames,n=3) # only explanatory variable names
+
+x_variables_n = colnames[-c(1)]
+x_variables_n = x_variables_n[c(1:18)] # without explanatory and date
+
+# train, val, test dataframes
+df_train = Projectdata[c(1:1941), c(1:22)]
+# df_val = df_tsbl[c(1914:1941), c(1:22)]
+df_test = Projectdata[c(1942:1969), c(1:22)]
+
+```
 
 ```{r}
 library(lubridate)
