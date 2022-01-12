@@ -329,7 +329,6 @@ df_train = Projectdata[c(1:1941), c(1:22)]
 df_test = Projectdata[c(1942:1969), c(1:22)]
 
 ```
-
 ```{r}
 library(lubridate)
 library(forecast)
@@ -366,7 +365,7 @@ snaive.HC1_df
 rownames(snaive.HC1_df) = date_decimal(as.numeric(rownames(snaive.HC1_df)))
 acc.snaive.HC1 <- accuracy(snaive.HC1, HC1.valid.ts)
 knitr::kable(acc.snaive.HC1)
-summary(snaive.HC1)
+
 # Exponential Smoothing 
 es.HC1 = ses(HC1.train.ts, h = 28)
 es.HC1$mean
@@ -376,7 +375,6 @@ rownames(es.HC1_df) <- date_decimal(as.numeric(rownames(es.HC1_df)))
 acc.es.HC1 <- accuracy(es.HC1, HC1.valid.ts)
 knitr::kable(acc.es.HC1)
 
-
 # Moving Average
 ma.HC1 <- forecast(ma(HC1.train.ts, order = 5), h = 28)
 ma.HC1$mean
@@ -385,7 +383,7 @@ rownames(ma.HC1_df) <- date_decimal(as.numeric(rownames(ma.HC1_df)))
 acc.ma.HC1 <- accuracy(ma.HC1, HC1.valid.ts)
 knitr::kable(acc.ma.HC1)
 
-# SARIMA
+#SARIMA
 sarima.HC1 <- forecast(auto.arima(HC1.train.ts, D = 1), h = 28)
 sarima.HC1$mean
 sarima.HC1_df <- data.frame(sarima.HC1)
@@ -401,14 +399,35 @@ rownames(hw.HC1.df) <- date_decimal(as.numeric(rownames(hw.HC1.df)))
 acc.hw.HC1 <- accuracy(hw.HC1, HC1.valid.ts)
 knitr::kable(acc.hw.HC1)
 
-# State Space (Tbats)
-tbats.HC1 <- forecast(tbats(HC1.train.ts), h = 28)
-tbats.HC1$mean
-tbats.HC1.df <- data.frame(tbats.HC1)
-rownames(tbats.HC1.df) <- date_decimal(as.numeric(rownames(tbats.HC1.df)))
-acc.tbats.HC1 <- accuracy(tbats.HC1, HC1.valid.ts)
-knitr::kable(acc.tbats.HC1)
+
+# Exponential Smoothing Model (ESX)
+
+
+Hobbies_CA_1_all = Projectdata[, c('date', 'Hobbies_CA_1')]
+Hobbies_CA_1_train = df_train[, c('date', 'Hobbies_CA_1')]
+Hobbies_CA_1_test = df_train[, c('date', 'Hobbies_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_1_all$date = as.Date(Hobbies_CA_1_all$date)
+Hobbies_CA_1_all_ts <- ts(Hobbies_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_1_train$date = as.Date(Hobbies_CA_1_train$date)
+Hobbies_CA_1_train_ts <- ts(Hobbies_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
+
+plot(sarima.HC1,  main="Forecast", xlab="Time", ylab="Sales")
+
 ```
+
+
+
+
 
 
 ```{r}
@@ -464,13 +483,14 @@ acc.ma.HC2 <- accuracy(ma.HC2, HC2.valid.ts)
 knitr::kable(acc.ma.HC2)
 
 # SARIMA
-sarima.HC2 <- forecast(auto.arima(HC2.train.ts, D = 1), h = 28)
-sarima.HC2$mean
-sarima.HC2_df <- data.frame(sarima.HC2)
-rownames(sarima.HC2_df) <- date_decimal(as.numeric(rownames(sarima.HC2_df)))
-acc.sarima.HC2 <- accuracy(sarima.HC2, HC2.valid.ts)
-knitr::kable(acc.sarima.HC2)
-plot(sarima.HC2)
+#sarima.HC2 <- forecast(auto.arima(HC2.train.ts, D = 1), h = 28)
+#sarima.HC2$mean
+#sarima.HC2_df <- data.frame(sarima.HC2)
+#rownames(sarima.HC2_df) <- date_decimal(as.numeric(rownames(sarima.HC2_df)))
+#acc.sarima.HC2 <- accuracy(sarima.HC2, HC2.valid.ts)
+#knitr::kable(acc.sarima.HC2)
+#plot(sarima.HC2)
+
 # HoltWinters
 hw.HC2 <- forecast(HoltWinters(HC2.train.ts, seasonal = "additive"), h = 28)
 hw.HC2$mean
@@ -480,15 +500,26 @@ acc.hw.HC2 <- accuracy(hw.HC2, HC2.valid.ts)
 knitr::kable(acc.hw.HC2)
 plot(hw.HC2)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.HC2 <- forecast(tbats(HC2.train.ts), h = 28)
-tbats.HC2$mean
-tbats.HC2.df <- data.frame(tbats.HC2)
-rownames(tbats.HC2.df) <- date_decimal(as.numeric(rownames(tbats.HC2.df)))
-acc.tbats.HC2 <- accuracy(tbats.HC2, HC2.valid.ts)
-knitr::kable(acc.tbats.HC2)
-plot(tbats.HC2)
+
+Hobbies_CA_2_all = Projectdata[, c('date', 'Hobbies_CA_2')]
+Hobbies_CA_2_train = df_train[, c('date', 'Hobbies_CA_2')]
+Hobbies_CA_2_test = df_train[, c('date', 'Hobbies_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_2_all$date = as.Date(Hobbies_CA_2_all$date)
+Hobbies_CA_2_all_ts <- ts(Hobbies_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_2_train$date = as.Date(Hobbies_CA_2_train$date)
+Hobbies_CA_2_train_ts <- ts(Hobbies_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -544,13 +575,13 @@ acc.ma.HC3 <- accuracy(ma.HC3, HC3.valid.ts)
 knitr::kable(acc.ma.HC3)
 
 # SARIMA
-sarima.HC3 <- forecast(auto.arima(HC3.train.ts, D = 1), h = 28)
-sarima.HC3$mean
-sarima.HC3_df <- data.frame(sarima.HC3)
-rownames(sarima.HC3_df) <- date_decimal(as.numeric(rownames(sarima.HC3_df)))
-acc.sarima.HC3 <- accuracy(sarima.HC3, HC3.valid.ts)
-knitr::kable(acc.sarima.HC3)
-plot(sarima.HC3)
+# sarima.HC3 <- forecast(auto.arima(HC3.train.ts, D = 1), h = 28)
+# sarima.HC3$mean
+# sarima.HC3_df <- data.frame(sarima.HC3)
+# rownames(sarima.HC3_df) <- date_decimal(as.numeric(rownames(sarima.HC3_df)))
+# acc.sarima.HC3 <- accuracy(sarima.HC3, HC3.valid.ts)
+# knitr::kable(acc.sarima.HC3)
+# plot(sarima.HC3)
 
 # HoltWinters
 hw.HC3 <- forecast(HoltWinters(HC3.train.ts, seasonal = "additive"), h = 28)
@@ -561,18 +592,26 @@ acc.hw.HC3 <- accuracy(hw.HC3, HC3.valid.ts)
 knitr::kable(acc.hw.HC3)
 plot(hw.HC3)
 
-# State Space (Tbats)
-tbats.HC3 <- forecast(tbats(HC3.train.ts), h = 28)
-tbats.HC3$mean
-tbats.HC3.df <- data.frame(tbats.HC3)
-rownames(tbats.HC3.df) <- date_decimal(as.numeric(rownames(tbats.HC3.df)))
-acc.tbats.HC3 <- accuracy(tbats.HC3, HC3.valid.ts)
-knitr::kable(acc.tbats.HC3)
-plot(tbats.HC3)
+# Exponential Smoothing Model (ESX)
+
+
+Hobbies_CA_3_all = Projectdata[, c('date', 'Hobbies_CA_3')]
+Hobbies_CA_3_train = df_train[, c('date', 'Hobbies_CA_3')]
+Hobbies_CA_3_test = df_train[, c('date', 'Hobbies_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_3_all$date = as.Date(Hobbies_CA_3_all$date)
+Hobbies_CA_3_all_ts <- ts(Hobbies_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_3_train$date = as.Date(Hobbies_CA_3_train$date)
+Hobbies_CA_3_train_ts <- ts(Hobbies_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
-
-
-
 ```{r}
 # Forecasting foods_1 CA_1
 # create a time series for the F1C1 data
@@ -637,19 +676,28 @@ acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1.valid.ts)
 knitr::kable(acc.hw.F1C1)
 plot(hw.F1C1)
 
-# State Space (Tbats)
-tbats.F1C1 <- forecast(tbats(F1C1.train.ts), h = 28)
-tbats.F1C1$mean
-tbats.F1C1.df <- data.frame(tbats.F1C1)
-rownames(tbats.F1C1.df) <- date_decimal(as.numeric(rownames(tbats.F1C1.df)))
-acc.tbats.F1C1 <- accuracy(tbats.F1C1, F1C1.valid.ts)
-knitr::kable(acc.tbats.F1C1)
-plot(tbats.F1C1)
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_1_all = Projectdata[, c('date', 'Foods_1_CA_1')]
+Foods_1_CA_1_train = df_train[, c('date', 'Foods_1_CA_1')]
+Foods_1_CA_1_test = df_train[, c('date', 'Foods_1_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_1_all$date = as.Date(Foods_1_CA_1_all$date)
+Foods_1_CA_1_all_ts <- ts(Foods_1_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_1_train$date = as.Date(Foods_1_CA_1_train$date)
+Foods_1_CA_1_train_ts <- ts(Foods_1_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 
 
 ```
-
-
 
 ```{r}
 # Forecasting foods_1 CA_2
@@ -706,6 +754,7 @@ rownames(sarima.F1C2_df) <- date_decimal(as.numeric(rownames(sarima.F1C2_df)))
 acc.sarima.F1C2 <- accuracy(sarima.F1C2, F1C2.valid.ts)
 knitr::kable(acc.sarima.F1C2)
 plot(sarima.F1C2)
+
 # HoltWinters
 hw.F1C2 <- forecast(HoltWinters(F1C2.train.ts, seasonal = "additive"), h = 28)
 hw.F1C2$mean
@@ -715,18 +764,26 @@ acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2.valid.ts)
 knitr::kable(acc.hw.F1C2)
 plot(hw.F1C2)
 
-# State Space (Tbats)
-tbats.F1C2 <- forecast(tbats(F1C2.train.ts), h = 28)
-tbats.F1C2$mean
-tbats.F1C2.df <- data.frame(tbats.F1C2)
-rownames(tbats.F1C2.df) <- date_decimal(as.numeric(rownames(tbats.F1C2.df)))
-acc.tbats.F1C2 <- accuracy(tbats.F1C2, F1C2.valid.ts)
-knitr::kable(acc.tbats.F1C2)
-plot(tbats.F1C2)
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_2_all = Projectdata[, c('date', 'Foods_1_CA_2')]
+Foods_1_CA_2_train = df_train[, c('date', 'Foods_1_CA_2')]
+Foods_1_CA_2_test = df_train[, c('date', 'Foods_1_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_2_all$date = as.Date(Foods_1_CA_2_all$date)
+Foods_1_CA_2_all_ts <- ts(Foods_1_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_2_train$date = as.Date(Foods_1_CA_2_train$date)
+Foods_1_CA_2_train_ts <- ts(Foods_1_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
-
-
 
 ```{r}
 # Forecasting foods_1 CA_3
@@ -793,17 +850,26 @@ acc.hw.F1C3 <- accuracy(hw.F1C3, F1C3.valid.ts)
 knitr::kable(acc.hw.F1C3)
 plot(hw.F1C3)
 
-# State Space (Tbats)
-tbats.F1C3 <- forecast(tbats(F1C3.train.ts), h = 28)
-tbats.F1C3$mean
-tbats.F1C3.df <- data.frame(tbats.F1C3)
-rownames(tbats.F1C3.df) <- date_decimal(as.numeric(rownames(tbats.F1C3.df)))
-acc.tbats.F1C3 <- accuracy(tbats.F1C3, F1C3.valid.ts)
-knitr::kable(acc.tbats.F1C3)
-plot(tbats.F1C3)
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_3_all = Projectdata[, c('date', 'Foods_1_CA_3')]
+Foods_1_CA_3_train = df_train[, c('date', 'Foods_1_CA_3')]
+Foods_1_CA_3_test = df_train[, c('date', 'Foods_1_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_3_all$date = as.Date(Foods_1_CA_3_all$date)
+Foods_1_CA_3_all_ts <- ts(Foods_1_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_3_train$date = as.Date(Foods_1_CA_3_train$date)
+Foods_1_CA_3_train_ts <- ts(Foods_1_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
-
-
 
 ```{r}
 
@@ -861,7 +927,6 @@ rownames(sarima.F2C1_df) <- date_decimal(as.numeric(rownames(sarima.F2C1_df)))
 acc.sarima.F2C1 <- accuracy(sarima.F2C1, F2C1.valid.ts)
 knitr::kable(acc.sarima.F2C1)
 plot(sarima.F2C1)
-
 # HoltWinters
 hw.F2C1 <- forecast(HoltWinters(F2C1.train.ts, seasonal = "additive"), h = 28)
 hw.F2C1$mean
@@ -871,15 +936,24 @@ acc.hw.F2C1 <- accuracy(hw.F2C1, F2C1.valid.ts)
 knitr::kable(acc.hw.F2C1)
 plot(hw.F2C1)
 
-# State Space (Tbats)
-tbats.F2C1 <- forecast(tbats(F2C1.train.ts), h = 28)
-tbats.F2C1$mean
-tbats.F2C1.df <- data.frame(tbats.F2C1)
-rownames(tbats.F2C1.df) <- date_decimal(as.numeric(rownames(tbats.F2C1.df)))
-acc.tbats.F2C1 <- accuracy(tbats.F2C1, F2C1.valid.ts)
-knitr::kable(acc.tbats.F2C1)
-plot(tbats.F2C1)
+# Exponential Smoothing Model (ESX)
 
+
+Foods_2_CA_1_all = Projectdata[, c('date', 'Foods_2_CA_1')]
+Foods_2_CA_1_train = df_train[, c('date', 'Foods_2_CA_1')]
+Foods_2_CA_1_test = df_train[, c('date', 'Foods_2_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_1_all$date = as.Date(Foods_2_CA_1_all$date)
+Foods_2_CA_1_all_ts <- ts(Foods_2_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_1_train$date = as.Date(Foods_2_CA_1_train$date)
+Foods_2_CA_1_train_ts <- ts(Foods_2_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -938,7 +1012,6 @@ rownames(sarima.F2C2_df) <- date_decimal(as.numeric(rownames(sarima.F2C2_df)))
 acc.sarima.F2C2 <- accuracy(sarima.F2C2, F2C2.valid.ts)
 knitr::kable(acc.sarima.F2C2)
 plot(sarima.F2C2)
-
 # HoltWinters
 hw.F2C2 <- forecast(HoltWinters(F2C2.train.ts, seasonal = "additive"), h = 28)
 hw.F2C2$mean
@@ -948,15 +1021,25 @@ acc.hw.F2C2 <- accuracy(hw.F2C2, F2C2.valid.ts)
 knitr::kable(acc.hw.F2C2)
 plot(hw.F2C2)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.F2C2 <- forecast(tbats(F2C2.train.ts), h = 28)
-tbats.F2C2$mean
-tbats.F2C2.df <- data.frame(tbats.F2C2)
-rownames(tbats.F2C2.df) <- date_decimal(as.numeric(rownames(tbats.F2C2.df)))
-acc.tbats.F2C2 <- accuracy(tbats.F2C2, F2C2.valid.ts)
-knitr::kable(acc.tbats.F2C2)
-plot(tbats.F2C2)
+
+Foods_2_CA_2_all = Projectdata[, c('date', 'Foods_2_CA_2')]
+Foods_2_CA_2_train = df_train[, c('date', 'Foods_2_CA_2')]
+Foods_2_CA_2_test = df_train[, c('date', 'Foods_2_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_2_all$date = as.Date(Foods_2_CA_2_all$date)
+Foods_2_CA_2_all_ts <- ts(Foods_2_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_2_train$date = as.Date(Foods_2_CA_2_train$date)
+Foods_2_CA_2_train_ts <- ts(Foods_2_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
 
 ```{r}
@@ -1014,7 +1097,6 @@ rownames(sarima.F2C3_df) <- date_decimal(as.numeric(rownames(sarima.F2C3_df)))
 acc.sarima.F2C3 <- accuracy(sarima.F2C3, F2C3.valid.ts)
 knitr::kable(acc.sarima.F2C3)
 plot(sarima.F2C3)
-
 # HoltWinters
 hw.F2C3 <- forecast(HoltWinters(F2C3.train.ts, seasonal = "additive"), h = 28)
 hw.F2C3$mean
@@ -1024,14 +1106,24 @@ acc.hw.F2C3 <- accuracy(hw.F2C3, F2C3.valid.ts)
 knitr::kable(acc.hw.F2C3)
 plot(hw.F2C3)
 
-# State Space (Tbats)
-tbats.F2C3 <- forecast(tbats(F2C3.train.ts), h = 28)
-tbats.F2C3$mean
-tbats.F2C3.df <- data.frame(tbats.F2C3)
-rownames(tbats.F2C3.df) <- date_decimal(as.numeric(rownames(tbats.F2C3.df)))
-acc.tbats.F2C3 <- accuracy(tbats.F2C3, F2C3.valid.ts)
-knitr::kable(acc.tbats.F2C3)
-plot(tbats.F2C3)
+# Exponential Smoothing Model (ESX)
+
+
+Foods_2_CA_3_all = Projectdata[, c('date', 'Foods_2_CA_3')]
+Foods_2_CA_3_train = df_train[, c('date', 'Foods_2_CA_3')]
+Foods_2_CA_3_test = df_train[, c('date', 'Foods_2_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_3_all$date = as.Date(Foods_2_CA_3_all$date)
+Foods_2_CA_3_all_ts <- ts(Foods_2_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_3_train$date = as.Date(Foods_2_CA_3_train$date)
+Foods_2_CA_3_train_ts <- ts(Foods_2_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -1083,7 +1175,7 @@ rownames(ma.F3C1_df) <- date_decimal(as.numeric(rownames(ma.F3C1_df)))
 acc.ma.F3C1 <- accuracy(ma.F3C1, F3C1.valid.ts)
 knitr::kable(acc.ma.F3C1)
 
-# SARIMA
+#SARIMA
 sarima.F3C1 <- forecast(auto.arima(F3C1.train.ts, D = 1), h = 28)
 sarima.F3C1$mean
 sarima.F3C1_df <- data.frame(sarima.F3C1)
@@ -1101,18 +1193,25 @@ acc.hw.F3C1 <- accuracy(hw.F3C1, F3C1.valid.ts)
 knitr::kable(acc.hw.F3C1)
 plot(hw.F3C1)
 
-# State Space (Tbats)
-tbats.F3C1 <- forecast(tbats(F3C1.train.ts), h = 28)
-tbats.F3C1$mean
-tbats.F3C1.df <- data.frame(tbats.F3C1)
-rownames(tbats.F3C1.df) <- date_decimal(as.numeric(rownames(tbats.F3C1.df)))
-acc.tbats.F3C1 <- accuracy(tbats.F3C1, F3C1.valid.ts)
-knitr::kable(acc.tbats.F3C1)
-plot(tbats.F3C1)
+# Exponential Smoothing Model (ESX)
+
+Foods_3_CA_1_all = Projectdata[, c('date', 'Foods_3_CA_1')]
+Foods_3_CA_1_train = df_train[, c('date', 'Foods_3_CA_1')]
+Foods_3_CA_1_test = df_train[, c('date', 'Foods_3_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_1_all$date = as.Date(Foods_3_CA_1_all$date)
+Foods_3_CA_1_all_ts <- ts(Foods_3_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_1_train$date = as.Date(Foods_3_CA_1_train$date)
+Foods_3_CA_1_train_ts <- ts(Foods_3_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
-
-
 
 ```{r}
 
@@ -1181,18 +1280,25 @@ acc.hw.F3C2 <- accuracy(hw.F3C2, F3C2.valid.ts)
 knitr::kable(acc.hw.F3C2)
 plot(hw.F3C2)
 
-# State Space (Tbats)
-tbats.F3C2 <- forecast(tbats(F3C2.train.ts), h = 28)
-tbats.F3C2$mean
-tbats.F3C2.df <- data.frame(tbats.F3C2)
-rownames(tbats.F3C2.df) <- date_decimal(as.numeric(rownames(tbats.F3C2.df)))
-acc.tbats.F3C2 <- accuracy(tbats.F3C2, F3C2.valid.ts)
-knitr::kable(acc.tbats.F3C2)
-plot(tbats.F3C2)
+# Exponential Smoothing Model (ESX)
 
+Foods_3_CA_2_all = Projectdata[, c('date', 'Foods_3_CA_2')]
+Foods_3_CA_2_train = df_train[, c('date', 'Foods_3_CA_2')]
+Foods_3_CA_2_test = df_train[, c('date', 'Foods_3_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_2_all$date = as.Date(Foods_3_CA_2_all$date)
+Foods_3_CA_2_all_ts <- ts(Foods_3_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_2_train$date = as.Date(Foods_3_CA_2_train$date)
+Foods_3_CA_2_train_ts <- ts(Foods_3_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
-
 
 ```{r}
 
@@ -1260,16 +1366,23 @@ acc.hw.F3C3 <- accuracy(hw.F3C3, F3C3.valid.ts)
 knitr::kable(acc.hw.F3C3)
 plot(hw.F3C3)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.F3C3 <- forecast(tbats(F3C3.train.ts), h = 28)
-tbats.F3C3$mean
-tbats.F3C3.df <- data.frame(tbats.F3C3)
-rownames(tbats.F3C3.df) <- date_decimal(as.numeric(rownames(tbats.F3C3.df)))
-acc.tbats.F3C3 <- accuracy(tbats.F3C3, F3C3.valid.ts)
-knitr::kable(acc.tbats.F3C3)
-plot(tbats.F3C3)
+Foods_3_CA_3_all = Projectdata[, c('date', 'Foods_3_CA_3')]
+Foods_3_CA_3_train = df_train[, c('date', 'Foods_3_CA_3')]
+Foods_3_CA_3_test = df_train[, c('date', 'Foods_3_CA_3')]
 
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_3_all$date = as.Date(Foods_3_CA_3_all$date)
+Foods_3_CA_3_all_ts <- ts(Foods_3_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_3_train$date = as.Date(Foods_3_CA_3_train$date)
+Foods_3_CA_3_train_ts <- ts(Foods_3_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -1330,7 +1443,6 @@ rownames(sarima.HH1C1_df) <- date_decimal(as.numeric(rownames(sarima.HH1C1_df)))
 acc.sarima.HH1C1 <- accuracy(sarima.HH1C1, HH1C1.valid.ts)
 knitr::kable(acc.sarima.HH1C1)
 plot(sarima.HH1C1)
-
 # HoltWinters
 hw.HH1C1 <- forecast(HoltWinters(HH1C1.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C1$mean
@@ -1340,14 +1452,23 @@ acc.hw.HH1C1 <- accuracy(hw.HH1C1, HH1C1.valid.ts)
 knitr::kable(acc.hw.HH1C1)
 plot(hw.HH1C1)
 
-# State Space (Tbats)
-tbats.HH1C1 <- forecast(tbats(HH1C1.train.ts), h = 28)
-tbats.HH1C1$mean
-tbats.HH1C1.df <- data.frame(tbats.HH1C1)
-rownames(tbats.HH1C1.df) <- date_decimal(as.numeric(rownames(tbats.HH1C1.df)))
-acc.tbats.HH1C1 <- accuracy(tbats.HH1C1, HH1C1.valid.ts)
-knitr::kable(acc.tbats.HH1C1)
-plot(tbats.HH1C1)
+# Exponential Smoothing Model (ESX)
+
+Household_1_CA_1_all = Projectdata[, c('date', 'Household_1_CA_1')]
+Household_1_CA_1_train = df_train[, c('date', 'Household_1_CA_1')]
+Household_1_CA_1_test = df_train[, c('date', 'Household_1_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_1_all$date = as.Date(Household_1_CA_1_all$date)
+Household_1_CA_1_all_ts <- ts(Household_1_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_1_train$date = as.Date(Household_1_CA_1_train$date)
+Household_1_CA_1_train_ts <- ts(Household_1_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -1406,7 +1527,6 @@ rownames(sarima.HH1C2_df) <- date_decimal(as.numeric(rownames(sarima.HH1C2_df)))
 acc.sarima.HH1C2 <- accuracy(sarima.HH1C2, HH1C2.valid.ts)
 knitr::kable(acc.sarima.HH1C2)
 plot(sarima.HH1C2)
-
 # HoltWinters
 hw.HH1C2 <- forecast(HoltWinters(HH1C2.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C2$mean
@@ -1416,15 +1536,24 @@ acc.hw.HH1C2 <- accuracy(hw.HH1C2, HH1C2.valid.ts)
 knitr::kable(acc.hw.HH1C2)
 plot(hw.HH1C2)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.HH1C2 <- forecast(tbats(HH1C2.train.ts), h = 28)
-tbats.HH1C2$mean
-tbats.HH1C2.df <- data.frame(tbats.HH1C2)
-rownames(tbats.HH1C2.df) <- date_decimal(as.numeric(rownames(tbats.HH1C2.df)))
-acc.tbats.HH1C2 <- accuracy(tbats.HH1C2, HH1C2.valid.ts)
-knitr::kable(acc.tbats.HH1C2)
-plot(tbats.HH1C2)
+Household_1_CA_2_all = Projectdata[, c('date', 'Household_1_CA_2')]
+Household_1_CA_2_train = df_train[, c('date', 'Household_1_CA_2')]
+Household_1_CA_2_test = df_train[, c('date', 'Household_1_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_2_all$date = as.Date(Household_1_CA_2_all$date)
+Household_1_CA_2_all_ts <- ts(Household_1_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_2_train$date = as.Date(Household_1_CA_2_train$date)
+Household_1_CA_2_train_ts <- ts(Household_1_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
 
 ```{r}
@@ -1483,7 +1612,6 @@ rownames(sarima.HH1C3_df) <- date_decimal(as.numeric(rownames(sarima.HH1C3_df)))
 acc.sarima.HH1C3 <- accuracy(sarima.HH1C3, HH1C3.valid.ts)
 knitr::kable(acc.sarima.HH1C3)
 plot(sarima.HH1C3)
-
 # HoltWinters
 hw.HH1C3 <- forecast(HoltWinters(HH1C3.train.ts, seasonal = "additive"), h = 28)
 hw.HH1C3$mean
@@ -1493,15 +1621,24 @@ acc.hw.HH1C3 <- accuracy(hw.HH1C3, HH1C3.valid.ts)
 knitr::kable(acc.hw.HH1C3)
 plot(hw.HH1C3)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.HH1C3 <- forecast(tbats(HH1C3.train.ts), h = 28)
-tbats.HH1C3$mean
-tbats.HH1C3.df <- data.frame(tbats.HH1C3)
-rownames(tbats.HH1C3.df) <- date_decimal(as.numeric(rownames(tbats.HH1C3.df)))
-acc.tbats.HH1C3 <- accuracy(tbats.HH1C3, HH1C3.valid.ts)
-knitr::kable(acc.tbats.HH1C3)
-plot(tbats.HH1C3)
+Household_1_CA_3_all = Projectdata[, c('date', 'Household_1_CA_3')]
+Household_1_CA_3_train = df_train[, c('date', 'Household_1_CA_3')]
+Household_1_CA_3_test = df_train[, c('date', 'Household_1_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_3_all$date = as.Date(Household_1_CA_3_all$date)
+Household_1_CA_3_all_ts <- ts(Household_1_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_3_train$date = as.Date(Household_1_CA_3_train$date)
+Household_1_CA_3_train_ts <- ts(Household_1_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
 
 ```{r}
@@ -1560,7 +1697,6 @@ rownames(sarima.HH2C1_df) <- date_decimal(as.numeric(rownames(sarima.HH2C1_df)))
 acc.sarima.HH2C1 <- accuracy(sarima.HH2C1, HH2C1.valid.ts)
 knitr::kable(acc.sarima.HH2C1)
 plot(sarima.HH2C1)
-
 # HoltWinters
 hw.HH2C1 <- forecast(HoltWinters(HH2C1.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C1$mean
@@ -1570,16 +1706,23 @@ acc.hw.HH2C1 <- accuracy(hw.HH2C1, HH2C1.valid.ts)
 knitr::kable(acc.hw.HH2C1)
 plot(hw.HH2C1)
 
+# Exponential Smoothing Model (ESX)
 
+Household_2_CA_1_all = Projectdata[, c('date', 'Household_2_CA_1')]
+Household_2_CA_1_train = df_train[, c('date', 'Household_2_CA_1')]
+Household_2_CA_1_test = df_train[, c('date', 'Household_2_CA_1')]
 
-# State Space (Tbats)
-tbats.HH2C1 <- forecast(tbats(HH2C1.train.ts), h = 28)
-tbats.HH2C1$mean
-tbats.HH2C1.df <- data.frame(tbats.HH2C1)
-rownames(tbats.HH2C1.df) <- date_decimal(as.numeric(rownames(tbats.HH2C1.df)))
-acc.tbats.HH2C1 <- accuracy(tbats.HH2C1, HH2C1.valid.ts)
-knitr::kable(acc.tbats.HH2C1)
-plot(tbats.HH2C1)
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_1_all$date = as.Date(Household_2_CA_1_all$date)
+Household_2_CA_1_all_ts <- ts(Household_2_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_1_train$date = as.Date(Household_2_CA_1_train$date)
+Household_2_CA_1_train_ts <- ts(Household_2_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -1639,7 +1782,6 @@ rownames(sarima.HH2C2_df) <- date_decimal(as.numeric(rownames(sarima.HH2C2_df)))
 acc.sarima.HH2C2 <- accuracy(sarima.HH2C2, HH2C2.valid.ts)
 knitr::kable(acc.sarima.HH2C2)
 plot(sarima.HH2C2)
-
 # HoltWinters
 hw.HH2C2 <- forecast(HoltWinters(HH2C2.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C2$mean
@@ -1649,15 +1791,23 @@ acc.hw.HH2C2 <- accuracy(hw.HH2C2, HH2C2.valid.ts)
 knitr::kable(acc.hw.HH2C2)
 plot(hw.HH2C2)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.HH2C2 <- forecast(tbats(HH2C2.train.ts), h = 28)
-tbats.HH2C2$mean
-tbats.HH2C2.df <- data.frame(tbats.HH2C2)
-rownames(tbats.HH2C2.df) <- date_decimal(as.numeric(rownames(tbats.HH2C2.df)))
-acc.tbats.HH2C2 <- accuracy(tbats.HH2C2, HH2C2.valid.ts)
-knitr::kable(acc.tbats.HH2C2)
-plot(tbats.HH2C2)
+Household_2_CA_2_all = Projectdata[, c('date', 'Household_2_CA_2')]
+Household_2_CA_2_train = df_train[, c('date', 'Household_2_CA_2')]
+Household_2_CA_2_test = df_train[, c('date', 'Household_2_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_2_all$date = as.Date(Household_2_CA_2_all$date)
+Household_2_CA_2_all_ts <- ts(Household_2_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_2_train$date = as.Date(Household_2_CA_2_train$date)
+Household_2_CA_2_train_ts <- ts(Household_2_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -1716,7 +1866,6 @@ rownames(sarima.HH2C3_df) <- date_decimal(as.numeric(rownames(sarima.HH2C3_df)))
 acc.sarima.HH2C3 <- accuracy(sarima.HH2C3, HH2C3.valid.ts)
 knitr::kable(acc.sarima.HH2C3)
 plot(sarima.HH2C3)
-
 # HoltWinters
 hw.HH2C3 <- forecast(HoltWinters(HH2C3.train.ts, seasonal = "additive"), h = 28)
 hw.HH2C3$mean
@@ -1726,15 +1875,25 @@ acc.hw.HH2C3 <- accuracy(hw.HH2C3, HH2C3.valid.ts)
 knitr::kable(acc.hw.HH2C3)
 plot(hw.HH2C3)
 
+# Exponential Smoothing Model (ESX)
 
-# State Space (Tbats)
-tbats.HH2C3 <- forecast(tbats(HH2C3.train.ts), h = 28)
-tbats.HH2C3$mean
-tbats.HH2C3.df <- data.frame(tbats.HH2C3)
-rownames(tbats.HH2C3.df) <- date_decimal(as.numeric(rownames(tbats.HH2C3.df)))
-acc.tbats.HH2C3 <- accuracy(tbats.HH2C3, HH2C3.valid.ts)
-knitr::kable(acc.tbats.HH2C3)
-plot(tbats.HH2C3)
+Household_2_CA_3_all = Projectdata[, c('date', 'Household_2_CA_3')]
+Household_2_CA_3_train = df_train[, c('date', 'Household_2_CA_3')]
+Household_2_CA_3_test = df_train[, c('date', 'Household_2_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_3_all$date = as.Date(Household_2_CA_3_all$date)
+Household_2_CA_3_all_ts <- ts(Household_2_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_3_train$date = as.Date(Household_2_CA_3_train$date)
+Household_2_CA_3_train_ts <- ts(Household_2_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 
@@ -1831,16 +1990,6 @@ rownames(hw.CA1.df) <- date_decimal(as.numeric(rownames(hw.CA1.df)))
 acc.hw.CA1 <- accuracy(hw.CA1, CA1.valid.ts)
 knitr::kable(acc.hw.CA1)
 plot(hw.CA1)
-
-
-# State Space (Tbats)
-tbats.CA1 <- forecast(tbats(CA1.train.ts), h = 28)
-tbats.CA1$mean
-tbats.CA1.df <- data.frame(tbats.CA1)
-rownames(tbats.CA1.df) <- date_decimal(as.numeric(rownames(tbats.CA1.df)))
-acc.tbats.CA1 <- accuracy(tbats.CA1, CA1.valid.ts)
-knitr::kable(acc.tbats.CA1)
-plot(tbats.CA1)
 ```
 
 ```{r}
@@ -1914,16 +2063,6 @@ rownames(hw.CA2.df) <- date_decimal(as.numeric(rownames(hw.CA2.df)))
 acc.hw.CA2 <- accuracy(hw.CA2, CA2.valid.ts)
 knitr::kable(acc.hw.CA2)
 plot(hw.CA2)
-
-
-# State Space (Tbats)
-tbats.CA2 <- forecast(tbats(CA2.train.ts), h = 28)
-tbats.CA2$mean
-tbats.CA2.df <- data.frame(tbats.CA2)
-rownames(tbats.CA2.df) <- date_decimal(as.numeric(rownames(tbats.CA2.df)))
-acc.tbats.CA2 <- accuracy(tbats.CA2, CA2.valid.ts)
-knitr::kable(acc.tbats.CA2)
-plot(tbats.CA2)
 ```
 
 
@@ -1996,17 +2135,6 @@ rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
 acc.hw.CA3 <- accuracy(hw.CA3, CA3.valid.ts)
 knitr::kable(acc.hw.CA3)
 plot(hw.CA3)
-
-
-
-# State Space (Tbats)
-tbats.CA3 <- forecast(tbats(CA3.train.ts), h = 28)
-tbats.CA3$mean
-tbats.CA3.df <- data.frame(tbats.CA3)
-rownames(tbats.CA3.df) <- date_decimal(as.numeric(rownames(tbats.CA3.df)))
-acc.tbats.CA3 <- accuracy(tbats.CA3, CA3.valid.ts)
-knitr::kable(acc.tbats.CA3)
-plot(tbats.CA3)
 ```
 
 
@@ -2132,16 +2260,6 @@ knitr::kable(acc.hw.CA1)
 plot(hw.CA1)
 
 
-# State Space (Tbats)
-tbats.CA1 <- forecast(tbats(HC1_w.train.ts), h = 28)
-tbats.CA1$mean
-tbats.CA1.df <- data.frame(tbats.CA1)
-rownames(tbats.CA1.df) <- date_decimal(as.numeric(rownames(tbats.CA1.df)))
-acc.tbats.CA1 <- accuracy(tbats.CA1, HC1_w.valid.ts)
-knitr::kable(acc.tbats.CA1)
-plot(tbats.CA1)
-
-
 ```
 ```{r}
 
@@ -2212,15 +2330,6 @@ knitr::kable(acc.hw.CA2)
 plot(hw.CA2)
 
 
-# State Space (Tbats)
-tbats.CA2 <- forecast(tbats(HC2_w.train.ts), h = 28)
-tbats.CA2$mean
-tbats.CA2.df <- data.frame(tbats.CA2)
-rownames(tbats.CA2.df) <- date_decimal(as.numeric(rownames(tbats.CA2.df)))
-acc.tbats.CA2 <- accuracy(tbats.CA2, HC2_w.valid.ts)
-knitr::kable(acc.tbats.CA2)
-plot(tbats.CA2)
-
 ```
 
 ```{r}
@@ -2289,18 +2398,6 @@ rownames(hw.CA3.df) <- date_decimal(as.numeric(rownames(hw.CA3.df)))
 acc.hw.CA3 <- accuracy(hw.CA3, HC3_w.valid.ts)
 knitr::kable(acc.hw.CA3)
 plot(hw.CA3)
-
-
-# State Space (Tbats)
-tbats.CA3 <- forecast(tbats(HC3_w.train.ts), h = 28)
-tbats.CA3$mean
-tbats.CA3.df <- data.frame(tbats.CA3)
-rownames(tbats.CA3.df) <- date_decimal(as.numeric(rownames(tbats.CA3.df)))
-acc.tbats.CA3 <- accuracy(tbats.CA3, HC3_w.valid.ts)
-knitr::kable(acc.tbats.CA3)
-plot(tbats.CA3)
-
-
 ```
 
 ```{r}
@@ -2369,15 +2466,6 @@ rownames(hw.F1C1.df) <- date_decimal(as.numeric(rownames(hw.F1C1.df)))
 acc.hw.F1C1 <- accuracy(hw.F1C1, F1C1_w.valid.ts)
 knitr::kable(acc.hw.F1C1)
 plot(hw.F1C1)
-
-# State Space (Tbats)
-tbats.F1C1 <- forecast(tbats(F1C1_w.train.ts), h = 28)
-tbats.F1C1$mean
-tbats.F1C1.df <- data.frame(tbats.F1C1)
-rownames(tbats.F1C1.df) <- date_decimal(as.numeric(rownames(tbats.F1C1.df)))
-acc.tbats.F1C1 <- accuracy(tbats.F1C1, F1C1_w.valid.ts)
-knitr::kable(acc.tbats.F1C1)
-plot(tbats.F1C1)
 ```
 
 ```{r}
@@ -2445,18 +2533,7 @@ hw.F1C2.df <- data.frame(hw.F1C2)
 rownames(hw.F1C2.df) <- date_decimal(as.numeric(rownames(hw.F1C2.df)))
 acc.hw.F1C2 <- accuracy(hw.F1C2, F1C2_w.valid.ts)
 knitr::kable(acc.hw.F1C2)
-plot
-
-
-
-# State Space (Tbats)
-tbats.F1C2 <- forecast(tbats(F1C2_w.train.ts), h = 28)
-tbats.F1C2$mean
-tbats.F1C2.df <- data.frame(tbats.F1C2)
-rownames(tbats.F1C2.df) <- date_decimal(as.numeric(rownames(tbats.F1C2.df)))
-acc.tbats.F1C2 <- accuracy(tbats.F1C2, F1C2_w.valid.ts)
-knitr::kable(acc.tbats.F1C2)
-plot(tbats.F1C2)
+plot(hw.F1C2)
 ```
 ```{r}
 
@@ -2524,16 +2601,6 @@ rownames(hw.F1C3.df) <- date_decimal(as.numeric(rownames(hw.F1C3.df)))
 acc.hw.F1C3 <- accuracy(hw.F1C1, F1C3_w.valid.ts)
 knitr::kable(acc.hw.F1C3)
 plot(hw.F1C3)
-
-
-# State Space (Tbats)
-tbats.F1C3 <- forecast(tbats(F1C3_w.train.ts), h = 28)
-tbats.F1C3$mean
-tbats.F1C3.df <- data.frame(tbats.F1C3)
-rownames(tbats.F1C3.df) <- date_decimal(as.numeric(rownames(tbats.F1C3.df)))
-acc.tbats.F1C3 <- accuracy(tbats.F1C3, F1C3_w.valid.ts)
-knitr::kable(acc.tbats.F1C3)
-plot(tbats.F1C3)
 ```
 ```{r}
 # create a time series forecasting for the Food2 CA1  data
@@ -2599,15 +2666,6 @@ rownames(hw.F2C1.df) <- date_decimal(as.numeric(rownames(hw.F2C1.df)))
 acc.hw.F2C1 <- accuracy(hw.F1C1, F2C1_w.valid.ts)
 knitr::kable(acc.hw.F2C1)
 plot(hw.F2C1)
-
-# State Space (Tbats)
-tbats.F2C1 <- forecast(tbats(F2C1_w.train.ts), h = 28)
-tbats.F2C1$mean
-tbats.F2C1.df <- data.frame(tbats.F2C1)
-rownames(tbats.F2C1.df) <- date_decimal(as.numeric(rownames(tbats.F2C1.df)))
-acc.tbats.F2C1 <- accuracy(tbats.F2C1, F2C1_w.valid.ts)
-knitr::kable(acc.tbats.F2C1)
-plot(tbats.F2C1)
 ```
 ```{r}
 # create a time series forecasting for the Food2 CA2  data
@@ -2673,15 +2731,6 @@ rownames(hw.F2C2.df) <- date_decimal(as.numeric(rownames(hw.F2C2.df)))
 acc.hw.F2C2 <- accuracy(hw.F1C1, F2C2_w.valid.ts)
 knitr::kable(acc.hw.F2C2)
 plot(hw.F2C2)
-
-# State Space (Tbats)
-tbats.F2C2 <- forecast(tbats(F2C2_w.train.ts), h = 28)
-tbats.F2C2$mean
-tbats.F2C2.df <- data.frame(tbats.F2C2)
-rownames(tbats.F2C2.df) <- date_decimal(as.numeric(rownames(tbats.F2C2.df)))
-acc.tbats.F2C2 <- accuracy(tbats.F2C2, F2C2_w.valid.ts)
-knitr::kable(acc.tbats.F2C2)
-plot(tbats.F2C2)
 ```
 ```{r}
 
@@ -2748,15 +2797,6 @@ rownames(hw.F2C3.df) <- date_decimal(as.numeric(rownames(hw.F2C3.df)))
 acc.hw.F2C3 <- accuracy(hw.F1C1, F2C3_w.valid.ts)
 knitr::kable(acc.hw.F2C3)
 plot(hw.F2C3)
-
-# State Space (Tbats)
-tbats.F2C3 <- forecast(tbats(F2C3_w.train.ts), h = 28)
-tbats.F2C3$mean
-tbats.F2C3.df <- data.frame(tbats.F2C3)
-rownames(tbats.F2C3.df) <- date_decimal(as.numeric(rownames(tbats.F2C3.df)))
-acc.tbats.F2C3 <- accuracy(tbats.F2C3, F2C3_w.valid.ts)
-knitr::kable(acc.tbats.F2C3)
-plot(tbats.F2C3)
 ```
 
 
@@ -2825,16 +2865,6 @@ rownames(hw.F3C1.df) <- date_decimal(as.numeric(rownames(hw.F3C1.df)))
 acc.hw.F3C1 <- accuracy(hw.F1C1, F3C1_w.valid.ts)
 knitr::kable(acc.hw.F3C1)
 plot(hw.F3C1)
-
-
-# State Space (Tbats)
-tbats.F3C1 <- forecast(tbats(F3C1_w.train.ts), h = 28)
-tbats.F3C1$mean
-tbats.F3C1.df <- data.frame(tbats.F3C1)
-rownames(tbats.F3C1.df) <- date_decimal(as.numeric(rownames(tbats.F3C1.df)))
-acc.tbats.F3C1 <- accuracy(tbats.F3C1, F3C1_w.valid.ts)
-knitr::kable(acc.tbats.F3C1)
-plot(tbats.F3C1)
 ```
 
 
@@ -2903,17 +2933,6 @@ rownames(hw.F3C2.df) <- date_decimal(as.numeric(rownames(hw.F3C2.df)))
 acc.hw.F3C2 <- accuracy(hw.F1C1, F3C2_w.valid.ts)
 knitr::kable(acc.hw.F3C2)
 plot(hw.F3C2)
-
-
-
-# State Space (Tbats)
-tbats.F3C2 <- forecast(tbats(F3C2_w.train.ts), h = 28)
-tbats.F3C2$mean
-tbats.F3C2.df <- data.frame(tbats.F3C2)
-rownames(tbats.F3C2.df) <- date_decimal(as.numeric(rownames(tbats.F3C2.df)))
-acc.tbats.F3C2 <- accuracy(tbats.F3C2, F3C2_w.valid.ts)
-knitr::kable(acc.tbats.F3C2)
-plot(tbats.F3C2)
 ```
 
 
@@ -2982,17 +3001,6 @@ rownames(hw.F3C3.df) <- date_decimal(as.numeric(rownames(hw.F3C3.df)))
 acc.hw.F3C3 <- accuracy(hw.F1C1, F3C3_w.valid.ts)
 knitr::kable(acc.hw.F3C3)
 plot(hw.F3C3)
-
-
-# State Space (Tbats)
-tbats.F3C3 <- forecast(tbats(F3C3_w.train.ts), h = 28)
-tbats.F3C3$mean
-tbats.F3C3.df <- data.frame(tbats.F3C3)
-rownames(tbats.F3C3.df) <- date_decimal(as.numeric(rownames(tbats.F3C3.df)))
-acc.tbats.F3C3 <- accuracy(tbats.F3C3, F3C3_w.valid.ts)
-knitr::kable(acc.tbats.F3C3)
-plot(tbats.F3C3)
-
 ```
 
 ```{r}
@@ -3060,17 +3068,6 @@ rownames(hw.HH1C1.df) <- date_decimal(as.numeric(rownames(hw.HH1C1.df)))
 acc.hw.HH1C1 <- accuracy(hw.F1C1, HH1C1_w.valid.ts)
 knitr::kable(acc.hw.HH1C1)
 plot(hw.HH1C1)
-
-
-
-# State Space (Tbats)
-tbats.HH1C1 <- forecast(tbats(HH1C1_w.train.ts), h = 28)
-tbats.HH1C1$mean
-tbats.HH1C1.df <- data.frame(tbats.HH1C1)
-rownames(tbats.HH1C1.df) <- date_decimal(as.numeric(rownames(tbats.HH1C1.df)))
-acc.tbats.HH1C1 <- accuracy(tbats.HH1C1, HH1C1_w.valid.ts)
-knitr::kable(acc.tbats.HH1C1)
-plot(tbats.HH1C1)
 ```
 
 
@@ -3139,17 +3136,6 @@ rownames(hw.HH1C2.df) <- date_decimal(as.numeric(rownames(hw.HH1C2.df)))
 acc.hw.HH1C2 <- accuracy(hw.F1C2, HH1C2_w.valid.ts)
 knitr::kable(acc.hw.HH1C2)
 plot(hw.HH1C2)
-
-
-
-# State Space (Tbats)
-tbats.HH1C2 <- forecast(tbats(HH1C2_w.train.ts), h = 28)
-tbats.HH1C2$mean
-tbats.HH1C2.df <- data.frame(tbats.HH1C2)
-rownames(tbats.HH1C2.df) <- date_decimal(as.numeric(rownames(tbats.HH1C2.df)))
-acc.tbats.HH1C2 <- accuracy(tbats.HH1C2, HH1C2_w.valid.ts)
-knitr::kable(acc.tbats.HH1C2)
-plot(tbats.HH1C2)
 ```
 
 
@@ -3218,16 +3204,6 @@ rownames(hw.HH1C3.df) <- date_decimal(as.numeric(rownames(hw.HH1C3.df)))
 acc.hw.HH1C3 <- accuracy(hw.F1C3, HH1C3_w.valid.ts)
 knitr::kable(acc.hw.HH1C3)
 plot(hw.HH1C3)
-
-
-# State Space (Tbats)
-tbats.HH1C3 <- forecast(tbats(HH1C3_w.train.ts), h = 28)
-tbats.HH1C3$mean
-tbats.HH1C3.df <- data.frame(tbats.HH1C3)
-rownames(tbats.HH1C3.df) <- date_decimal(as.numeric(rownames(tbats.HH1C3.df)))
-acc.tbats.HH1C3 <- accuracy(tbats.HH1C3, HH1C3_w.valid.ts)
-knitr::kable(acc.tbats.HH1C3)
-plot(tbats.HH1C3)
 ```
 
 
@@ -3296,17 +3272,6 @@ rownames(hw.HH2C1.df) <- date_decimal(as.numeric(rownames(hw.HH2C1.df)))
 acc.hw.HH2C1 <- accuracy(hw.F1C1, HH2C1_w.valid.ts)
 knitr::kable(acc.hw.HH2C1)
 plot(hw.HH2C1)
-
-
-
-# State Space (Tbats)
-tbats.HH2C1 <- forecast(tbats(HH2C1_w.train.ts), h = 28)
-tbats.HH2C1$mean
-tbats.HH2C1.df <- data.frame(tbats.HH2C1)
-rownames(tbats.HH2C1.df) <- date_decimal(as.numeric(rownames(tbats.HH2C1.df)))
-acc.tbats.HH2C1 <- accuracy(tbats.HH2C1, HH2C1_w.valid.ts)
-knitr::kable(acc.tbats.HH2C1)
-plot(tbats.HH2C1)
 ```
 ```{r}
 # create a time series forecasting for the HH2 CA2 data
@@ -3372,17 +3337,6 @@ rownames(hw.HH2C2.df) <- date_decimal(as.numeric(rownames(hw.HH2C2.df)))
 acc.hw.HH2C2 <- accuracy(hw.F1C2, HH2C2_w.valid.ts)
 knitr::kable(acc.hw.HH2C2)
 plot(hw.HH2C2)
-
-
-
-# State Space (Tbats)
-tbats.HH2C2 <- forecast(tbats(HH2C2_w.train.ts), h = 28)
-tbats.HH2C2$mean
-tbats.HH2C2.df <- data.frame(tbats.HH2C2)
-rownames(tbats.HH2C2.df) <- date_decimal(as.numeric(rownames(tbats.HH2C2.df)))
-acc.tbats.HH2C2 <- accuracy(tbats.HH2C2, HH2C2_w.valid.ts)
-knitr::kable(acc.tbats.HH2C2)
-plot(tbats.HH2C2)
 ```
 
 ```{r}
@@ -3450,17 +3404,6 @@ rownames(hw.HH2C3.df) <- date_decimal(as.numeric(rownames(hw.HH2C3.df)))
 acc.hw.HH2C3 <- accuracy(hw.F1C3, HH2C3_w.valid.ts)
 knitr::kable(acc.hw.HH2C3)
 plot(hw.HH2C3)
-
-
-
-# State Space (Tbats)
-tbats.HH2C3 <- forecast(tbats(HH2C3_w.train.ts), h = 28)
-tbats.HH2C3$mean
-tbats.HH2C3.df <- data.frame(tbats.HH2C3)
-rownames(tbats.HH2C3.df) <- date_decimal(as.numeric(rownames(tbats.HH2C3.df)))
-acc.tbats.HH2C3 <- accuracy(tbats.HH2C3, HH2C3_w.valid.ts)
-knitr::kable(acc.tbats.HH2C3)
-plot(tbats.HH2C3)
 ```
 
 ################################################################################
