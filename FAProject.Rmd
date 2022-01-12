@@ -408,6 +408,27 @@ tbats.HC1.df <- data.frame(tbats.HC1)
 rownames(tbats.HC1.df) <- date_decimal(as.numeric(rownames(tbats.HC1.df)))
 acc.tbats.HC1 <- accuracy(tbats.HC1, HC1.valid.ts)
 knitr::kable(acc.tbats.HC1)
+
+# Exponential Smoothing Model (ESX)
+
+
+Hobbies_CA_1_all = Projectdata[, c('date', 'Hobbies_CA_1')]
+Hobbies_CA_1_train = df_train[, c('date', 'Hobbies_CA_1')]
+Hobbies_CA_1_test = df_train[, c('date', 'Hobbies_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_1_all$date = as.Date(Hobbies_CA_1_all$date)
+Hobbies_CA_1_all_ts <- ts(Hobbies_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_1_train$date = as.Date(Hobbies_CA_1_train$date)
+Hobbies_CA_1_train_ts <- ts(Hobbies_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 
@@ -489,6 +510,28 @@ rownames(tbats.HC2.df) <- date_decimal(as.numeric(rownames(tbats.HC2.df)))
 acc.tbats.HC2 <- accuracy(tbats.HC2, HC2.valid.ts)
 knitr::kable(acc.tbats.HC2)
 plot(tbats.HC2)
+
+# Exponential Smoothing Model (ESX)
+
+
+Hobbies_CA_2_all = Projectdata[, c('date', 'Hobbies_CA_2')]
+Hobbies_CA_2_train = df_train[, c('date', 'Hobbies_CA_2')]
+Hobbies_CA_2_test = df_train[, c('date', 'Hobbies_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_2_all$date = as.Date(Hobbies_CA_2_all$date)
+Hobbies_CA_2_all_ts <- ts(Hobbies_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_2_train$date = as.Date(Hobbies_CA_2_train$date)
+Hobbies_CA_2_train_ts <- ts(Hobbies_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
+
 ```
 
 ```{r}
@@ -569,6 +612,27 @@ rownames(tbats.HC3.df) <- date_decimal(as.numeric(rownames(tbats.HC3.df)))
 acc.tbats.HC3 <- accuracy(tbats.HC3, HC3.valid.ts)
 knitr::kable(acc.tbats.HC3)
 plot(tbats.HC3)
+
+# Exponential Smoothing Model (ESX)
+
+
+Hobbies_CA_3_all = Projectdata[, c('date', 'Hobbies_CA_3')]
+Hobbies_CA_3_train = df_train[, c('date', 'Hobbies_CA_3')]
+Hobbies_CA_3_test = df_train[, c('date', 'Hobbies_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Hobbies_CA_3_all$date = as.Date(Hobbies_CA_3_all$date)
+Hobbies_CA_3_all_ts <- ts(Hobbies_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Hobbies_CA_3_train$date = as.Date(Hobbies_CA_3_train$date)
+Hobbies_CA_3_train_ts <- ts(Hobbies_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Hobbies_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Hobbies_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 
@@ -646,6 +710,24 @@ acc.tbats.F1C1 <- accuracy(tbats.F1C1, F1C1.valid.ts)
 knitr::kable(acc.tbats.F1C1)
 plot(tbats.F1C1)
 
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_1_all = Projectdata[, c('date', 'Foods_1_CA_1')]
+Foods_1_CA_1_train = df_train[, c('date', 'Foods_1_CA_1')]
+Foods_1_CA_1_test = df_train[, c('date', 'Foods_1_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_1_all$date = as.Date(Foods_1_CA_1_all$date)
+Foods_1_CA_1_all_ts <- ts(Foods_1_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_1_train$date = as.Date(Foods_1_CA_1_train$date)
+Foods_1_CA_1_train_ts <- ts(Foods_1_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
 
 ```
 
@@ -724,6 +806,25 @@ acc.tbats.F1C2 <- accuracy(tbats.F1C2, F1C2.valid.ts)
 knitr::kable(acc.tbats.F1C2)
 plot(tbats.F1C2)
 
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_2_all = Projectdata[, c('date', 'Foods_1_CA_2')]
+Foods_1_CA_2_train = df_train[, c('date', 'Foods_1_CA_2')]
+Foods_1_CA_2_test = df_train[, c('date', 'Foods_1_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_2_all$date = as.Date(Foods_1_CA_2_all$date)
+Foods_1_CA_2_all_ts <- ts(Foods_1_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_2_train$date = as.Date(Foods_1_CA_2_train$date)
+Foods_1_CA_2_train_ts <- ts(Foods_1_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 ```
 
 
@@ -801,6 +902,27 @@ rownames(tbats.F1C3.df) <- date_decimal(as.numeric(rownames(tbats.F1C3.df)))
 acc.tbats.F1C3 <- accuracy(tbats.F1C3, F1C3.valid.ts)
 knitr::kable(acc.tbats.F1C3)
 plot(tbats.F1C3)
+
+# Exponential Smoothing Model (ESX)
+
+
+Foods_1_CA_3_all = Projectdata[, c('date', 'Foods_1_CA_3')]
+Foods_1_CA_3_train = df_train[, c('date', 'Foods_1_CA_3')]
+Foods_1_CA_3_test = df_train[, c('date', 'Foods_1_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_1_CA_3_all$date = as.Date(Foods_1_CA_3_all$date)
+Foods_1_CA_3_all_ts <- ts(Foods_1_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_1_CA_3_train$date = as.Date(Foods_1_CA_3_train$date)
+Foods_1_CA_3_train_ts <- ts(Foods_1_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 
@@ -880,6 +1002,25 @@ acc.tbats.F2C1 <- accuracy(tbats.F2C1, F2C1.valid.ts)
 knitr::kable(acc.tbats.F2C1)
 plot(tbats.F2C1)
 
+# Exponential Smoothing Model (ESX)
+
+
+Foods_2_CA_1_all = Projectdata[, c('date', 'Foods_2_CA_1')]
+Foods_2_CA_1_train = df_train[, c('date', 'Foods_2_CA_1')]
+Foods_2_CA_1_test = df_train[, c('date', 'Foods_2_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_1_all$date = as.Date(Foods_2_CA_1_all$date)
+Foods_2_CA_1_all_ts <- ts(Foods_2_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_1_train$date = as.Date(Foods_2_CA_1_train$date)
+Foods_2_CA_1_train_ts <- ts(Foods_2_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 
 ```
 
@@ -957,6 +1098,27 @@ rownames(tbats.F2C2.df) <- date_decimal(as.numeric(rownames(tbats.F2C2.df)))
 acc.tbats.F2C2 <- accuracy(tbats.F2C2, F2C2.valid.ts)
 knitr::kable(acc.tbats.F2C2)
 plot(tbats.F2C2)
+
+# Exponential Smoothing Model (ESX)
+
+
+Foods_2_CA_2_all = Projectdata[, c('date', 'Foods_2_CA_2')]
+Foods_2_CA_2_train = df_train[, c('date', 'Foods_2_CA_2')]
+Foods_2_CA_2_test = df_train[, c('date', 'Foods_2_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_2_all$date = as.Date(Foods_2_CA_2_all$date)
+Foods_2_CA_2_all_ts <- ts(Foods_2_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_2_train$date = as.Date(Foods_2_CA_2_train$date)
+Foods_2_CA_2_train_ts <- ts(Foods_2_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1032,6 +1194,27 @@ rownames(tbats.F2C3.df) <- date_decimal(as.numeric(rownames(tbats.F2C3.df)))
 acc.tbats.F2C3 <- accuracy(tbats.F2C3, F2C3.valid.ts)
 knitr::kable(acc.tbats.F2C3)
 plot(tbats.F2C3)
+
+# Exponential Smoothing Model (ESX)
+
+
+Foods_2_CA_3_all = Projectdata[, c('date', 'Foods_2_CA_3')]
+Foods_2_CA_3_train = df_train[, c('date', 'Foods_2_CA_3')]
+Foods_2_CA_3_test = df_train[, c('date', 'Foods_2_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_2_CA_3_all$date = as.Date(Foods_2_CA_3_all$date)
+Foods_2_CA_3_all_ts <- ts(Foods_2_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_2_CA_3_train$date = as.Date(Foods_2_CA_3_train$date)
+Foods_2_CA_3_train_ts <- ts(Foods_2_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 
 ```
 
@@ -1109,6 +1292,25 @@ rownames(tbats.F3C1.df) <- date_decimal(as.numeric(rownames(tbats.F3C1.df)))
 acc.tbats.F3C1 <- accuracy(tbats.F3C1, F3C1.valid.ts)
 knitr::kable(acc.tbats.F3C1)
 plot(tbats.F3C1)
+
+# Exponential Smoothing Model (ESX)
+
+Foods_3_CA_1_all = Projectdata[, c('date', 'Foods_3_CA_1')]
+Foods_3_CA_1_train = df_train[, c('date', 'Foods_3_CA_1')]
+Foods_3_CA_1_test = df_train[, c('date', 'Foods_3_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_1_all$date = as.Date(Foods_3_CA_1_all$date)
+Foods_3_CA_1_all_ts <- ts(Foods_3_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_1_train$date = as.Date(Foods_3_CA_1_train$date)
+Foods_3_CA_1_train_ts <- ts(Foods_3_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 
 ```
 
@@ -1190,6 +1392,24 @@ acc.tbats.F3C2 <- accuracy(tbats.F3C2, F3C2.valid.ts)
 knitr::kable(acc.tbats.F3C2)
 plot(tbats.F3C2)
 
+# Exponential Smoothing Model (ESX)
+
+Foods_3_CA_2_all = Projectdata[, c('date', 'Foods_3_CA_2')]
+Foods_3_CA_2_train = df_train[, c('date', 'Foods_3_CA_2')]
+Foods_3_CA_2_test = df_train[, c('date', 'Foods_3_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_2_all$date = as.Date(Foods_3_CA_2_all$date)
+Foods_3_CA_2_all_ts <- ts(Foods_3_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_2_train$date = as.Date(Foods_3_CA_2_train$date)
+Foods_3_CA_2_train_ts <- ts(Foods_3_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 
 ```
 
@@ -1270,6 +1490,24 @@ acc.tbats.F3C3 <- accuracy(tbats.F3C3, F3C3.valid.ts)
 knitr::kable(acc.tbats.F3C3)
 plot(tbats.F3C3)
 
+# Exponential Smoothing Model (ESX)
+
+Foods_3_CA_3_all = Projectdata[, c('date', 'Foods_3_CA_3')]
+Foods_3_CA_3_train = df_train[, c('date', 'Foods_3_CA_3')]
+Foods_3_CA_3_test = df_train[, c('date', 'Foods_3_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Foods_3_CA_3_all$date = as.Date(Foods_3_CA_3_all$date)
+Foods_3_CA_3_all_ts <- ts(Foods_3_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Foods_3_CA_3_train$date = as.Date(Foods_3_CA_3_train$date)
+Foods_3_CA_3_train_ts <- ts(Foods_3_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Foods_3_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Foods_3_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
 
 ```
 
@@ -1349,6 +1587,25 @@ acc.tbats.HH1C1 <- accuracy(tbats.HH1C1, HH1C1.valid.ts)
 knitr::kable(acc.tbats.HH1C1)
 plot(tbats.HH1C1)
 
+# Exponential Smoothing Model (ESX)
+
+Household_1_CA_1_all = Projectdata[, c('date', 'Household_1_CA_1')]
+Household_1_CA_1_train = df_train[, c('date', 'Household_1_CA_1')]
+Household_1_CA_1_test = df_train[, c('date', 'Household_1_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_1_all$date = as.Date(Household_1_CA_1_all$date)
+Household_1_CA_1_all_ts <- ts(Household_1_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_1_train$date = as.Date(Household_1_CA_1_train$date)
+Household_1_CA_1_train_ts <- ts(Household_1_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1425,6 +1682,26 @@ rownames(tbats.HH1C2.df) <- date_decimal(as.numeric(rownames(tbats.HH1C2.df)))
 acc.tbats.HH1C2 <- accuracy(tbats.HH1C2, HH1C2.valid.ts)
 knitr::kable(acc.tbats.HH1C2)
 plot(tbats.HH1C2)
+
+# Exponential Smoothing Model (ESX)
+
+Household_1_CA_2_all = Projectdata[, c('date', 'Household_1_CA_2')]
+Household_1_CA_2_train = df_train[, c('date', 'Household_1_CA_2')]
+Household_1_CA_2_test = df_train[, c('date', 'Household_1_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_2_all$date = as.Date(Household_1_CA_2_all$date)
+Household_1_CA_2_all_ts <- ts(Household_1_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_2_train$date = as.Date(Household_1_CA_2_train$date)
+Household_1_CA_2_train_ts <- ts(Household_1_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1502,6 +1779,26 @@ rownames(tbats.HH1C3.df) <- date_decimal(as.numeric(rownames(tbats.HH1C3.df)))
 acc.tbats.HH1C3 <- accuracy(tbats.HH1C3, HH1C3.valid.ts)
 knitr::kable(acc.tbats.HH1C3)
 plot(tbats.HH1C3)
+
+# Exponential Smoothing Model (ESX)
+
+Household_1_CA_3_all = Projectdata[, c('date', 'Household_1_CA_3')]
+Household_1_CA_3_train = df_train[, c('date', 'Household_1_CA_3')]
+Household_1_CA_3_test = df_train[, c('date', 'Household_1_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Household_1_CA_3_all$date = as.Date(Household_1_CA_3_all$date)
+Household_1_CA_3_all_ts <- ts(Household_1_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_1_CA_3_train$date = as.Date(Household_1_CA_3_train$date)
+Household_1_CA_3_train_ts <- ts(Household_1_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_1_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1581,6 +1878,25 @@ acc.tbats.HH2C1 <- accuracy(tbats.HH2C1, HH2C1.valid.ts)
 knitr::kable(acc.tbats.HH2C1)
 plot(tbats.HH2C1)
 
+# Exponential Smoothing Model (ESX)
+
+Household_2_CA_1_all = Projectdata[, c('date', 'Household_2_CA_1')]
+Household_2_CA_1_train = df_train[, c('date', 'Household_2_CA_1')]
+Household_2_CA_1_test = df_train[, c('date', 'Household_2_CA_1')]
+
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_1_all$date = as.Date(Household_2_CA_1_all$date)
+Household_2_CA_1_all_ts <- ts(Household_2_CA_1_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_1_train$date = as.Date(Household_2_CA_1_train$date)
+Household_2_CA_1_train_ts <- ts(Household_2_CA_1_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_1_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1659,6 +1975,26 @@ acc.tbats.HH2C2 <- accuracy(tbats.HH2C2, HH2C2.valid.ts)
 knitr::kable(acc.tbats.HH2C2)
 plot(tbats.HH2C2)
 
+
+# Exponential Smoothing Model (ESX)
+
+Household_2_CA_2_all = Projectdata[, c('date', 'Household_2_CA_2')]
+Household_2_CA_2_train = df_train[, c('date', 'Household_2_CA_2')]
+Household_2_CA_2_test = df_train[, c('date', 'Household_2_CA_2')]
+
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_2_all$date = as.Date(Household_2_CA_2_all$date)
+Household_2_CA_2_all_ts <- ts(Household_2_CA_2_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_2_train$date = as.Date(Household_2_CA_2_train$date)
+Household_2_CA_2_train_ts <- ts(Household_2_CA_2_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_2_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 ```{r}
@@ -1735,6 +2071,26 @@ rownames(tbats.HH2C3.df) <- date_decimal(as.numeric(rownames(tbats.HH2C3.df)))
 acc.tbats.HH2C3 <- accuracy(tbats.HH2C3, HH2C3.valid.ts)
 knitr::kable(acc.tbats.HH2C3)
 plot(tbats.HH2C3)
+
+# Exponential Smoothing Model (ESX)
+
+Household_2_CA_3_all = Projectdata[, c('date', 'Household_2_CA_3')]
+Household_2_CA_3_train = df_train[, c('date', 'Household_2_CA_3')]
+Household_2_CA_3_test = df_train[, c('date', 'Household_2_CA_3')]
+
+# ts objects ------------------------------------------------------------
+
+Household_2_CA_3_all$date = as.Date(Household_2_CA_3_all$date)
+Household_2_CA_3_all_ts <- ts(Household_2_CA_3_all[,2],start=c(2011,01,29), frequency = 365)
+
+Household_2_CA_3_train$date = as.Date(Household_2_CA_3_train$date)
+Household_2_CA_3_train_ts <- ts(Household_2_CA_3_train[,2],start=c(2011,01,29), frequency = 365)
+
+ex_variables = Projectdata[, ex_variables_n]
+es(Household_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)
+esx_model = es(Household_2_CA_3_all_ts, h=28, holdout=TRUE, interval=TRUE, silent=FALSE, xreg=ex_variables)$forecast
+
+
 ```
 
 
