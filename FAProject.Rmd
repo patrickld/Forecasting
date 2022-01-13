@@ -3942,29 +3942,33 @@ benchmarks_f <- function(x, fh){
 (b) Assess them using the Scaled Pinball Loss (p7 of the M5 guidelines)
 
 ```{r}
-final_scores <- NULL
-b_names <- c("Naive", "sNaive", "SES", "ETS", "ARIMA", "Kernel")
-qlist <- c(0.005, 0.025, 0.165, 0.25, 0.5, 0.75, 0.835, 0.975, 0.995)
+# Definition of the Scaled Pinball Loss function
+quantile_spl <- function(train_y, valid_y, quantile_preds, quantile){
 
-    scorej <- 0
-    for (j in 1:length(qlist)){
-      for_temp_j <- for_temp[for_temp$quantile==qlist[j],]
-      for_temp_j$fh <- as.numeric(for_temp_j$fh)
-      for_temp_j <- for_temp_j[order(for_temp_j$fh),] ; row.names(for_temp_j) <- NULL
-      for_temp_j <- for_temp_j[,3]
-      temp_score <- 0
-      for (k in 1:length(for_temp_j)){
-        if (outsample$x[k]>=for_temp_j[k]){
-          temp_score <- temp_score + qlist[j]*(outsample$x[k]-for_temp_j[k])
-        }else{
-          temp_score <- temp_score + (1-qlist[j])*(for_temp_j[k]-outsample$x[k])
-        }
-      }
-      temp_score <- (temp_score/length(for_temp_j))/mean(abs(diff(insample$x)))
-      scorej <- scorej + temp_score
-    }
-    score_total <- rbind(score_total, data.frame((scorej/length(qlist))*wi,outsample$Agg_Level_1,outsample$Agg_Level_2, outsample$Hlevel)) 
+    # train_y : All the demand used in the training set (vector)
+    # valid_y : All true future value (vector)
+    # quantile_preds: All Quantile value predicted at a given quantile
   
+    loss = (((valid_y-quantile_preds)*(valid_y>=quantile_preds)*quantile) + 
+              ((quantile_preds-valid_y)*(quantile_preds>valid_y)*(1-quantile)))
+    sum_of_loss = sum(loss)
+    div = sum_of_loss/length(quantile_preds)
+    scale = mean(abs(diff(train_y)))
+    spl = div/scale
+    
+    #print(paste("loss:", loss))
+    #print(paste("sum_of_loss:", sum_of_loss))
+    #print(paste("div:", div))
+    #print(paste("scale:", scale))
+    
+    return (spl)
+}
+
+# Example
+#x = c(11.5, 12, 11, 14, 10, 13, 11, 13, 14, 9, 15, 13)
+#y = c(10 , 11, 10, 13.78, 9, 12, 10, 12, 13, 8, 14, 12)
+#forecast = c(10, 12, 12.47, 13, 12, 11.69, 13, 14, 12, 10, 14, 13)
+#quantile_spl(x,y,forecast, 0.9)
 
 ```
 
